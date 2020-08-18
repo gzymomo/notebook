@@ -55,6 +55,8 @@ Raster out of db is disabled by default. To enable POSTGIS_ENABLE_OUTDB_RASTERS 
 
 # [windows开启PostgreSQL数据库远程访问](https://www.cnblogs.com/dhrs/p/11786059.html)
 
+## **修改postgresql.conf文件**
+
 
 
 1.在PostgreSQL安装目录下data文件夹，打开pg_hba.conf文件，新增允许访问的ip
@@ -64,3 +66,25 @@ Raster out of db is disabled by default. To enable POSTGIS_ENABLE_OUTDB_RASTERS 
 2.打开postgresql.conf，将listen_addresses = 'localhost' 改成 listen_addresses = '*'（改过请忽略）
 
 3.重启服务
+
+
+
+## **修改pg_hba.conf文件**
+
+在data/pg_hba.conf中
+
+\# TYPE DATABASE    USER      ADDRESS         METHOD 
+
+\# IPv4 local connections:
+host  all       all       127.0.0.1/32      md5
+host  all       all       0.0.0.0/0         md5    
+
+其中0.0.0.0/0表示运行任意ip地址访问。
+
+若设置为 192.168.1.0/24 则表示允许来自ip为192.168.1.0 ~ 192.168.1.255之间的访问。
+
+# [WINDOWS下重启POSTGRESQL](http://www.choupangxia.com/2020/06/23/windows-postgresql/)
+
+在Windows下，postgresql以服务的形式启动，如果需要重启在服务中点击重启即可。
+
+依次执行如下步骤：控制面板–》管理工具–》服务。然后在名称中找到“postgresql-xxx”，右击，在弹出框中选择“重新启动”即可。
