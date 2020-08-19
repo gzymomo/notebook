@@ -256,7 +256,7 @@ Error response from daemon: Get https://10.0.86.193/v1/users/: dial tcp 10.0.86.
 
 远程也可直接通过以下方式解决：
 ```bash
-vim  /etc/docker/daemon.json
+vi  /etc/docker/daemon.json
 # 增加一个daemon.json文件
 
 { "insecure-registries":["192.168.1.100:port"] }
@@ -270,3 +270,4 @@ vim  /etc/docker/daemon.json
 systemctl daemon-reload
 systemctl restart docker
 ```
+
