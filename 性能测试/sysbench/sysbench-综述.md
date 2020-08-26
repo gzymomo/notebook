@@ -119,6 +119,12 @@ sysbench 1.1.0
 
 　　到目前为止sysbench的安装就算是完成了！
 
+### Yum安装
+
+```
+yum -y install sysbench
+```
+
 # sysbench语法
 
 执行sysbench –help，可以看到sysbench的详细使用方法。
@@ -190,3 +196,17 @@ sysbench的参数有很多，其中比较常用的包括：
 4、测试时需要注意主从同步的状态。
 
 5、测试必须模拟多线程的情况，单线程情况不但无法模拟真实的效率，也无法模拟阻塞甚至死锁情况。
+
+# sysbench除了以上的测试之外，还可以测试：
+
+```bash
+Compiled-in tests:
+  fileio - File I/O test  
+  cpu - CPU performance test
+  memory - Memory functions speed test
+  threads - Threads subsystem performance test
+  mutex - Mutex performance test
+
+See 'sysbench <testname> help' for a list of options for each test
+```
+
