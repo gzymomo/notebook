@@ -219,7 +219,7 @@ http {
 }
 ```
 
-# 5、、状态监控
+# 5、状态监控
 ## 5.1 配置访问地址
 ```
 location /nginxstatus {
@@ -322,7 +322,7 @@ upstream myserver {
 
 # 7、access日志切割
 ## 7.1 新建Shell脚本
-# 脚本文件路径随意
+### 脚本文件路径随意
 
 `vim /usr/local/nginx/nginx_log.sh`
 - 将以下内容添加到脚本中
@@ -377,3 +377,48 @@ server {
 }
 ```
 在实际的后台服务器中发布的程序中，使用静态文件时，路径指向设置为静态文件服务器（这里是代理服务器）。
+
+# 9、nginx转发配置
+
+```yaml
+#user  nobody;
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+
+    keepalive_timeout  65;
+
+    server {
+        listen  8888;
+	    client_max_body_size 50m;        
+        charset utf-8;
+
+        location / {
+		   proxy_pass  http://ip:8868/;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header Host $host:50;
+	       proxy_set_header Upgrade $http_upgrade;
+	       proxy_set_header Connection  "upgrade";
+	    }
+
+        location /arcgis_js_api/ {
+           add_header 'Access-Control-Allow-Origin' '*';
+           add_header 'Access-Control-Allow-Credentials' 'true';
+           add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,X-Requested-With';
+           add_header 'Access-Control-Allow-Methods' 'GET,POST,OPTIONS';
+           root /usr/local/nginx-zydz/html;
+           expires  7d;
+        }
+    }
+}
+
+```
+
