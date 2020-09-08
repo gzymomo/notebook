@@ -51,3 +51,58 @@ docker run --name redis -p 6379:6379 -v /var/project/redis/data:/data -v /var/pr
 ```bash
 docker run -d --name halo -p 7081:8090  -v /var/project/halo:/root/.halo ruibaby/halo
 ```
+
+# 八、docker搭建yapi
+
+## 1.启动 MongoDB
+
+```bash
+# docker run -d --name mongo-yapi mongo
+```
+
+## 2.获取yapi镜像
+
+```bash
+# docker pull registry.cn-hangzhou.aliyuncs.com/anoy/yapi
+```
+
+## 3.初始化数据库索引及管理员账号
+
+```bash
+# docker run -it --rm \
+  --link mongo-yapi:mongo \
+  --entrypoint npm \
+  --workdir /api/vendors \
+  registry.cn-hangzhou.aliyuncs.com/anoy/yapi \
+  run install-server
+```
+
+## 4.启动yapi服务
+
+```bash
+# docker run -d \
+  --name yapi \
+  --link mongo-yapi:mongo \
+  --workdir /api/vendors \
+  -p 3000:3000 \
+  registry.cn-hangzhou.aliyuncs.com/anoy/yapi \
+  server/app.js
+```
+
+## 5.访问
+
+访问 http://localhost:3000 登录账号 admin@admin.com，密码 ymfe.org
+
+## 6.其他命令
+
+```bash
+#启动停止
+# docker stop yapi
+# docker start yapi
+# 开机自启动
+# chmod +x /etc/rc.d/rc.local
+# systemctl daemon-reload
+# sudo service docker restart
+# docker start mongo-yapi
+# docker start yapi
+```

@@ -2,7 +2,37 @@
 
 [掘金：秋天不落叶：三年 Git 使用心得 & 常见问题整理](https://juejin.im/post/5ee649ff51882542ea2b5108#heading-34)
 
-# 1、Git global配置
+
+
+# Git基本概念
+
+![Git基本命令](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b675e7bb00d24232a2338f87d85d00af~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+基于上面的图，我们就有接下来一些概念👇
+
+- 版本库👉`.git`
+  - 当我们使用git管理文件时，比如`git init`时，这个时候，会多一个`.git`文件，我们把这个文件称之为版本库。
+  - `.git文件`另外一个作用就是它在创建的时候，会自动创建master分支，并且将HEAD指针指向master分支。
+- 工作区 
+  - 本地项目存放文件的位置
+  - 可以理解成图上的workspace
+- 暂存区 (Index/Stage) 
+  - 顾名思义就是暂时存放文件的地方，通过是通过add命令将工作区的文件添加到缓冲区
+- 本地仓库（Repository）
+  - 通常情况下，我们使用commit命令可以将暂存区的文件添加到本地仓库
+  - 通常而言，HEAD指针指向的就是master分支
+- 远程仓库（Remote）
+  - 举个例子，当我们使用GitHub托管我们项目时，它就是一个远程仓库。
+  - 通常我们使用clone命令将远程仓库代码拷贝下来，本地代码更新后，通过push托送给远程仓库。
+
+
+
+# 1、Git命令
+
+## 1、Git global配置
+
 ```shell
 # 配置全局用户
 $ git config --global user.name "用户名" 
@@ -23,8 +53,10 @@ $ git config --global --unset user.xxx
 git修改完密码后，重置git bash密码。
 解决方法：打开电脑的控制面板–>用户账户–>管理Windows凭据（win10可以直接搜索** 凭据管理器**）
 
-
 ## 1.1 查看git信息
+
+![Git配置命令](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29f0c70414b14fe1986b376f7b303959~tplv-k3u1fbpfcp-zoom-1.image)
+
 ```shell
 # 查看系统配置
 $ git config --list
@@ -100,7 +132,208 @@ $ git stash
 $ git stash pop
 ```
 
-# 2、Git数据流向图
+## 1.3 Git分支管理
+
+![Git分支管理](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3bff7ddbc6a145f993c0841eb81c8998~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+- 查看本地分支
+
+```bash
+git branch
+```
+
+- 查看远程分支
+
+```bash
+git branch -r
+```
+
+- 查看本地和远程分支
+
+```bash
+git branch -a
+```
+
+- 从当前分支，切换到其他分支
+
+```bash
+git checkout <branch-name>
+// 举个例子
+git checkout feature/tiantian
+```
+
+- 创建并切换到新建分支
+
+```bash
+git checkout -b <branch-name>
+// 举个例子👇
+git checkout -b feature/tiantian
+```
+
+- 删除分支
+
+```bash
+git branch -d <branch-name>
+// 举个例子👇
+git branch -d feature/tiantian
+```
+
+- 当前分支与指定分支合并
+
+```bash
+git merge <branch-name>
+// 举个例子👇
+git merge feature/tiantian
+```
+
+- 查看哪些分支已经合并到当前分支
+
+```bash
+git branch --merged
+```
+
+- 查看哪些分支没有合并到当前分支
+
+```bash
+git branch --no-merged
+```
+
+- 查看各个分支最后一个提交对象的信息
+
+```bash
+git branch -v
+```
+
+- 删除远程分支
+
+```bash
+git push origin -d <branch-name>
+```
+
+- 重命名分支
+
+```bash
+git branch -m <oldbranch-name> <newbranch-name>
+```
+
+- 拉取远程分支并创建本地分支
+
+```bash
+git checkout -b 本地分支名x origin/远程分支名x
+
+// 另外一种方式,也可以完成这个操作。
+git fetch origin <branch-name>:<local-branch-name>
+// fetch这个指令的话,后续会梳理
+```
+
+## 1.4 fetch指令
+
+![Git命令fetch](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6c666ec139fe4dc5a08df6b811b9803d~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+我理解的就是将远程仓库内容更新到本地，最近与师姐开发项目过程中，使用的就是这个命令。
+
+具体是这样子的👇
+
+### fetch推荐写法
+
+```bash
+git fetch origin <branch-name>:<local-branch-name>
+复制代码
+```
+
+- 一般而言，这个origin是远程主机名，一般默认就是origin。
+- `branch-name` 你要拉取的分支
+- `local-branch-name` 通常而言，就是你本地新建一个新分支，将origin下的某个分支代码下载到本地分支。
+
+举个例子👇
+
+```bash
+git fetch origin feature/template_excellent:feature/template_layout
+// 你的工作目录下，就会有feature/template_layout
+// 一般情况下,我们需要做的就是在这个分支上开发新需求
+// 完成代码后,我们需要做的就是上传我们的分支
+复制代码
+```
+
+### fetch其他写法
+
+- 将某个远程主机的更新，全部取回本地。
+
+```bash
+git fetch <远程主机名> 
+```
+
+- 这样子的话，取回的是所有的分支更新，如果想取回特定分支，可以指定分支名👇
+
+```bash
+git fetch <远程主机名> <分支名>
+```
+
+- 当你想将某个分支的内容取回到本地下某个分支的话，如下👇
+
+```
+git fetch origin :<local-branch-name>
+// 等价于👇
+git fetch origin master:<local-branch-name>
+```
+
+## 1.5 状态查询
+
+- 查看状态
+  - git status
+- 查看历史操作记录
+  - git reflog
+- 查看日志
+  - git log
+
+
+
+## 1.6 文件暂存
+
+![Git命令文件暂存](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b229cb4872e4991b33181cdad72b59d~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+- 添加改动到stash
+  - git stash save -a “message”
+- 删除暂存
+  - git stash drop [stash@{ID}](mailto:stash@{ID})
+- 查看stash列表
+  - git stash list
+- 删除全部缓存
+  - git stash clear
+- 恢复改动
+  - git stash pop [stash@{ID}](mailto:stash@{ID})
+
+
+
+## 1.7 差异比较
+
+![Git文件比较](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c779e736198247bfb0795b50dced0814~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+- 比较工作区与缓存区
+  - git diff
+- 比较缓存区与本地库最近一次commit内容
+  - git diff -- cached
+- 比较工作区与本地最近一次commit内容
+  - git diff HEAD
+- 比较两个commit之间差异
+  - git diff
+
+
+
+# 2、Git思维导图
+
+## Git数据流向图
+
+
+
 ![](https://www.showdoc.cc/server/api/common/visitfile/sign/1407a1916ff926d3ae69b667ec0e1af1?showdoc=.jpg)
 
 ![](https://user-gold-cdn.xitu.io/2020/6/15/172b390eab77fcbd?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
@@ -109,6 +342,20 @@ $ git stash pop
 - Index / Stage：暂存区
 - Repository：仓库区（或本地仓库）
 - Remote：远程仓库
+
+
+
+## Git导图
+
+![Git脑图](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/145b0cdfa98a4a9cb724d745a1466c47~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+Git通常的操作流程👇
+
+
+
+![Git经典流程图](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1d538d63559402fbcfd82d68b08061c~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 3、GitLab Service
 ![](https://www.showdoc.cc/server/api/common/visitfile/sign/3a4b814c78dcef21bb49de4749a6e3f0?showdoc=.jpg)
@@ -460,3 +707,116 @@ $ git clone <git-repo-url>
 # 将远程仓库下载到（当前 git bash 启动位置下面的）指定文件中，如果没有会自动生成
 $ git clone <git-repo-url> <project-name>
 ```
+
+# 7、分支命名
+
+![Git分支管理规范](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd8abe5e5605411d8dbe5c4faa0054aa~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+**master分支**
+
+1. 主分支，用于部署生产环境的分支，确保稳定性。
+2. master分支一般由develop以及hotfix分支合并，任何情况下都不能直接修改代码。
+
+**develop 分支**
+
+1. develop为开发分支，通常情况下，保存最新完成以及bug修复后的代码。
+2. 开发新功能时，feature分支都是基于develop分支下创建的。
+
+**feature分支**
+
+1. 开发新功能，基本上以develop为基础创建feature分支。
+2. 分支命名：feature/ 开头的为特性分支， 命名规则: feature/user_module、 feature/cart_module。
+
+**这点我深有体会，我在网易，mentor就是这么教我的，**通常建一个feature分支。
+
+**release分支**
+
+1. release 为预上线分支，发布提测阶段，会release分支代码为基准提测。
+
+**hotfix分支**
+
+1. 分支命名：hotfix/ 开头的为修复分支，它的命名规则与 feature 分支类似。
+2. 线上出现紧急问题时，需要及时修复，以master分支为基线，创建hotfix分支，修复完成后，需要合并到master分支和develop分支。
+
+
+
+# 8、基本操作
+
+创建本地仓库 git init
+
+> git init
+
+链接本地仓库与远端仓库
+
+> git remote add  origin 
+>
+> origin默认是远端仓库别名  url 可以是**可以使用https或者ssh的方式新建**
+
+检查配置信息
+
+- git config --list
+
+Git user name 与email
+
+> git config --global user.name "yourname"
+>
+> git config --global user.email  "your_email"
+
+生成SSH密钥
+
+> ssh-keygen -t rsa -C "这里换上你的邮箱"
+>
+> cd ~/.ssh 里面有一个文件名为id_rsa.pub,把里面的内容复制到git库的我的SSHKEYs中
+
+常看远端仓库信息 
+
+- git remote -v
+
+远端仓库重新命名 
+
+- git remote rename old new
+
+提交到缓存区 
+
+- git add .  全部上传到缓存区
+- git add   指定文件
+
+提交到本地仓库
+
+- git commit -m 'some message'
+
+提交远程仓库
+
+- git push <远程主机名> <本地分支名>:<远程分支名>
+
+查看分支
+
+- git  branch
+
+创建新分支
+
+- git branch 
+
+切换分支
+
+- git checkout 
+
+创建分支并切换
+
+- git checkout -b 
+
+删除分支
+
+- git branch -d 
+
+删除远程分支
+
+- git push -d  
+
+切换分支
+
+- git checkout
+
+
