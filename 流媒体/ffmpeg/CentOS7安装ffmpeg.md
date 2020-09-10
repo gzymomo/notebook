@@ -1,0 +1,1 @@
+# [CentOS7安装ffmpeg](https://www.cnblogs.com/wangrong1/p/11951856.html)
