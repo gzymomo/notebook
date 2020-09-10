@@ -179,8 +179,7 @@ Doing random read test
 Initializing worker threads...
  
 Threads started!
- 
- 
+  
 File operations:
     reads/s:                      1487.34
     writes/s:                     0.00

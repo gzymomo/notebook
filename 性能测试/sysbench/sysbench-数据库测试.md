@@ -399,14 +399,14 @@ Dropping table 'sbtest3'...
 
 1. 第一步 prepare  
 
-```
+```bash
 sysbench --mysql-host=localhost --mysql-port=3306 --mysql-user=sbtest \
     --mysql-password=123456 --mysql-db=tempdb oltp_insert prepare
 ```
 
   　　2. 第二步 run
 
-```
+```bash
 sysbench --mysql-host=localhost --mysql-port=3306 --mysql-user=sbtest     --mysql-password=123456 --mysql-db=tempdb oltp_insert run                                                              
 sysbench 1.1.0 (using bundled LuaJIT 2.1.0-beta3)
 
@@ -449,10 +449,9 @@ Threads fairness:
 
 3. 第三步 cleanup
 
-```
-sysbench --mysql-host=localhost --mysql-port=3306 --mysql-user=sbtest     --mysql-password=123456 --mysql-db=tempdb oltp_insert cleanup                                                   
+```bash
+sysbench --mysql-host=localhost --mysql-port=3306 --mysql-user=sbtest     --mysql-password=123456 --mysql-db=tempdb oltp_insert cleanup                                  
 sysbench 1.1.0 (using bundled LuaJIT 2.1.0-beta3)
-
 Dropping table 'sbtest1'...
 ```
 
@@ -460,6 +459,7 @@ Dropping table 'sbtest1'...
 
 ## 只读示例
 
+```bash
 ./bin/sysbench --test=share/sysbench/oltp.lua \
 --mysql-host=10.229.153.175 --mysql-port=7001 --mysql-user=kp --mysql-password=kp123456 \
 --mysql-db=conanwang --oltp-tables-count=10 --oltp-table-size=10000000 \
@@ -467,6 +467,9 @@ Dropping table 'sbtest1'...
 --oltp-test-mode=nontrx --oltp-nontrx-mode=select \
 --oltp-read-only=on --oltp-skip-trx=on \
 --max-time=120 --num-threads=12 \
+```
+
+
 
 [prepare|run|cleanup]
 
@@ -474,29 +477,18 @@ Dropping table 'sbtest1'...
 
 注意最后一行，一项测试开始前需要用`prepare`来准备好表和数据，`run`执行真正的压测，`cleanup`用来清除数据和表。实际prepare的表结构：
 
- 
-
+ ```mysql
 mysql> desc dbtest1a.sbtest1;
-
 +-------+------------------+------+-----+---------+----------------+
-
 | Field | Type | Null | Key | Default | Extra |
-
 +-------+------------------+------+-----+---------+----------------+
-
 | id | int(10) unsigned | NO | PRI | NULL | auto_increment |
-
 | k | int(10) unsigned | NO | MUL | 0 | |
-
 | c | char(120) | NO | | | |
-
 | pad | char(60) | NO | | | |
-
 +-------+------------------+------+-----+---------+----------------+
-
 4 rows in set (0.00 sec)
-
- 
+ ```
 
 上面的测试命令代表的是：对mysql进行oltp基准测试，表数量10，每表行数约1000w（几乎delete多少就会insert的多少），并且是非事务的只读测试，持续60s，并发线程数12。
 
@@ -547,17 +539,15 @@ ps2: 我在用sysbench压的时候，在mysql后端会话里有时看到大量�
 
 读写测试还是用oltp.lua，只需把`--oltp-read-only`等于`off`。
 
+```bash
 ./bin/sysbench --test=./share/tests/db/oltp.lua --mysql-host=10.0.201.36 --mysql-port=8066 --mysql-user=ecuser --mysql-password=ecuser --mysql-db=dbtest1a --oltp-tables-count=10 --oltp-table-size=500000 --report-interval=10 --rand-init=on --max-requests=0 --oltp-test-mode=nontrx --oltp-nontrx-mode=select --oltp-read-only=off --max-time=120 --num-threads=128 prepare
-
- 
 
 ./bin/sysbench --test=./share/tests/db/oltp.lua --mysql-host=10.0.201.36 --mysql-port=8066 --mysql-user=ecuser --mysql-password=ecuser --mysql-db=dbtest1a --oltp-tables-count=10 --oltp-table-size=500000 --report-interval=10 --rand-init=on --max-requests=0 --oltp-test-mode=nontrx --oltp-nontrx-mode=select --oltp-read-only=off --max-time=120 --num-threads=128 run
 
- 
-
 ./bin/sysbench --test=./share/tests/db/oltp.lua --mysql-host=10.0.201.36 --mysql-port=8066 --mysql-user=ecuser --mysql-password=ecuser --mysql-db=dbtest1a --oltp-tables-count=10 --oltp-table-size=500000 --report-interval=10 --rand-init=on --max-requests=0 --oltp-test-mode=nontrx --oltp-nontrx-mode=select --oltp-read-only=off --max-time=120 --num-threads=128 cleanup
+```
 
- 
+
 
 然而`oltp-test-mode=nontrx`一直没有跟着我预期的去走，在mysql general log里面看到的sql记录与`complex`模式相同。所以上面示例中的`--oltp-test-mode=nontrx --oltp-nontrx-mode=select`可以删掉。
 
@@ -584,6 +574,7 @@ sysbench作者 akopytov 对我这个疑问有了回复：https://github.com/akop
 
 如果基准测试的时候，你只想比较两个项目的update（或insert）效率，那可以不使用oltp脚本，而直接改用`update_index.lua`：
 
+```bash
 ./bin/sysbench --test=./share/tests/db/update_index.lua \
 
 --mysql-host=10.0.201.36 --mysql-port=8066 --mysql-user=ecuser --mysql-password=ecuser \
@@ -593,12 +584,11 @@ sysbench作者 akopytov 对我这个疑问有了回复：https://github.com/akop
 --report-interval=10 --rand-init=on --max-requests=0 \
 
 --oltp-read-only=off --max-time=120 --num-threads=128 \
+```
 
 [ prepare | run | cleanup ]
 
- 
-
- 
+  
 
 此时像`oltp-read-only=off`许多参数都失效了。需要说明的是这里 (非)索引更新，不是where条件根据索引去查找更新，而是更新索引列上的值。
 
