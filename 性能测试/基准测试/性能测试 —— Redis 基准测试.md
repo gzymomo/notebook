@@ -62,8 +62,6 @@ Redis 的性能测试工具，目前主流使用的是 [redis-benchmark](https:/
 
 - 型号 ：ecs.c5.xlarge
 
-  > 艿艿：和我一样抠门（穷）的胖友，可以买竞价类型服务器，使用完后，做成镜像。等下次需要使用的时候，恢复一下。HOHO 。
-
 - 系统 ：CentOS 7.6 64位
 
 - CPU ：4 核
@@ -167,7 +165,7 @@ redis-benchmark
 
 在安装 Redis 的服务器上，直接执行，不带任何参数，即可进行测试。测试结果如下：
 
-```
+```bash
 ====== PING_INLINE ======
   100000 requests completed in 1.18 seconds
   50 parallel clients
@@ -371,7 +369,7 @@ redis-benchmark
 
 ## 4.5 精简测试
 
-```
+```bash
 redis-benchmark -t set,get,incr -n 1000000 -q
 ```
 
@@ -381,7 +379,7 @@ redis-benchmark -t set,get,incr -n 1000000 -q
 
 执行结果如下：
 
-```
+```bash
 [root@iZuf6hci646px19gg3hpuwZ ~]# redis-benchmark -t set,get,incr -n 1000000 -q
 SET: 85888.52 requests per second
 GET: 85881.14 requests per second

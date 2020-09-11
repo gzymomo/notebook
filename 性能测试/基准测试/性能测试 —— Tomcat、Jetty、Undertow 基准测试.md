@@ -35,8 +35,6 @@ public class Controller {
 
 - 型号 ：ecs.c5.xlarge
 
-  > 艿艿：和我一样抠门（穷）的胖友，可以买竞价类型服务器，使用完后，做成镜像。等下次需要使用的时候，恢复一下。HOHO 。
-
 - 系统 ：CentOS 7.6 64位
 
 - CPU ：4 核
