@@ -1,5 +1,11 @@
 [使用flv.js快速搭建html5网页直播](https://blog.csdn.net/impingo/article/details/103077380)
 
+[B站视频开源代码flv.js的使用部署心得（代码案例应用）](https://blog.csdn.net/hj7jay/article/details/54906612)
+
+[使用flv.js做直播](https://www.cnblogs.com/burro/p/10149566.html)
+
+
+
 
 
 # 什么是flv.js
@@ -110,3 +116,86 @@ git clone https://github.com/im-pingo/h5player.git
 | isLive            | 是否为直播流         |
 | hasAudio          | 是否播放声音         |
 | hasVideo          | 是否播放画面         |
+
+# 源码分析
+
+- createPlayer 接收两个参数：媒体资源 mediaDataSource 和配置 optionalConfig，根据媒体类型( type 属性)创建一个播放器
+
+- isSupported 实际上是 Features.supportMSEH264Playback()
+
+- getFeatureList 实际上是 Features.getFeatureList()
+
+
+
+## flv.js-flvjs 对象入口
+
+它做了以下几件事：
+
+1. 激活了 polyfill
+
+2. 组合播放器实例以及相关方法：FlvPlayer 和 NativePlayer，createPlayer、isSupported、getFeatureList。`这里个人建议使用 Object.assign 完成组合`
+   2.1 createPlayer 接收两个参数：媒体资源 mediaDataSource 和配置 optionalConfig，根据媒体类型( type 属性)创建一个播放器
+   2.2 isSupported 实际上是 Features.supportMSEH264Playback()
+   2.3 getFeatureList 实际上是 Features.getFeatureList()
+
+3. 关联相关事件和错误、调试工具
+
+4. 挂载到window对象导出
+
+### polyfill.js-Polyfill类-es6的polyfill
+
+1. 引入了 Object.setPrototypeOf、Object.assign、promise 的 polyfill，包装在 install 函数里
+2. 这一块完全可以交给 polyfill 库或者从 MDN 引，不是 flv.js 的重点
+
+## features.js-Features 类-MSE 特征检测
+
+**重点文件，可以知道浏览器目前支持 MSE 的哪些功能**
+
+
+
+supportMSEH264Playback 判断全局上是否有 [MediaSource](https://link.jianshu.com/?t=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FMediaSource) 这个对象，并且需要支持 `video/mp4; codecs="avc1.42E01E,mp4a.40.2"`这种类型。
+
+- flv.js 是将 flv 格式转换成 "avc1.42E01E,mp4a.40.2" 格式了。
+- MDN 的 MediaSource 示例也给我们展示了如何通过 MediaSource 的方法和事件加载一个 mp4 文件。
+
+
+
+supportNetworkStreamIO 通过创建一个 IOController 来判断加载器是否支持流。 （只能是 fetch-stream-loader 类型或 xhr-moz-chunked-loader 类型）。
+
+
+
+supportNativeMediaPlayback 通过创建一个 [video 元素](https://link.jianshu.com/?t=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FHTMLVideoElement),利用它的 canPlayType 方法判断是否支持某种 mime 的数据
+
+getFeatureList 获取支持的特性列表，分别是：
+
+- mseFlvPlayback MSE是否支持
+- networkStreamIO 数据流是否支持
+- networkLoaderName 数据加载器名称
+-  mseLiveFlvPlayback MSE 流视频是否支持
+- nativeMP4H264Playback 原生 MP4 格式是否支持
+-  nativeWebmVP8Playback 原生 [Webm](https://link.jianshu.com/?t=https%3A%2F%2Fzh.wikipedia.org%2Fzh-cn%2FWebM) VP8 格式是否支持
+- nativeWebmVP9Playback 原生 Webm VP9 格式是否支持
+
+## logging-control.js-LoggingControl类-调试控制器
+
+这里涉及到繁琐的参数设置，并且使用 get 和 set 控制了读写过程，不具体介绍每个方法，主要是介绍用途和事件的使用。
+
+1. 组合了 EventEmitter，采用发布-订阅模式管理调试，getConfig 方法可以获得所有调试选项，applyConfig 方法可以接受一个 config 对象来配置调试选项。
+2. forceGlobalTag 是否开启强制全局标签和 globalTag 全局标签在 set 中使用了 _notifyChange 方法发布变化。
+3. enableAll/enableDebug/enableVerbose/enableInfo/enableWarn/enableError 这六个方法是是否允许特定模式的 console，刚好对应原生的调试 API，同上会在 set 中发布了变化
+4. _notifyChange 关键是利用 emitter 触发一个 change 事件，参数是所有调试配置。
+   4.1 这里利用 listenerCount 方法让多个事件只触发一次。
+5. registerListener(listener) 和 removeListener(listener) 是让 emitter 注册或移除事件监听。
+   5.1 代码初始化的时候 new 了一个 EventEmitter 注入到 LoggingControl 中。
+
+### exception.js
+
+这个文件里有四个类，用来描述代码运行中的三类错误，其中 RuntimeException 是基类。
+
+1. RuntimeException类-运行时错误，基类，拥有 _message 私有属性和 message、name 两个只读属性，以及一个 toString 方法用来描述完整的错误信息。
+
+2. IllegalStateException类-无效状态，name 只读属性重写为 'IllegalStateException'
+
+3. InvalidArgumentException类-无效参数，name 只读属性重写为 'InvalidArgumentException'
+
+4. NotImplementedException-未实现功能，name 只读属性重写为 'NotImplementedException'

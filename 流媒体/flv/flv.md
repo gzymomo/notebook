@@ -8,6 +8,15 @@ Github地址：https://github.com/Bilibili/flv.js/
 
 一个实现了在 HTML5 视频中播放 FLV 格式视频的 JavaScript 库。它的工作原理是将 FLV 文件流转码复用成 ISO BMFF（MP4 碎片）片段，然后通过 [Media Source Extensions](https://w3c.github.io/media-source/) 将 MP4 片段喂进浏览器。
 
+flv.js只做了一件事，在获取到FLV格式的音视频数据后通过原生的JS去解码FLV数据，再通过[Media Source Extensions](https://w3c.github.io/media-source/) API 喂给原生HTML5 Video标签。(HTML5 原生仅支持播放 mp4/webm 格式，不支持 FLV)
+
+
+
+flv.js 为什么要绕一圈，从服务器获取FLV再解码转换后再喂给Video标签呢？原因如下：
+
+1. 兼容目前的直播方案：目前大多数直播方案的音视频服务都是采用FLV容器格式传输音视频数据。
+2. FLV容器格式相比于MP4格式更加简单，解析起来更快更方便。
+
 
 
 HTML5 原生仅支持播放 mp4/webm 格式，flv.js 实现了在 HTML5 上播放 FLV 格式视频。
