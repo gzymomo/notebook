@@ -420,3 +420,113 @@ rtmp {
 }
 ```
 
+# 三、实践使用的nginx.conf
+
+```yaml
+#user  nobody;
+
+error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+worker_processes 1;
+
+events {
+  worker_connections 1024;
+}
+
+rtmp {
+  server {
+    listen 1935;
+    chunk_size 4096;
+
+    application vod {
+      play /opt/video/vod;
+    }
+
+    application live { #第一处添加的直播字段
+      live on;
+    }
+
+    #hls配置
+    application hls {
+      live on;
+      hls on;
+      hls_path /opt/video/hls;
+    }
+  }
+
+}
+
+http {
+  include mime.types;
+  default_type application/octet-stream;
+  sendfile on;
+  keepalive_timeout 65;
+  server_names_hash_bucket_size 128;
+  client_header_buffer_size 32k;
+  large_client_header_buffers 4 32k;
+
+  gzip  on;
+  gzip_min_length 1k;
+  gzip_buffers 4 16k;
+  gzip_comp_level 2;
+  gzip_types text/plain application/x-javascript text/css application/xml;
+  gzip_vary on;
+
+  output_buffers 1 32k;
+  postpone_output 1460;
+  client_header_timeout 3m;
+  client_body_timeout 3m;
+  send_timeout 3m;
+  tcp_nopush on;
+  tcp_nodelay on;
+
+  server {
+    listen 80;
+    server_name localhost;
+
+    charset utf-8;
+
+    location /stat { #第二处添加的location字段。
+      rtmp_stat all;
+      rtmp_stat_stylesheet stat.xsl;
+    }
+    location /stat.xsl { #第二处添加的location字段。
+      root /usr/local/nginx/nginx-rtmp-module;
+    }
+    location / {
+      root html;
+      index index.html index.htm;
+    }
+    #配置hls
+    location /hls {
+      types {
+        application/vnd.apple.mpegurl m3u8;
+        video/mp2t ts;
+      }
+      root /opt;
+      add_header Cache-Control no-cache;
+    }
+
+    location ~ \.mp4$ {
+      root   /opt/video/mp4/;
+    }
+
+
+    location ~ \.m4v$ {
+      root   /opt/video/m4v/;
+    }
+
+    location ~ \.flv$ {
+      root   /opt/video/flv/;
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+      root html;
+    }
+  }
+}
+```
+
