@@ -422,6 +422,14 @@ rtmp {
 
 # 三、实践使用的nginx.conf
 
+## 1、ffmpeg拉流命令
+
+```bash
+ffmpeg -re  -rtsp_transport tcp -i rtsp:////////  -vcodec copy  -f flv  rtmp://192.168.0.140/rtmp
+```
+
+## 2、nginx配置文件
+
 ```yaml
 #user  nobody;
 
@@ -438,7 +446,21 @@ events {
 rtmp {
   server {
     listen 1935;
+	access_log logs/rtmp_access.log;
     chunk_size 4096;
+	
+	application rtmp {
+            live on;
+            notify_method get;
+            on_play http://192.168.0.141:7081/rtmp/on_play;
+            on_publish http://192.168.0.141:7081/rtmp/on_publish;
+            on_done http://192.168.0.141:7081/rtmp/on_done;
+            on_play_done http://192.168.0.141:7081/rtmp/on_play_done;
+            on_publish_done http://192.168.0.141:7081/rtmp/on_publish_done;
+            on_record_done http://192.168.0.141:7081/rtmp/on_record_done;
+            on_update http://192.168.0.141:7081/rtmp/on_update;
+            notify_update_timeout 30s;
+        }
 
     application vod {
       play /opt/video/vod;

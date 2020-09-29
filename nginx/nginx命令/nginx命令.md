@@ -1,9 +1,7 @@
+
+
 ```bash
-./configure --prefix=/usr/local/nginx --add-module=/usr/local/nginx/module/nginx-rtmp-module --conf-path=/usr/local/nginx/nginx.conf
-
-./configure --prefix=/usr/local/nginx --add-module=/opt/nginx-rtmp-module --conf-path=/usr/local/nginx/sbin/nginx.conf
-
-./configure --add-module=/opt/nginx-rtmp-module
+cp /usr/local/nginx/sbin/nginx /usr/local/bin/ 
 ```
 
 

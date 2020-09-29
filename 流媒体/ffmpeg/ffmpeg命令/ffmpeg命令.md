@@ -1,5 +1,13 @@
 简书：作者：往后余生9375：链接：https://www.jianshu.com/p/049d03705a81
 
+# 推流命令
+
+```bash
+ffmpeg -re  -rtsp_transport tcp -i rtsp:///////  -vcodec copy  -f flv  rtmp://192.168.0.140/rtmp
+```
+
+
+
 # 压缩视频
 
 ```bash
@@ -181,7 +189,7 @@ Sqcif 128X96 qcif 176X144 cif 252X288 4cif 704X576
 
 -ac channels 设置通道 缺省为1
 
--an 不使能音频纪录
+-an 不使用音频，去掉音频
 
 -acodec codec 使用codec编解码
 ```
@@ -224,7 +232,6 @@ Sqcif 128X96 qcif 176X144 cif 252X288 4cif 704X576
 
 ```
 $ ffmpeg -i ./in.mp4  -vcodec copy -acodec copy -ss 00:00:20 -to 00:05:30 ./out.mp4
-1
 ```
 
 -ss为开始时间，-to为结束时间。
@@ -233,7 +240,6 @@ $ ffmpeg -i ./in.mp4  -vcodec copy -acodec copy -ss 00:00:20 -to 00:05:30 ./out.
 
 ```
 $ ffmpeg -i ./sea.mp4 -fs 19M output.mp4
-1
 ```
 
 -fs需要设置的大小，例如19M、1024K，其实就是剪切了前19M、1024K的视频内容。
@@ -242,7 +248,6 @@ $ ffmpeg -i ./sea.mp4 -fs 19M output.mp4
 
 ```
 $ ffmpeg  -i in.mp4  -map 0:0  -vcodec copy -acodec copy out.mp4
-1
 ```
 
 通过ffprobe命令，可以查看所有的通道，例子中的0:0就是视频通道。
@@ -251,7 +256,6 @@ $ ffmpeg  -i in.mp4  -map 0:0  -vcodec copy -acodec copy out.mp4
 
 ```
 $ ffmpeg -i video_1920.mp4 -vf scale=640:360 video_640.mp4 -hide_banner
-1
 ```
 
 高分辨率向低分辨率的转化。
@@ -260,35 +264,30 @@ $ ffmpeg -i video_1920.mp4 -vf scale=640:360 video_640.mp4 -hide_banner
 
 ```
 $ ffmpeg -i video_320x180.mp4 -vf scale=320:240,setdar=4:3 video_320x240.mp4 -hide_banner
-1
 ```
 
 ## 6. 视频倒放，无音频
 
 ```
 $ ffmpeg -i in.mp4 -filter_complex [0:v]reverse[v] -map [v] -preset superfast out.mp4
-1
 ```
 
 ## 7.视频倒放，音频不变
 
 ```
 $ ffmpeg -i in.mp4 -vf reverse out.mp4
-1
 ```
 
 ## 8.音频倒放，视频不变
 
 ```
 $ ffmpeg -i in.mp4 -map 0 -c:v copy -af "areverse" out.mp4
-1
 ```
 
 ## 9.音视频同时倒放
 
 ```
 $ ffmpeg -i in.mp4 -vf reverse -af areverse -preset superfast out.mp4
-1
 ```
 
 ## 10.抽取音频
@@ -296,19 +295,17 @@ $ ffmpeg -i in.mp4 -vf reverse -af areverse -preset superfast out.mp4
 ```
 $ ffmpeg -i 3.mp4 -vn -y -acodec copy 3.aac
 $ ffmpeg -i 3.mp4 -vn -y -acodec copy 3.m4a
-12
 ```
 
 ## 11.提取视频或者叫做删除音频
 
 ```
 ffmpeg -i Life.of.Pi.has.subtitles.mkv -vcodec copy –an  videoNoAudioSubtitle.mp4
- ffmpeg -i output.mp4 -c:v copy -an  input-no-audio.mp4
-12
+ffmpeg -i output.mp4 -c:v copy -an  input-no-audio.mp4
 ```
 
 ## 12.为无声的视频添加音频
 
 ```
- ffmpeg -i ../out/4in1.mp4  -i ./3.aac  -vcodec copy -acodec copy output.mp4
+ffmpeg -i ../out/4in1.mp4  -i ./3.aac  -vcodec copy -acodec copy output.mp4
 ```
