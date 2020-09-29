@@ -1,3 +1,7 @@
+[Spring Boot 第三弹，一文带你了解日志如何配置？](https://www.cnblogs.com/Chenjiabing/p/13749073.html)
+
+
+
 ## 1、日志框架
 
 故事：有一个开发人员，开发一个大型系统；
@@ -16,6 +20,14 @@
 >
 > - 写了一个统一的接口层：暂时叫做日志门面（日志的一个抽象层）：fourth.jar
 > - 给项目中导入具体的日志实现就行了，我们之前的日志框架都是实现的抽象层
+
+### 日志级别
+
+几种常见的日志级别由低到高分为：`TRACE < DEBUG < INFO < WARN < ERROR < FATAL`。
+
+如何理解这个日志级别呢？很简单，如果项目中的日志级别设置为`INFO`，那么比它更低级别的日志信息就看不到了，即是`TRACE`、`DEBUG`日志将会不显示。
+
+
 
 ## 2、市面上的日志框架
 
@@ -183,6 +195,22 @@ public abstract class LogFactory {
 
 Spring Boot能自动适配所有的日志，而且底层使用slf4j+logback的方式记录日志，我们唯一需要做的是，引入其他框架的时候，只需要把这个框架依赖的日志框架排除掉。
 
+
+
+Spring Boot中默认的日志级别是`INFO`，启动项目日志打印如下：![img](https://gitee.com/chenjiabing666/Blog-file/raw/master/Spring%20Boot%20%E7%AC%AC%E4%B8%89%E5%BC%B9%EF%BC%8C%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/1.png)
+
+从上图可以看出，输出的日志的默认元素如下：
+
+1. 时间日期：精确到毫秒
+2. 日志级别：ERROR, WARN, INFO, DEBUG , TRACE
+3. 进程ID
+4. 分隔符：— 标识实际日志的开始
+5. 线程名：方括号括起来（可能会截断控制台输出）
+6. Logger名：通常使用源代码的类名
+7. 日志内容
+
+
+
 ## 6、日志使用
 
 ### 6.1 默认配置
@@ -300,6 +328,39 @@ ERROR in ch.qos.logback.core.joran.spi.Interpreter@23:39 -
 </appender>
 ```
 
+
+
+### 6.3 **代码中如何使用日志？**
+
+第一种其实也是很早之前常用的一种方式，只需要在代码添加如下：
+
+```java
+private final Logger logger= LoggerFactory.getLogger(DemoApplicationTests.class);
+```
+
+这种方式显然比较鸡肋，如果每个类中都添加一下岂不是很low。别着急，lombok为我们解决了这个难题。
+
+要想使用lombok，需要添加如下依赖：
+
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+```
+
+使用也是很简单，只需要在类上标注一个注解`@Slf4j`即可，如下：
+
+```java
+@Slf4j
+class DemoApplicationTests {
+  @Test
+  public void test(){
+    log.debug("输出DEBUG日志.......");
+  }
+}
+```
+
 ## 7、切换日志框架
 
 ### 7.1 现在我们想用log4j实现
@@ -393,3 +454,125 @@ IDEA->在`pom.xml`文件中鼠标右键->Diagrams->Show Dependencies->选择要�
   <artifactId>spring-boot-starter-log4j2</artifactId>
 </dependency>
 ```
+
+## 8、logback-spring.xml
+
+Spring Boot官方推荐优先使用带有-spring的文件名作为你的日志配置。因此只需要在`src/resources`文件夹下创建`logback-spring.xml`即可，配置文件内容如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 定义日志存放目录 -->
+    <property name="logPath" value="logs"/>
+    <!--    日志输出的格式-->
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t-%L] %-5level %logger{36} %L %M - %msg%xEx%n"/>
+    <contextName>logback</contextName>
+
+    <!--输出到控制台 ConsoleAppender-->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <!--展示格式 layout-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${PATTERN}</pattern>
+        </layout>
+            <!--过滤器，只有过滤到指定级别的日志信息才会输出，如果level为ERROR，那么控制台只会输出ERROR日志-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>ERROR</level>-->
+<!--        </filter>-->
+    </appender>
+
+    <!--正常的日志文件，输出到文件中-->
+    <appender name="fileDEBUGLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，
+        所以我们使用下面的策略，可以避免输出 Error 的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--过滤 Error-->
+            <level>Error</level>
+            <!--匹配到就禁止-->
+            <onMatch>DENY</onMatch>
+            <!--没有匹配到就允许-->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <File>${logPath}/log_demo.log</File>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${logPath}/log_demo_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--输出ERROR日志到指定的文件中-->
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>Error</level>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+            如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+            的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <File>${logPath}/error.log</File>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${logPath}/error_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--指定最基础的日志输出级别-->
+    <root level="DEBUG">
+        <!--appender将会添加到这个loger-->
+        <appender-ref ref="consoleLog"/>
+        <appender-ref ref="fileDEBUGLog"/>
+        <appender-ref ref="fileErrorLog"/>
+    </root>
+
+    <!--    定义指定package的日志级别-->
+    <logger name="org.springframework" level="DEBUG"></logger>
+    <logger name="org.mybatis" level="DEBUG"></logger>
+    <logger name="java.sql.Connection" level="DEBUG"></logger>
+    <logger name="java.sql.Statement" level="DEBUG"></logger>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"></logger>
+    <logger name="io.lettuce.*" level="INFO"></logger>
+    <logger name="io.netty.*" level="ERROR"></logger>
+    <logger name="com.rabbitmq.*" level="DEBUG"></logger>
+    <logger name="org.springframework.amqp.*" level="DEBUG"></logger>
+    <logger name="org.springframework.scheduling.*" level="DEBUG"></logger>
+    <!--定义com.xxx..xx..xx包下的日志信息不上传，直接输出到fileDEBUGLog和fileErrorLog这个两个appender中，日志级别为DEBUG-->
+    <logger name="com.xxx.xxx.xx"  additivity="false" level="DEBUG">
+        <appender-ref ref="fileDEBUGLog"/>
+        <appender-ref ref="fileErrorLog"/>
+    </logger>
+
+</configuration>
+```
+
+然，如果就不想用Spring Boot推荐的名字，想自己定制也行，只需要在配置文件中指定配置文件名即可，如下：
+
+```
+logging.config=classpath:logging-config.xml
+```
+

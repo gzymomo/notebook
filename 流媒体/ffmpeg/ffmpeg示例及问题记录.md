@@ -348,7 +348,7 @@ Info:
 
 # Java examples
 
-![推拉流](.\img\推拉流.jpg)
+![推拉流](img\推拉流.jpg)
 
 
 
