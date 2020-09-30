@@ -15,3 +15,4 @@ cp /usr/local/nginx/sbin/nginx /usr/local/bin/
 /usr/local/nginx/sbin/nginx -s reload
 # -c 指定nginx的配置文件：
 /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+
