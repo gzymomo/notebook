@@ -27,6 +27,8 @@ lovebetterworld私人读书笔记库，收藏来自各大博文网站，书籍�
 
 ### ffmpeg
 
+
+
 - [CentOS7安装ffmpeg](https://www.cnblogs.com/wangrong1/p/11951856.html)
 
 - [ffmpeg架构]()
@@ -34,6 +36,18 @@ lovebetterworld私人读书笔记库，收藏来自各大博文网站，书籍�
 - [ffmpeg推流rtmp的参数设置](https://blog.csdn.net/impingo/article/details/104163365)
 
 - [FFmpeg Protocols Documentation](https://ffmpeg.org/ffmpeg-protocols.html)
+
+  
+
+  【ffmpeg命令】
+
+- [ffmpeg命令](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/ffmpeg/ffmpeg%E5%91%BD%E4%BB%A4)
+
+  【ffmpeg官方文档详解】
+
+  - [ffmpeg官方文档详解](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/ffmpeg/ffmpeg%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E4%B8%AD%E6%96%87)
+
+  
 
   【架构图】
 
@@ -113,9 +127,21 @@ lovebetterworld私人读书笔记库，收藏来自各大博文网站，书籍�
 
 ### flv
 
-- [使用flv.js快速搭建html5网页直播](https://blog.csdn.net/impingo/article/details/103077380)
-- [**Flv.js** B 站 HTML5 播放器内核](https://www.oschina.net/p/flv-js)
-- [Flv文档使用随记]()
+- [Flv.js全面解析](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/flv)
+- [Flv文档使用随记](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/flv)
+- [FLV文件格式](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/flv)
+- [Flv.js源码-IO部分](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/flv)
+- [Flv.js源码-flv-demuxer.js](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/flv)
+
+### MSE
+
+- [Media Source Extensions](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/MSE)
+
+### WebRTC
+
+- [WebRTC](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/WebRTC)
+- [WebRTC直播](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/WebRTC)
+- [关于视频会议系统（WebRTC）的反思](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/WebRTC)
 
 ### hls
 
@@ -143,24 +169,47 @@ lovebetterworld私人读书笔记库，收藏来自各大博文网站，书籍�
 ### video
 
 - [video标签在不同平台上的事件表现差异分析](https://segmentfault.com/a/1190000023519979)
-- [Video介绍]
-
-### WebRTC
-
-- [关于视频会议系统（WebRTC）的反思](https://blog.csdn.net/impingo/article/details/103248516)
 
 
+
+### nginx-rtmp-module
+
+- [Nginx-rtmp 直播媒体实时流实现](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/nginx-rtmp-module)
+- [nginx搭建RTMP视频点播、直播、HLS服务器](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/nginx-rtmp-module)
+- [rtmp-nginx-module实现直播状态、观看人数控制](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/nginx-rtmp-module)
+- [实现nginx-rtmp-module多频道输入输出与权限控制](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/nginx-rtmp-module)
+- [直播流媒体入门(RTMP篇)](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/nginx-rtmp-module)
+
+
+
+### nginx-http-flv-module
+
+- [nginx-http-flv-module](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/nginx-http-flv-module)
+
+
+
+个人总结的思维导图：
+
+- [流媒体](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE)
+- [流媒体，flv.js，MSE](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE)
 
 其他博文：
 
-- [花椒web端实时互动流媒体播放器]
+- [Nginx-rtmp rtmp、http-flv、http-ts、hls、hls+ 配置说明](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93)
+
 - [知乎：chapin：基于 H5 的直播协议和视频监控方案](https://zhuanlan.zhihu.com/p/100519553?utm_source=wechat_timeline)
+
 - [前端 Video 播放器 | 多图预警](https://juejin.im/post/5f0e52fe518825742109d9ee)
+
 - [分布式直播系统（三）【Nginx-rtmp rtmp、http-flv、http-ts、hls、hls+ 配置说明】](https://blog.csdn.net/impingo/article/details/99703528)
-- [流媒体相关介绍]
-- 
 
+- [流媒体相关介绍](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93)
 
+- [在HTML5上开发音视频应用的五种思路](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93)
+
+- [流媒体资源](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93)
+
+  
 
 ## 代码审查
 
