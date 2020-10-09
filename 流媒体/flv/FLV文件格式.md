@@ -1,9 +1,4 @@
-参考
-[FLV文件格式详解](http://blog.useasp.net/archive/2016/02/28/The-flv-video-file-format-specification-version-10-1.aspx)
-[flv格式详解+实例剖析](https://www.jianshu.com/p/7ffaec7b3be6)
-[FLV 实例分析](https://blog.csdn.net/y_z_hyangmo/article/details/79219996)
 
-简书：作者：合肥懒皮：[H5直播系列八 FLV文件格式](https://www.jianshu.com/p/1df4bc217dbd)
 
 
 
