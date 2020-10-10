@@ -195,7 +195,6 @@ Open Broadcaster Software（简称OBS）是一款直播流媒体内容制作软�
 
 ```bash
 git clone https://github.com/im-pingo/h5player.git
-1
 ```
 
 将h5player复制到你的网站目录，h5player/flv目录下有个index.html文件，这里是js播放器接口的调用示例，你可以直接利用这个页面演示。

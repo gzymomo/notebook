@@ -161,7 +161,7 @@ include ld.so.conf.d/*.conf``/usr/local/ffmpeg/lib/
 在最后PATH添加环境变量：
 
 ```bash
-#set ffmpeg environment``PATH=$PATH:/usr/local/ffmpeg/bin``export PATH
+#set ffmpeg environment PATH=$PATH:/usr/local/ffmpeg/bin export PATH
 source /etc/profile #使配置生效
 ```
 
@@ -174,3 +174,39 @@ ffmpeg -version
 ![img](https://img2018.cnblogs.com/blog/1486162/201907/1486162-20190710113208809-336235091.png)
 
 至此安装成功
+
+## 三、错误记录
+
+#### 3.1 [解决ffmpeg执行报错“ffmpeg: error while loading shared libraries: libavdevice.so.58: cannot open shared ...](https://my.oschina.net/u/4257767/blog/3325852)
+
+找下这些文件在哪里
+
+```bash
+find /usr -name 'libavdevice.so.58'
+```
+
+应该都在这个目录
+
+```bash
+/usr/local/lib/
+```
+
+![img](https://oscimg.oschina.net/oscnet/2946817047649a128cca0cd2b4dcff58240.png)
+
+ 我们export出来：
+
+```bash
+export LD_LIBRARY_PATH=/usr/local/lib/
+```
+
+然后再尝试执行
+
+```bash
+/usr/local/bin/ffmpeg
+```
+
+![img](https://oscimg.oschina.net/oscnet/5b66da0984d1005e7ac5c2aa8b8014f8a28.png)
+
+ 
+
+ 问题解决
