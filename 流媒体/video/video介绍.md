@@ -52,6 +52,3 @@ play () {
   this.videoDOM.play()
 }
 ```
-
-
-
