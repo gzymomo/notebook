@@ -8,7 +8,7 @@ Docker Swarm 是生产环境中运行 Docker 应用程序最简单的方法。�
 
 　　Docker Swarm 和 Docker Compose 一样，都是 Docker 官方容器编排工具，但不同的是，**Docker Compose** 是一个在**单个服务器或主机上创建多个容器的工具**，而 **Docker Swarm** 则可以在**多个服务器或主机上创建容器集群服务**，对于微服务的部署，显然 Docker Swarm 会更加适合。
 
-　Swarm deamon只是一个调度器(Scheduler)加路由器(router),Swarm自己不运行容器，它只是接受Docker客户端发来的请求，调度适合的节点来运行容器，这就意味着，即使Swarm由于某些原因挂掉了，集群中的节点也会照常运行，放Swarm重新恢复运行之后，他会收集重建集群信息。
+　Swarm deamon只是一个调度器(Scheduler)加路由器(router)，Swarm自己不运行容器，它只是接受Docker客户端发来的请求，调度适合的节点来运行容器，这就意味着，即使Swarm由于某些原因挂掉了，集群中的节点也会照常运行，Swarm重新恢复运行之后，他会收集重建集群信息。
 
 # Swarm核心概念
 
@@ -25,11 +25,23 @@ Swarm 集群由 **Manager 节点**（管理者角色，管理成员和委托任�
 - **Manager**：负责整个集群的管理工作包括集群配置、服务管理、容器编排等所有跟集群有关的工作，它会选举出一个 leader 来指挥编排任务；
 - **Worker**：工作节点接收和执行从管理节点分派的任务（Tasks）运行在相应的服务（Services）上。
 
+
+
+Node就是计算机节点，也可以认为是一个Docker节点。 Node分为两类：Manager和Worker。 一个Swarm至少要有一个Manager，部分管理命令只有在Manager上才能使用。 两类Node都可以运行Service，但只有Manager上才能执行运行命令。 比如，在Manager才能使用`docker node`命令可以查看、配置、删除Node。
+
 [![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c0487cef51d49199afcddab69bf9474~tplv-k3u1fbpfcp-zoom-1.image)](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5c0487cef51d49199afcddab69bf9474~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## Service and tasks
 
-　**服务**（Service）是一个抽象的概念，是对要在管理节点或工作节点上执行的**任务的定义**。它是集群系统的中心结构，是用户与集群交互的主要根源。Swarm 创建服务时，可以为服务定义以下信息：
+Stack是一组Service，和[docker-compose](https://docs.docker.com/compose/reference/overview/)类似。 默认情况下，一个Stack共用一个Network，相互可访问，与其它Stack网络隔绝。 这个概念只是为了编排的方便。 `docker stack`命令可以方便地操作一个Stack，而不用一个一个地操作Service。
+
+Service是一类容器。 对用户来说，Service就是与Swarm交互的最核心内容。 Service有两种运行模式，一是`replicated`，指定一个Service运行容器的数量； 二是`global`，在所有符合运行条件的Node上，都运行一个这类容器。 `docker service`命令可以操作Swarm中的Service。
+
+Task就是指运行一个容器的任务，是Swarm执行命令的最小单元。 要成功运行一个Service，需要执行一个或多个Task（取决于一个Service的容器数量），确保每一个容器都顺利启动。 通常用户操作的是Service，而非Task。　
+
+
+
+**服务**（Service）是一个抽象的概念，是对要在管理节点或工作节点上执行的**任务的定义**。它是集群系统的中心结构，是用户与集群交互的主要根源。Swarm 创建服务时，可以为服务定义以下信息：
 
 - 服务名称；
 - 使用哪个镜像来创建容器；
@@ -40,6 +52,10 @@ Swarm 集群由 **Manager 节点**（管理者角色，管理成员和委托任�
 [![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58f3a6cf250a4eb8bb4d502fcf852632~tplv-k3u1fbpfcp-zoom-1.image)](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58f3a6cf250a4eb8bb4d502fcf852632~tplv-k3u1fbpfcp-zoom-1.image)
 
 　　**任务**（Task）包括**一个 Docker 容器**和**在容器中运行的命令**。任务是一个集群的最小单元，任务与容器是一对一的关系。管理节点根据服务规模中设置的副本数量将任务分配给工作节点。一旦任务被分配到一个节点，便无法移动到另一个节点。它只能在分配的节点上运行或失败。
+
+
+
+
 
 ## Replicated and global services
 
