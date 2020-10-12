@@ -2,6 +2,43 @@
 
 
 
+常用命令：
+
+```bash
+# 创建服务
+docker service create \ 
+  --image nginx \
+  --replicas 2 \
+  nginx
+ 
+# 更新服务
+docker service update \ 
+  --image nginx:alpine \
+  nginx
+ 
+# 删除服务
+docker service rm nginx
+ 
+# 减少服务实例(这比直接删除服务要好)
+docker service scale nginx=0
+ 
+# 增加服务实例
+docker service scale nginx=5
+ 
+# 查看所有服务
+docker service ls
+ 
+# 查看服务的容器状态
+docker service ps nginx
+ 
+# 查看服务的详细信息。
+docker service inspect nginx
+```
+
+
+
+
+
 ## 一、docker-machine
 
 | 命令                   | 说明                                        |
