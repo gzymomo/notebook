@@ -8,7 +8,7 @@
 
 [html](http://www.fly63.com/tag/html)
 
-```
+```html
 <div id="player1" class="dplayer"></div>
 <!-- ... -->
 <script src="dist/DPlayer.min.js"></script>
@@ -16,7 +16,7 @@
 
 ### 选项
 
-```
+```javascript
 var dp = new DPlayer({
     element: document.getElementById('player1'),                       // 可选，player元素
     autoplay: false,                                                   // 可选，自动播放视频，不支持移动浏览器
@@ -60,7 +60,7 @@ ended: DPlayer 结束时触发 error: 发生错误时触发
 
 它需要 hls.[js](http://www.fly63.com/tag/js) 库，并且应该在 DPlayer.min.[js](http://www.fly63.com/tag/js) 之前加载。实时弹幕尚不支持。
 
-```
+```html
 <div id="player1" class="dplayer"></div>
 <!-- ... -->
 <script src="plugin/hls.min.js"></script>
@@ -81,7 +81,7 @@ url: 'xxx.m3u8'
 
 它需要 flv.[js](http://www.fly63.com/tag/js) 库，并且应该在 DPlayer.min.[js](http://www.fly63.com/tag/js) 之前加载。
 
-```
+```html
 <div id="player1" class="dplayer"></div>
 <!-- ... -->
 <script src="plugin/flv.min.js"></script>
@@ -100,7 +100,8 @@ url: 'xxx.flv'
 
 ### 使用bundler模块
 
-```
+```html
 var DPlayer = require('DPlayer'); 
 var dp = new DPlayer(option);
 ```
+
