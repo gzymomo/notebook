@@ -4,6 +4,18 @@
 
 # 一、Swarm的几个关键概念
 
+**集群管理:** docker swarm 子命令有 init, join, leave, update （docker swarm --help查看帮助）
+
+**节点管理:** docker node子 命令有 accept, promote, demote, inspect, update, tasks, ls, rm （docker node --help查看帮助）
+
+**配置管理:** docker config 子命令有 create, inspect, ls, rm （docker config--help查看帮助）
+
+**服务管理:** docker service 子命令有 create, inspect, update, remove, tasks, ls, rm, ps （docker service--help查看帮助）
+
+**堆栈管理:** docker stack 子命令有 deploy, services, ps, rm （docker stack--help查看帮助）
+
+
+
 ## 1.1 Swarm
 
 集群的管理和编排是使用嵌入docker引擎的SwarmKit，可以在docker初始化时启动swarm模式或者加入已存在的swarm。

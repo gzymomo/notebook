@@ -61,14 +61,12 @@
         </plugin>
     </plugins>
 </build>
-复制代码
 ```
 
 - 我们构建镜像之前需要先将项目打包，然后再构建，否则会出错，直接使用如下命令即可；
 
 ```bash
 mvn package docker:build
-复制代码
 ```
 
 - 打包完成后就可以在我们的服务器上看到这个镜像了；
@@ -77,7 +75,6 @@ mvn package docker:build
 [root@linux-local mydata]# docker images
 REPOSITORY                                     TAG                 IMAGE ID            CREATED             SIZE
 192.168.3.101:5000/mall-tiny/mall-tiny-fabric   0.0.1-SNAPSHOT      6b8bc6faeb0b        9 seconds ago       680MB
-复制代码
 ```
 
 - 当然我们也可以设置使用`package`命令时直接打包镜像，修改`pom.xml`，在`<plugin>`节点下添加`<executions>`配置即可；
@@ -98,7 +95,6 @@ REPOSITORY                                     TAG                 IMAGE ID     
         </execution>
     </executions>
 </plugin>
-复制代码
 ```
 
 - 使用不同的Maven插件构建Docker镜像时方法往往不同，这时候直接使用`Dockerfile`来构建会比较好，我们先写好Dockerfile文件并放到项目根目录下；
@@ -114,7 +110,6 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar","/mall-tiny-fabric-0.0.1-SNAPSHOT.jar"]
 # 指定维护者的名字
 MAINTAINER macrozheng
-复制代码
 ```
 
 - 然后修改`pom.xml`文件，将`<build>`节点配置替换为如下内容，仅需配置Dockerfile所在目录即可。
@@ -123,7 +118,6 @@ MAINTAINER macrozheng
 <build>
      <dockerFileDir>${project.basedir}</dockerFileDir>
 </build>
-复制代码
 ```
 
 ### 推送到镜像仓库
@@ -153,7 +147,6 @@ docker run -p 8080:8080 --name mall-tiny-fabric \
 -v /etc/localtime:/etc/localtime \
 -v /mydata/app/mall-tiny-fabric/logs:/var/logs \
 -d 192.168.3.101:5000/mall-tiny/mall-tiny-fabric:0.0.1-SNAPSHOT
-复制代码
 ```
 
 - 现在我们只需在插件中配置即可，在`<image>`节点下添加`<run>`节点可以定义容器启动的行为：
@@ -179,7 +172,6 @@ docker run -p 8080:8080 --name mall-tiny-fabric \
         </bind>
     </volumes>
 </run>
-复制代码
 ```
 
 - 之后直接使用`docker:start`命令即可启动了；
@@ -190,14 +182,12 @@ mvn docker:start
 [root@linux-local mydata]# docker ps
 CONTAINER ID        IMAGE                                                         COMMAND                  CREATED             STATUS              PORTS                                            NAMES
 95ce77c0394b        192.168.3.101:5000/mall-tiny/mall-tiny-fabric:0.0.1-SNAPSHOT   "java -jar /mall-tin…"   32 seconds ago      Up 31 seconds       0.0.0.0:8080->8080/tcp                           mall-tiny-fabric
-复制代码
 ```
 
 - 停止容器使用`docker:stop`命令即可；
 
 ```bash
 mvn docker:stop
-复制代码
 ```
 
 - 删除容器使用`docker:remove`命令，是不是很方便！
