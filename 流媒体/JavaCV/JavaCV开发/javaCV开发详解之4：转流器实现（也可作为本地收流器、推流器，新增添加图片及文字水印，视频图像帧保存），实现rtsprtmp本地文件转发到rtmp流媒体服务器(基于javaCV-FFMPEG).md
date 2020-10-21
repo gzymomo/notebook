@@ -127,7 +127,7 @@ public static void main(String[] args) throws FrameRecorder.Exception, FrameGrab
      *
      * @param inputFile
      * @param outputFile
-     * @param convert    是否转吗
+     * @param convert    是否转码
      * @throws Exception
      * @throws org.bytedeco.javacv.FrameRecorder.Exception
      * @throws InterruptedException

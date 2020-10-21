@@ -37,7 +37,7 @@ maven和gradle方式如果想要减小依赖包大小，则需要手动进行排
 <dependency>
     <groupId>org.bytedeco</groupId>
     <artifactId>javacv-platform</artifactId>
-    <version>1.4.4</version>
+    <version>1.5.3</version>
 </dependency>
 ```
 
