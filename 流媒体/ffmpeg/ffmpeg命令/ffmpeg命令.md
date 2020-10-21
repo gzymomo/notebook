@@ -8,6 +8,10 @@ ffmpeg -re  -rtsp_transport tcp -i rtsp:///////  -vcodec copy  -f flv  rtmp://19
 
 
 
+
+
+
+
 # 压缩视频
 
 ```bash
