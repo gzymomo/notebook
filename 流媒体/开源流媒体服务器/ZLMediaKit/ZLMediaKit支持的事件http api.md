@@ -2,6 +2,8 @@
 
 
 
+# ZLMediaKit支持的Http API
+
 ZLMediaKit可以把内部的一些事件通过调用第三方http服务器api的方式通知出去，以下是相关的默认配置：
 
 
@@ -82,3 +84,82 @@ on_stream_not_found=https://127.0.0.1/index/hook/on_stream_not_found
 - **on_stream_not_found**：
 
   流未找到事件，用户可以在此事件触发时，立即去拉流，这样可以实现按需拉流。
+
+# API预览
+
+## API预览
+
+MediaServer是ZLMediaKit的主进程，目前支持以下http api接口，这些接口全部支持GET/POST方式，
+
+```
+      "/index/api/addFFmpegSource",
+      "/index/api/addStreamProxy",
+      "/index/api/close_stream",
+      "/index/api/close_streams",
+      "/index/api/delFFmpegSource",
+      "/index/api/delStreamProxy",
+      "/index/api/getAllSession",
+      "/index/api/getApiList",
+      "/index/api/getMediaList",
+      "/index/api/getServerConfig",
+      "/index/api/getThreadsLoad",
+      "/index/api/getWorkThreadsLoad",
+      "/index/api/kick_session",
+      "/index/api/kick_sessions",
+      "/index/api/restartServer",
+      "/index/api/setServerConfig",
+      "/index/api/isMediaOnline",
+      "/index/api/getMediaInfo",
+      "/index/api/getRtpInfo",
+      "/index/api/getMp4RecordFile",
+      "/index/api/startRecord",
+      "/index/api/stopRecord",
+      "/index/api/getRecordStatus",
+      "/index/api/getSnap",
+      "/index/api/openRtpServer",
+      "/index/api/closeRtpServer",
+      "/index/api/listRtpServer",
+      "/index/api/startSendRtp",
+      "/index/api/stopSendRtp"
+```
+
+其中POST方式，参数既可以使用urlencoded方式也可以使用json方式。 操作这些api一般需要提供secret参数以便鉴权，如果操作ip是127.0.0.1，那么可以无需鉴权。
+
+## API返回结果约定
+
+- HTTP层面统一返回200状态码，body统一为json。
+- body一般为以下样式：
+
+```
+{
+    "code" : -1,
+    "msg" : "失败提示"
+}
+```
+
+- code值代表执行结果，目前包含以下类型：
+
+```
+typedef enum {
+    Exception = -400,//代码抛异常
+    InvalidArgs = -300,//参数不合法
+    SqlFailed = -200,//sql执行失败
+    AuthFailed = -100,//鉴权失败
+    OtherFailed = -1,//业务代码执行失败，
+    Success = 0//执行成功
+} ApiErr;
+```
+
+- 如果执行成功，那么`code == 0`,并且一般无`msg`字段。
+- `code == -1`时代表业务代码执行不成功，更细的原因一般提供`result`字段，例如以下：
+
+```
+{
+    "code" : -1, # 代表业务代码执行失败
+    "msg" : "can not find the stream", # 失败提示
+    "result" : -2 # 业务代码执行失败具体原因
+}
+```
+
+- 开发者一般只要关注`code`字段和`msg`字段，如果`code != 0`时，打印显示`msg`字段即可。
+- `code == 0`时代表完全成功，如果有数据返回，一般提供`data`字段返回数据。
