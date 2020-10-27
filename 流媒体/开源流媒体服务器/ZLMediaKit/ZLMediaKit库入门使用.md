@@ -13,3 +13,10 @@ ZLMediaKit 是一个基于C++11的高性能运营级流媒体服务框架
 - 全面支持H265/H264/AAC/G711/OPUS。
 
 其功能非常多，支持RTSP、RTMP[S]、HLS、GB28181等多种流媒体格式。
+
+# 二、Docker方式启动
+
+```bash
+docker run --name zlmediakit -id -p 1935:1935 -p 8080:80 -p 8554:554 -p 10000:10000 -p 10000:10000/udp panjjo/zlmediakit
+```
+

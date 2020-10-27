@@ -43,7 +43,6 @@ docker run --name emq -p 18083:18083 -p 1883:1883 -p 8084:8084 -p 8883:8883 -p 8
 ```bash
 # 进入容器, 不能用 /bin/bash 进入
 docker exec -it emq /bin/sh
-12
 ```
 
 - 1.首先先关闭匿名认证(默认是开启的谁都能够登录)
@@ -53,7 +52,6 @@ docker exec -it emq /bin/sh
 vi /opt/emqttd/etc/emq.conf
 # 更改允许匿名 True -> false
 allow_anonymous = false
-1234
 ```
 
 - 2.建立用户和权限的 mysql 表, 可以拉一个 mysql 容器, 也可以直接在你的 ubuntu 里的 mysql 中创建
@@ -84,7 +82,6 @@ access int(2) NOT NULL COMMENT '1: subscribe, 2: publish, 3: pubsub',
 topic varchar(100) NOT NULL DEFAULT '' COMMENT 'Topic Filter', 
 PRIMARY KEY (id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-12345678910111213141516171819202122232425
 ```
 
 - 3.插入ACL规则 - [ACL规则](https://blog.csdn.net/weixin_43676025/article/details/108401225#ACL规则)
@@ -99,7 +96,6 @@ INSERT INTO `mqtt_acl` (`id`, `allow`, `ipaddr`, `username`, `clientid`, `access
 (5,1,'127.0.0.1',NULL,NULL,2,'$SYS/#'),
 (6,1,'127.0.0.1',NULL,NULL,2,'#'),
 (7,1,NULL,'dashboard',NULL,1,'$SYS/#');
-1234567
 ```
 
 - 4.插入用户, 由此开始订阅与发布的 Client 都必须通过用户验证（sha256值请自行转换）
@@ -110,7 +106,6 @@ insert into mqtt_user (`username`, `password`) values ('admin', '03ac674216f3e15
 update mqtt_user set is_superuser=1 where id= 超级管理员ID ;
 
 ps:注意 auth.mysql.password_hash(默认为sha256) 为sha256的话，新增用户时需要手动传递加密后的值，plain的话则无需加密，明码存放
-12345
 ```
 
 - 5.修改emq的mysql配置文件
@@ -121,7 +116,6 @@ auth.mysql.server = 你的mysql-IP:3306
 auth.mysql.username = root 
 auth.mysql.password = xxxxxxxx 
 auth.mysql.database = emq
-12345
 ```
 
 - 6.重启emq
@@ -130,7 +124,6 @@ auth.mysql.database = emq
 /opt/emqttd/bin/ emqx stop
 /opt/emqttd/bin/ emqx start
 /opt/emqttd/bin/emqttd_ctl plugins load emq_auth_mysql   #开启mysql认证插件
-123
 ```
 
 ------
@@ -162,7 +155,6 @@ INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (
 
 -- 允许客户端订阅包含自身 Client ID 的 /smarthome/${clientid}/temperature 主题
 INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (1, NULL, NULL, NULL, 1, '/smarthome/%c/temperature');
-1234567891011
 ```
 
 ------
