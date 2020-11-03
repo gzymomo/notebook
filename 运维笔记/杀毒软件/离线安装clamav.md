@@ -17,7 +17,6 @@ wget http://www.clamav.net/downloads/production/clamav-0.101.2.tar.gz
 
 ```shell
 tar -zxvf clamav-0.101.2.tar.gz
-1
 ```
 
 # 三、安装
@@ -32,10 +31,7 @@ cd clamav-0.101.2
 
 ./configure --prefix=/usr/local/clamav
 
-make
-
-make install
-1234567
+make && make install
 ```
 
 ## 2.添加用户组和组成员
@@ -43,7 +39,6 @@ make install
 ```shell
 groupadd clamav
 useradd -g clamav clamav
-12
 ```
 
 # 四、配置
@@ -53,7 +48,6 @@ useradd -g clamav clamav
 ```shell
 mkdir -p /usr/local/clamav/logs
 mkdir -p /usr/local/clamav/updata
-12
 ```
 
 ## 2. 创建日志文件
@@ -61,7 +55,6 @@ mkdir -p /usr/local/clamav/updata
 ```shell
 touch /usr/local/clamav/logs/clamd.log
 touch /usr/local/clamav/logs/freshclam.log
-12
 ```
 
 ## 3. 文件授权
@@ -72,7 +65,6 @@ touch /usr/local/clamav/logs/freshclam.log
 chown clamav:clamav /usr/local/clamav/logs/clamd.log
 chown clamav:clamav /usr/local/clamav/logs/freshclam.log
 chown clamav:clamav /usr/local/clamav/updata
-123
 ```
 
 ## 4. 修改配置文件
@@ -80,7 +72,6 @@ chown clamav:clamav /usr/local/clamav/updata
 ```shell
 cp  /usr/local/clamav/etc/clamd.conf.sample /usr/local/clamav/etc/clamd.conf
 cp /usr/local/clamav/etc/freshclam.conf.sample /usr/local/clamav/etc/freshclam.conf
-12
 ```
 
 编辑这两个配置文件内容
@@ -90,26 +81,24 @@ cp /usr/local/clamav/etc/freshclam.conf.sample /usr/local/clamav/etc/freshclam.c
 
 ```shell
 vim /usr/local/clamav/etc/clamd.conf
-1
+
 #Example　　//注释掉这一行
 #添加以下内容
 LogFile /usr/local/clamav/logs/clamd.log
 PidFile /usr/local/clamav/updata/clamd.pid
 DatabaseDirectory /usr/local/clamav/updata
-12345
 ```
 
 文件2：freshclam.conf
 
 ```shell
 vim /usr/local/clamav/etc/freshclam.conf
-1
+
 #Example　　//注释掉这一行
 #添加以下内容
 DatabaseDirectory /usr/local/clamav/updata
 UpdateLogFile /usr/local/clamav/logs/freshclam.log
 PidFile /usr/local/clamav/updata/freshclam.pid
-12345
 ```
 
 # 五、执行
@@ -123,7 +112,6 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 
 ```shell
 /usr/local/clamav/bin/freshclam
-1
 ```
 
 ## 2.扫描
@@ -133,7 +121,7 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 -r 递归扫描子目录
 -i 只显示发现的病毒文件
 –no-summary 不显示统计信息
-1234
+
 用法：
 --帮助
 /usr/local/clamav/bin/clamscan --help     
@@ -152,7 +140,7 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 
 --扫描data目录下的所有目录和文件，不显示统计信息  
 /usr/local/clamav/bin/clamscan --no-summary -ri /data 
-123456789101112131415161718
+
 ```
 
 ## 3.杀毒
@@ -165,7 +153,6 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 /usr/local/clamav/bin/clamscan -r --bell -i #扫描过程中发现病毒发出警报声
 /usr/local/clamav/bin/clamscan -r --move [路径] #扫描并将发现的病毒文件移动至对应的路径下
 /usr/local/clamav/bin/clamscan -r --infected -i #扫描显示发现的病毒文件，一般文件后面会显示FOUND
-1234
 ```
 
 使用第一条命令的时候要特别注意，如果病毒感染力系统的核心区域，该命令直接会删除系统核心文件，严重者会导致系统崩溃，所以要慎重，最好是先确认好病毒的位置后，再执行删除命令。
@@ -177,7 +164,6 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 ```shell
 1  3  * * *          /usr/local/clamav/bin/freshclam --quiet
 20 3  * * *          /usr/local/clamav/bin/clamscan  -r /home  --remove -l /var/log/cla
-12
 ```
 
 ## 5. 案例
@@ -186,7 +172,6 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 
 ```shell
 /usr/local/clamav/bin/clamscan -r
-1
 ```
 
 结果如下：
@@ -203,7 +188,6 @@ Data scanned: 4717.23 MB                 #数据扫描：4717.23兆字节
 Data read: 9475.00 MB (ratio 0.50:1)     #数据读取：9475MB（比0.50∶1）
 Time: 1939.667 sec (32 m 19 s)           #时间：1939.667秒（32分19秒）
 --------------------- 
-1234567891011
 ```
 
 # 六、小结
@@ -215,14 +199,12 @@ Time: 1939.667 sec (32 m 19 s)           #时间：1939.667秒（32分19秒）
 
 ```shell
 /usr/local/clamav/bin/freshclam
-1
 ```
 
 ③打开对应位置，将病毒库传输到本地；
 
 ```shell
 cd /usr/local/clamav/update/
-1
 ```
 
 ④将病毒库上传到离线环境中，放置到对应的文件夹底下；
@@ -243,9 +225,7 @@ yum -y install gcc-c++
 ```shell
 ./configure
 
-make
-
-make install
+make && make install
 ```
 
 可以本地制作一个yum源，使用yum解决依赖关系吧！时间充足的话，可以慢慢琢磨。
