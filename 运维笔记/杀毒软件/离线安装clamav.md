@@ -140,7 +140,6 @@ PidFile /usr/local/clamav/updata/freshclam.pid
 
 --扫描data目录下的所有目录和文件，不显示统计信息  
 /usr/local/clamav/bin/clamscan --no-summary -ri /data 
-
 ```
 
 ## 3.杀毒

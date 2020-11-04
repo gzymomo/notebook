@@ -16,7 +16,7 @@ CentOS: 7.x
 
 ### 下载
 
-```
+```bash
 下载地址 ：http://www.clamav.net/downloads，使用目前最新版本为：clamav-0.101.3
 使用 wget 下载
 wget https://clamav-site.s3.amazonaws.com/production/release_files/files/000/000/484/original/clamav-0.101.3.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIY6OSGQFGUNJQ7GQ%2F20190812%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190812T053848Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=965dd9d950d9337bf792a5af2b0fb009dd08fc2533f2b262504a778739439b64
@@ -27,28 +27,28 @@ wget https://clamav-site.s3.amazonaws.com/production/release_files/files/000/000
 1. 解压
 
 ```
-    tar -zxvf clamav-0.101.3.tar.gz
+tar -zxvf clamav-0.101.3.tar.gz
 ```
 
 1. 安装依赖
 
 ```
-    yum install gcc gcc-c++ openssl openssl-devel  -y
+yum install gcc gcc-c++ openssl openssl-devel  -y
 ```
 
 1. 编译安装
 
 ```
-    cd clamav-0.101.3
-    ./configure --prefix=/usr/local/clamav
-    make && make install
+cd clamav-0.101.3
+./configure --prefix=/usr/local/clamav
+make && make install
 ```
 
 1. 添加用户
 
 ```
-    groupadd clamav
-    useradd -g clamav clamav
+groupadd clamav
+useradd -g clamav clamav
 ```
 
 ### 配置
@@ -56,24 +56,24 @@ wget https://clamav-site.s3.amazonaws.com/production/release_files/files/000/000
 1. 创建日志目录和病毒库目录
 
 ```
-    mkdir /usr/local/clamav/logs
-    mkdir /usr/local/clamav/updata
+mkdir /usr/local/clamav/logs
+mkdir /usr/local/clamav/updata
 ```
 
 1. 创建日志文件
 
 ```
-    touch /usr/local/clamav/logs/clamd.log
-    touch /usr/local/clamav/logs/freshclam.log
+touch /usr/local/clamav/logs/clamd.log
+touch /usr/local/clamav/logs/freshclam.log
 ```
 
 1. 文件授权
 
 ```
-    chown clamav:clamav /usr/local/clamav/logs/clamd.log
-    chown clamav:clamav /usr/local/clamav/logs/freshclam.log
-    chown clamav:clamav /usr/local/clamav/updata
-    chown -R clamav.clamav /usr/local/clamav/
+chown clamav:clamav /usr/local/clamav/logs/clamd.log
+chown clamav:clamav /usr/local/clamav/logs/freshclam.log
+chown clamav:clamav /usr/local/clamav/updata
+chown -R clamav.clamav /usr/local/clamav/
 ```
 
 1. 修改配置文件
@@ -106,20 +106,20 @@ wget https://clamav-site.s3.amazonaws.com/production/release_files/files/000/000
 1. 更新病毒库
 
 ```
-    /usr/local/clamav/bin/freshclam
+/usr/local/clamav/bin/freshclam
 ```
 
 1. 启动
 
-```
-    # 启动
-    systemctl start clamav-freshclam.service    
+```bash
+# 启动
+systemctl start clamav-freshclam.service    
     
-    # 开机启动
-    systemctl enable clamav-freshclam.service 
+# 开机启动
+systemctl enable clamav-freshclam.service 
     
-    # 查看状态
-    systemctl status clamav-freshclam.service
+# 查看状态
+systemctl status clamav-freshclam.service
 ```
 
 1. 扫描杀毒

@@ -38,7 +38,7 @@ Spug面向中小型企业设计的轻量级无 Agent 的自动化运维平台，
 
 **1. 安装docker并启动**
 
-```
+```bash
 yum install docker -y
 systemctl start docker
 ```
@@ -47,7 +47,7 @@ systemctl start docker
 
 阿里云的镜像与 Docker hub 同步更新，国内用户建议使用阿里云的镜像。
 
-```
+```bash
 $ docker pull registry.aliyuncs.com/openspug/spug
 ```
 
@@ -55,7 +55,7 @@ $ docker pull registry.aliyuncs.com/openspug/spug
 
 Docker镜像内部使用的 Mysql 数据库。如果需要持久化存储代码和数据，可以添加：-v 映射容器内/data路径
 
-```
+```bash
 $ docker run -d --name=spug -p 80:80 registry.aliyuncs.com/openspug/spug
 
 # 持久化存储启动命令：
@@ -67,7 +67,7 @@ $ docker run -d --name=spug -p 80:80 -v /mydata/:/data registry.aliyuncs.com/ope
 
 以下操作会创建一个用户名为 admin 密码为 spug.dev 的管理员账户，可自行替换管理员账户。
 
-```
+```bash
 $ docker exec spug init_spug admin spug.dev
 
 # 执行完毕后需要重启容器
@@ -188,7 +188,7 @@ $ docker restart spug
 
 创建账户使用 manage.py user add 命令，用法示例如下
 
-```
+```bash
 $ cd spug/spug_api
 $ source venv/bin/activate
 $ python manage.py user add -u admin -p 123 -n 民工哥 -s
@@ -196,7 +196,7 @@ $ python manage.py user add -u admin -p 123 -n 民工哥 -s
 
 Docker 安装的可以执行如下命令
 
-```
+```bash
 $ docker exec spug python3 /data/spug/spug_api/manage.py user add -u admin -p 123 -n 民工哥 -s
 #上面的命令会创建个登录名为 admin 密码为 123 昵称为 民工哥 的管理员账户，注意最后的 -s 参数，如果携带了这个参数意味着该账户为管理员账户， 管理员账户可以不受任何限制的访问所有功能模块。
 ```
@@ -205,7 +205,7 @@ $ docker exec spug python3 /data/spug/spug_api/manage.py user add -u admin -p 12
 
 使用 manage.py user reset 命令来重置账户密码，用法示例如下
 
-```
+```bash
 $ cd spug/spug_api
 $ source venv/bin/activate
 $ python manage.py user reset -u admin -p abc
@@ -213,7 +213,7 @@ $ python manage.py user reset -u admin -p abc
 
 Docker 安装的可以执行如下命令
 
-```
+```bash
 $ docker exec spug python3 /data/spug/spug_api/manage.py user reset -u admin -p abc
 #上述操作会重置登录名为 admin 的账户的密码为 abc。
 ```
@@ -222,7 +222,7 @@ $ docker exec spug python3 /data/spug/spug_api/manage.py user reset -u admin -p 
 
 当页面上登录连续错误数次超过3次后账户自动转为禁用状态，普通用户可以通过 系统管理 / 账户管理 在页面是启用账户即可，但管理员账户需要使用如下命令来启用
 
-```
+```bash
 $ cd spug/spug_api
 $ source venv/bin/activate
 $ python manage.py user enable -u admin
@@ -230,7 +230,7 @@ $ python manage.py user enable -u admin
 
 Docker 安装的可以执行如下命令
 
-```
+```bash
 $ docker exec spug python3 /data/spug/spug_api/manage.py user enable -u admin
 ```
 
