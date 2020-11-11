@@ -1,3 +1,7 @@
+[SpringBoot的外部化配置最全解析!](https://www.cnblogs.com/summerday152/p/13954046.html)
+
+
+
 [TOC]
 
 # 1、位置问题
