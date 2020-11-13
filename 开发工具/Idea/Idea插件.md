@@ -47,14 +47,14 @@ Codota 还有一个在线网站，在这个网站上你可以根据代码关键�
 - 根据接口搜索
 - 提供接口可以测试
 
-![](http://cdn.nlark.com/yuque/0/2020/png/631242/1590199463505-d3e9a1cf-5359-40a8-b75c-82dcfd869fa6.png#align=left&display=inline&height=358&margin=%5BobjectObject%5D&name=image.png&originHeight=358&originWidth=646&size=47482&status=done&style=none&width=646)
+
 
 Windows：   Ctrl + \
 1. 根据接口进行搜索
 2. 侧边栏找到RestServices
 提供了所有Controller里的接口，还有默认的测试数据。
 
-![](http://cdn.nlark.com/yuque/0/2020/png/631242/1590199517482-06c9b613-1cac-4c8b-b3da-13eaa274519f.png#align=left&display=inline&height=860&margin=%5BobjectObject%5D&name=image.png&originHeight=860&originWidth=637&size=65021&status=done&style=none&width=637)
+
 
 ## 2.5 Material Theme UI
 Material Theme UI 在主题下载量排行榜中高居第一。安装主题后（在页面底部就会有进入主题的快捷入口），选择自己喜欢的主题进行微调就可以啦，如果懒得做配置，按照下图勾选相应设置就和我的一样了：
