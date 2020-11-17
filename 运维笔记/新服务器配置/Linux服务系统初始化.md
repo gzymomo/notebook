@@ -53,7 +53,30 @@ sudo yum install -y git
  5. 查看版本：`docker version`
 
 
-# 四、Jenkins的安装
+
+# 四、maven安装及配置
+
+1. 下载安装包，传至服务器后，解压。
+2. 配置环境变量：
+
+```bash
+vi /etc/profile
+
+export MAVEN_HOME=/usr/local/apache-maven-3.6.3
+export PATH=$MAVEN_HOME/bin:$PATH
+```
+
+3. 刷新环境变量
+4. 检查maven版本
+
+```bash
+mvn -v
+```
+
+
+
+
+# 五、Jenkins的安装
 ## 4.1 安装方法一
 https://pkg.jenkins.io/redhat-stable/
 根据需要选择要安装的jenkins版本，
@@ -166,14 +189,14 @@ echo $! > /var/run/myClass.pid
 echo "over"
 ```
 
-# 五、Linux、Centos7服务运维操作
-## 5.1 重启服务：
+# 六、Linux、Centos7服务运维操作
+## 6.1 重启服务：
 ```shell
 systemctl daemon-reload
 systemctl restart jenkins.service
 ```
 
-## 5.2 uname -r 命令查看你当前的内核版本
+## 6.2 uname -r 命令查看你当前的内核版本
 
 ```shell
 wget http://mirrors.aliyun.com/repo/Centos-7.repo
@@ -185,7 +208,7 @@ yum install -y lrzsz
 yum install -y gcc
 ```
 
-## 5.3 查看网关、端口开放情况
+## 6.3 查看网关、端口开放情况
 
 ```bash
 ip  r  查看网关
@@ -195,7 +218,7 @@ ss -tnlp 查看端口开启情况
 netstat -ntlp | grep 80
 ```
 
-## 5.4 修改镜像源
+## 6.4 修改镜像源
 ```shell
 修改默认yum源为国内的阿里云yum源。官方的yum源在国内访问效果不佳，需要改为国内比较好的阿里云或者网易的yum源：
 	#下载wget
@@ -211,7 +234,7 @@ netstat -ntlp | grep 80
 	yum makecache
 ```
 
-## 5.5 检查服务器时间
+## 6.5 检查服务器时间
 一般新服务器时间都会与网络时间不一致，这时就需要我们先同步一下服务器时间
 date/timedatectl 命令可用于查看系统当前的时间，如果和网络时间不一致
 ```bash

@@ -7,7 +7,7 @@
 ​	mysql_exporter：7362
 ​	docker：893、10619
 ​	JYM：4701
-	SpringBoot：10280
+​	SpringBoot：10280
 
 # Docker启动Docker可视化工具：
 
@@ -112,13 +112,11 @@ docker search grafana
 
 ```shell
 chmod 777 /data/grafana
-
 ```
 
 ```shell
 docker run -d -p 3000:3000 --name=grafana -v /data/grafana:/var/lib/grafana grafana/grafana
 docker run -d --name=grafana -v /etc/localtime:/etc/localtime:ro --restart=always -p 3000:3000 grafana/grafana 
-
 ```
 
 ## Docker启动Promethus：
@@ -137,6 +135,5 @@ docker run -d --name=prometheus --net=host -v /etc/localtime:/etc/localtime:ro  
 ```shell
 docker pull danielqsj/kafka-exporter:latest
 docker run -ti --rm -p 9308:9308 danielqsj/kafka-exporter --kafka.server=kafka:9092 [--kafka.server=another-server ...]
-
 ```
 
