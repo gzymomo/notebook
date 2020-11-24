@@ -56,7 +56,7 @@ spec
 
 #### 1.3.1. 不指定VIP的service
 
-```
+```bash
 [root@hdss7-200 service]# vim /data/k8s-yaml/base_resource/service/slb-s1.yaml
 apiVersion: v1
 kind: Service
@@ -77,7 +77,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/base_resource/service/slb-s1.yaml
 [root@hdss7-21 ~]# kubectl get svc -n app -o wide
 NAME     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   SELECTOR
@@ -108,7 +108,7 @@ Events:            <none>
 
 
 
-```
+```bash
 # 测试域名解析！
 [root@pod-demo /]# curl -s http://slb-s1.app.svc.cluster.local/info  # 全域名
 2020-01-23T03:17:16+00:00|172.7.22.8|nginx:v1.14
@@ -118,7 +118,7 @@ Events:            <none>
 
 
 
-```
+```bash
 # 测试负载均衡！因为是nq算法，所有用单进程curl看不出效果，采用多进程同时访问进行测试
 [root@hdss7-21 ~]# vim /tmp/test.sh 
 test() {
@@ -146,7 +146,7 @@ rm -f /tmp/res.*
 
 #### 1.3.2. 指定VIP的service
 
-```
+```bash
 # 大部分情况下，不需要指定vip，因为内部pod通过域名的方式访问service
 [root@hdss7-200 service]# vim /data/k8s-yaml/base_resource/service/slb-s2.yaml 
 apiVersion: v1
@@ -169,7 +169,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl get svc slb-s2 -n app
 NAME     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
 slb-s2   ClusterIP   192.168.10.100   <none>        80/TCP    14s
@@ -191,7 +191,7 @@ Events:            <none>
 
 #### 1.3.3. 使用NodePort的service
 
-```
+```bash
 [root@hdss7-200 service]# vim /data/k8s-yaml/base_resource/service/slb-s3.yaml
 apiVersion: v1
 kind: Service
@@ -214,7 +214,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/base_resource/service/slb-s3.yaml
 [root@hdss7-21 ~]# kubectl get svc slb-s3 -n app  
 NAME     TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)       AGE
@@ -228,7 +228,7 @@ tcp6       0      0 :::3080                 :::*                    LISTEN      
 
 #### 1.3.4. Headless service
 
-```
+```bash
 # 直接将域名解析到pod上
 [root@hdss7-200 service]# vim /data/k8s-yaml/base_resource/service/slb-s4.yaml 
 apiVersion: v1
@@ -251,7 +251,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/base_resource/service/slb-s4.yaml
 [root@hdss7-21 ~]# kubectl get svc slb-s4 -n app
 NAME     TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
@@ -301,7 +301,7 @@ IngressController有两种部署方式：一种是采用DaemonSet方式部署，
 
 ### 2.3. 模板
 
-```
+```bash
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata
@@ -329,7 +329,7 @@ spec
 
 在内网中，采用http方式通信是主流，内网中客户端访问k8s集群内部，可采用http协议，降低性能损失。通过公网访问k8s内部集群服务时，一律采用https协议，并在前端负载均衡器中卸载SSL会话，这样就避免在每个node上配置证书。
 
-```
+```bash
 [root@hdss7-200 ingress]# vim /data/k8s-yaml/base_resource/ingress/api-ingress.yaml 
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -352,7 +352,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/base_resource/ingress/api-ingress.yaml
 [root@hdss7-21 ~]# kubectl get ingress -n app
 NAME              HOSTS                ADDRESS   PORTS   AGE
@@ -375,7 +375,7 @@ Events:  <none>
 
 
 
-```
+```bash
 # 配置集群外部DNS服务器，解析monitor.api.od.com域名
 [root@hdss7-11 ~]# vim /var/named/od.com.zone 
 $ORIGIN od.com.

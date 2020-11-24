@@ -24,6 +24,33 @@ Kubernetes支持一种特殊的网络模型，Kubernetes创建了一个地址空
 
 # 二、K8S设计架构
 
+### K8S核心概念
+
+#### 1.Pod
+
+- 最小部署单元
+- 一组容器的集合
+- 共享网络
+- 生命周期是短暂的
+
+
+
+#### 2.Controller
+
+- 确保预期的pod副本数量
+- 无状态应用部署
+- 有状态应用部署
+- 确保所有的node运行同一个pod
+- 一次性任务和定时任务
+
+
+
+#### 3.Service
+
+- 定义一组pod的访问规则
+
+
+
 Kubernetes主要由以下几个核心组件组成：
 
 - etcd保存了整个集群的状态；
@@ -43,10 +70,29 @@ Kubernetes主要由以下几个核心组件组成：
 - Federation提供跨可用区的集群
 - Fluentd-elasticsearch提供集群日志采集、存储与查询
 
-
 ![img](https://feisky.gitbooks.io/kubernetes/architecture/images/14791969222306.png)
 
+
+
+### Master组件说明
+
+Master组件说明：
+
+- API Server：集群统一入口，以Restful方式，交给etcd存储。
+- Scheduler：节点调度，选择node节点部署应用
+- Controller-Manage：处理集群中的常规后台任务，一个资源对应一个控制器。
+- etcd：存储系统，用于保存集群相关的数据。
+
+
+
 ![img](https://feisky.gitbooks.io/kubernetes/architecture/images/14791969311297.png)
+
+
+
+### Node组件说明
+
+- kubelet：master派到node节点代表，管理本机容器
+- kube-proxy：提供网络代理，负载均衡等操作。
 
 
 

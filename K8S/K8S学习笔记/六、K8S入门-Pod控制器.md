@@ -4,9 +4,26 @@
 
 #### 1.1.1. Pod简介
 
-Pod 是 Kubernetes 的基本构建块，它是 Kubernetes 对象模型中创建或部署的最小和最简单的单元。 Pod 表示集群上正在运行的进程。Pod 封装了应用程序容器（或者在某些情况下封装多个容器）、存储资源、唯一网络 IP 以及控制容器应该如何运行的选项。 Pod 表示部署单元：*Kubernetes 中应用程序的单个实例*，它可能由单个容器或少量紧密耦合并共享资源的容器组成。
+Pod 是 Kubernetes 的基本构建块，它是 Kubernetes 对象模型中创建或部署的**最小和最简单的单元**。 Pod 表示集群上正在运行的进程。Pod 封装了应用程序容器（或者在某些情况下封装多个容器）、存储资源、唯一网络 IP 以及控制容器应该如何运行的选项。 Pod 表示部署单元：*Kubernetes 中应用程序的单个实例*，它可能由单个容器或少量紧密耦合并共享资源的容器组成。
 
 一个pod内部一般仅运行一个pod，也可以运行多个pod，如果存在多个pod时，其中一个为主容器，其它作为辅助容器，也被称为边车模式。同一个pod共享一个网络名称空间和外部存储卷。
+
+
+
+1. 最小部署单元
+2. 包含多个容器（一组容器的集合）
+3. 一个pod中容器共享网络命令空间
+4. pod是短暂的，重启后ip会变
+
+
+
+Pod存在意义：
+
+1. 创建容器使用docker，一个docker对应是一个容器，一个容器有进程，一个容器运行一个应用程序。
+2. Pod是多进程设计，运行多个应用程序（一个pod有多个容器，一个容器里面运行一个应用程序）
+3. Pod存在是为了亲密性应用（两个应用之间交互。网络之间调用。两个应用需要频繁调用）
+
+
 
 ![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579339190487-a1f2c303-a092-4f16-a7e2-2bba306fe3d2.png)
 
@@ -36,14 +53,14 @@ Pod的生命周期中可以经历多个阶段，在一个Pod中在主容器(Main
 
 #### 1.2.1. apiversion/kind
 
-```
+```bash
 apiVersion: v1
 kind: Pod
 ```
 
 #### 1.2.2. metadata
 
-```
+```bash
 metadata
     name        <string>            # 在一个名称空间内不能重复
     namespace   <string>            # 指定名称空间，默认defalut
@@ -53,7 +70,7 @@ metadata
 
 #### 1.2.3. spec
 
-```
+```bash
 spec
     containers  <[]Object> -required-   # 必选参数
         name    <string> -required-     # 指定容器名称，不可更新
@@ -118,13 +135,260 @@ spec
 
 
 
-### 1.3. 案例
+### 1.3 Pod实现机制
+
+
+
+#### 1.3.1 共享网络
+
+容器本身之间是相互隔离的，是通过namespace和group实现隔离。
+
+一个Pod中会存在多个容器，容器之间如何实现网络共享。
+
+前提条件：容器在同一个ns里面。
+
+Pod实现网络共享机制：
+
+![](..\img\pod_network.png)
+
+共享网络：
+
+- 通过Pause容器，把其他业务容器加入到Pause容器里面，让所有业务容器在同一个名称空间中，可以实现网络共享
+
+
+
+#### 1.3.2 共享存储
+
+引入数据卷概念Volume，使用数据卷进行持久化存储。
+
+![](..\img\volume.png)
+
+### 1.4 Pod镜像拉取策略
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14
+      imagePullPolicy: Always
+```
+
+
+
+- IfNotPresent：默认值，镜像在宿主机不存在时才拉取
+- Always：每次创建Pod都会重新拉取一次镜像
+- Nerver：Pod永远不会主动拉取这个镜像
+
+
+
+### 1.5 Pod资源限制
+
+
+
+![](..\img\resources.png)
+
+### 1.6 Pod重启机制
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: busybox
+      image: busibox:1.28.4
+      args:
+      - /bin/sh
+      - -c
+      - sleep 36000
+    restartPolicy: Never
+```
+
+- Always：当容器终止退出后，总是容器容器，默认策略
+- OnFailure：当容器异常退出（退出状态码非0）时，才重启容器
+- Never：当容器终止退出，从不重启容器。（场景：执行批量任务，只需执行一次）
+
+### 1.7 Pod健康检查
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: busybox
+      image: busibox:1.28.4
+      args:
+      - /bin/sh
+      - -c
+      - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy
+      livenessProbe:
+        exec:
+          command:
+          - cat
+          - /tmp/healthy
+        initialDelaySeconds: 5
+        periodSeconds: 5
+```
+
+livenessProbe（存活检查）
+
+- 如果检查失败，将杀死容器，根据Pod的restartPolicy来进行后续操作。
+
+readinessProbe（就绪检查）
+
+- 如果检查失败，Kubernetes会把Pod从service endpoints中剔除。
+
+
+
+Probe支持以下三种检查方法：
+
+- httpGet：发送HTTP请求，返回200-400范围状态码为成功。
+- exec：执行Shell命令返回状态码是0位成功。
+- tcpSocket：发起TCP Socket建立成功。
+
+### 1.8 Pod调度策略
+
+#### 创建Pod流程
+
+![](..\img\createpod.png)
+
+
+
+#### 影响Pod调度-资源限制、节点亲和性）
+
+资源限制：Pod资源限制对Pod调用产生影响
+
+```yaml
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250"
+```
+
+根据request找到足够node节点进行调度。
+
+
+
+#### 影响Pod调度-节点选择器
+
+节点选择器标签：
+
+1. 首先对节点创建标签
+
+```bash
+kubectl label node node1 env_role=prod
+```
+
+2. 在yaml文件中进行配置
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-example
+spec:
+  nodeSelector:  # 节点选择器
+    env_role: dev
+  containers:
+  - name: nginx
+    image: nginx:1.15
+```
+
+![](..\img\nodeselector.png)
+
+#### 影响Pod调度-节点亲和性
+
+节点亲和性：
+
+nodeAffinity和之前的nodeSelector基本一样的，根据节点上标签约束来决定Pod调度到哪些节点上。
+
+功能相较于nodeSelector更强大。里面还支持各种操作符。
+
+1. 硬亲和性（约束条件必须满足）（支持常用操作符，In,NotIn，Exists，Gt，Lt，DoesNotExists。）
+
+2. 软亲和性（尝试满足，不保证）
+
+![](..\img\affinity.png)
+
+
+
+#### 影响Pod调度-污点和污点容忍
+
+nodeSelecor和nodeAffinity：Pod调度到某些节点上，Pod属性，调度时候实现
+
+Taint污点：节点不做普通分配调度，是节点属性
+
+
+
+场景：
+
+- 专用节点
+- 配置特点硬件节点
+- 基于Taint驱逐
+
+
+
+示例：
+
+1. 查看节点污点情况
+
+```bash
+kubectl describe node [node] | grep Taint
+```
+
+污点值有三个：
+
+- NoSchedule：一定不被调度
+- PreferNoSchdule：尽量不被调度
+- NoExecute：不会调度，并且还会驱逐Node已有Pod
+
+2. 为节点添加污点
+
+```bash
+kebuctl taint node [node] key=value:污点三个值
+```
+
+3. 删除污点
+
+```bash
+kubectl taint node [node] key:NoSchedule-node/[node] untainted
+```
+
+
+
+**污点容忍**
+
+```yaml
+spec:
+  tolerations:
+  - key: "key"
+    operator: "Equal"
+    value: "value"
+    effect: "NoSchedule"
+    
+  containers:
+  - name: webdemo
+    images: nginx
+```
+
+
+
+
+
+###  案例
 
 **一般不会单独创建pod，而是通过控制器的方式创建。**
 
-#### 1.3.1. 创建简单pod
+#### 1. 创建简单pod
 
-```
+```bash
 apiVersion: v1
 kind: Pod
 metadata:
@@ -146,7 +410,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/base_resource/pods/myapp.yaml
 [root@hdss7-21 ~]# kubectl get pod -o wide -n app
 NAME       READY   STATUS    RESTARTS   AGE   IP           NODE                NOMINATED NODE   READINESS GATES
@@ -159,7 +423,7 @@ root         11  0.0  0.0  51752  1696 ?        Rs   04:42   0:00 ps uax
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl describe pod pod-demo -n app | tail
 Events:
   Type    Reason     Age    From                        Message
@@ -171,9 +435,9 @@ Events:
   Normal  Started    3m45s  kubelet, hdss7-22.host.com  Started container centos
 ```
 
-#### 1.3.2. 带健康检测的pod
+#### 2. 带健康检测的pod
 
-```
+```bash
 apiVersion: v1
 kind: Pod
 metadata:
@@ -200,648 +464,3 @@ spec:
 ```
 
 
-
-## 2. Deployment
-
-### 2.1. 介绍
-
-#### 2.1.1. 简介
-
-Pod控制器有很多种，最初的是使用 ReplicationController，即副本控制器，用于控制pod数量。随着版本升级，出现了ReplicaSet，跟ReplicationController没有本质的不同，只是名字不一样，并且ReplicaSet支持集合式的selector。ReplicaSet的核心管理对象有三种：用户期望的副本数、标签选择器、pod模板。
-
-ReplicaSet一般不会直接使用，而是采用Deployment，Deployment是用来管理Replicaset，ReplicaSet来管理Pod。Deployment为ReplicaSet 提供了一个声明式定义(declarative)方法，用来替代以前的 ReplicationController 来方便的管理应用，比ReplicaSet的功能更加强大，且包含了ReplicaSet的功能。Deployment支持以下功能：
-
-- 定义Deployment来创建Pod和ReplicaSet
-- 滚动升级和回滚应用
-- 扩容和缩容
-- 暂停部署功能和手动部署
-
-#### 2.1.2. 部署方式
-
-- 蓝绿发布
-
-如图，假设副本数是5，目标是从v1升级到v2。先部署5个v2版本的业务机器，再将SLB的流量全部切换到v2上。如果出现异常，可以快速切换到v1版本。但是实际上用的不多，因为需要消耗大量的额外机器资源。
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579609622409-fadb8cdd-29c6-4b18-827f-16d128938364.png)
-
-- 滚动发布
-
-滚动发布是逐台(批次)升级，需要占用的额外资源少。比如先升级一台，再升级一台，直到全部升级完毕。也可以每次升级10%数量的机器，逐批次升级。
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579611102084-705eb102-c391-4781-a6f4-15cea08c4f01.png)
-
-- 灰度发布(金丝雀发布)
-
-灰度发布也叫金丝雀发布，起源是，矿井工人发现，金丝雀对瓦斯气体很敏感，矿工会在下井之前，先放一只金丝雀到井中，如果金丝雀不叫了，就代表瓦斯浓度高。
-
-灰度发布会先升级一台灰度机器，将版本升级为v2，此时先经过测试验证，确认没有问题后。从LB引入少量流量进入灰度机器，运行一段时间后，再将其它机器升级为v2版本，引入全部流量。
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579610210779-2dcfddfc-483a-4e24-9545-9180ef98e400.png)
-
-#### 2.1.3. Deployment升级方案
-
-Deployment的升级方案默认是滚动升级，支持升级暂停，支持指定最大超过预期pod数量，支持指定最小低于预期pod数量。可以实现上述三种部署方案(以目标预期pod数量5个，v1版本升级到v2版本为案例)：
-
-- 蓝绿发布场景实现方案：新创建5个v2版本pod，等待5个v2版本Pod就绪后，下掉5个v1版本pod。
-- 灰度发布场景实现案例：新创建的第一个pod最为灰度pod，此时暂定升级，等待灰度成功后再升级v1版本Pod
-- 滚动发布：通过控制超出预期pod数量和低于预期Pod数量来控制滚动发布的节奏。
-
-如下图，预期pod数量5个，滚动升级，最大超出副本数为2个，最大低于期望值2个的升级方式：
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579612087811-c8985d4d-1032-4a26-baca-a8a7555bc024.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_10%2Ctext_TGludXgt5rih5rih6bif%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
-
-### 2.2. 模板
-
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata
-    name        <string>            # 在一个名称空间不能重复
-    namespace   <string>            # 指定名称空间，默认defalut
-    labels      <map[string]string> # 标签
-    annotations <map[string]string> # 注释
-```
-
-
-
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata
-    name        <string>                            # 在一个名称空间不能重复
-    namespace   <string>                            # 指定名称空间，默认defalut
-    labels      <map[string]string>                 # 标签
-    annotations <map[string]string>                 # 注释
-
-spec
-    replicas                    <integer>           # 期望副本数，默认值1
-    selector                    <Object>            # 标签选择器
-        matchExpressions        <[]Object>          # 标签选择器的一种形式,多个条件使用AND连接
-            key                 <string> -required- # 标签中的Key
-            operator            <string> -required- # 操作符，支持 In, NotIn, Exists, DoesNotExist
-            values              <[]string>          # value的数组集合，当操作符为In或NotIn时不能为空
-        matchLabels             <map[string]string> # 使用key/value的格式做筛选
-    strategy                    <Object>            # pod更新策略，即如何替换已有的pod
-        type                    <string>            # 更新类型，支持 Recreate, RollingUpdate。默认RollingUpdate
-        rollingUpdate           <Object>            # 滚动更新策略，仅在type为RollingUpdate时使用
-            maxSurge            <string>            # 最大浪涌pod数，即滚动更新时最多可多于出期望值几个pod。支持数字和百分比格式
-            maxUnavailable      <string>            # 最大缺失Pod数，即滚动更新时最多可少于期望值出几个pod。支持数字和百分比格式
-    revisionHistoryLimit        <integer>           # 历史版本记录数，默认为最大值(2^32)
-    template                    <Object> -required- # Pod模板，和Pod管理器yaml几乎格式一致
-        metadata                <Object>            # Pod的metadata
-        spec                    <Object>            # Pod的spec
-```
-
-### 2.3. 案例
-
-#### 2.3.1. 创建deployment
-
-```
-[root@hdss7-200 deployment]# vim /data/k8s-yaml/base_resource/deployment/nginx-v1.12.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deploy
-  namespace: app
-spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: nginx
-      release: stable
-      tier: slb
-      partition: website
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-  template:
-    metadata:
-      labels:
-        app: nginx
-        release: stable
-        tier: slb
-        partition: website
-        version: v1.12
-    spec:
-      containers:
-      - name: nginx-pod
-        image: harbor.od.com/public/nginx:v1.12
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - /bin/bash
-                - -c
-                - "echo 'health check ok!' > /usr/share/nginx/html/health.html"
-        readinessProbe: 
-          initialDelaySeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-        livenessProbe:
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-```
-
-
-
-```
-[root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.12.yaml --record
-
-[root@hdss7-21 ~]# kubectl get pods -n app -l partition=website  # 查看
-NAME                           READY   STATUS    RESTARTS   AGE
-nginx-deploy-5597c8b45-425ms   1/1     Running   0          5m12s
-nginx-deploy-5597c8b45-5p2rz   1/1     Running   0          9m34s
-nginx-deploy-5597c8b45-dw7hd   1/1     Running   0          9m34s
-nginx-deploy-5597c8b45-fg82k   1/1     Running   0          5m12s
-nginx-deploy-5597c8b45-sfxmg   1/1     Running   0          9m34s
-[root@hdss7-21 ~]# kubectl get rs -n app -l partition=website -o wide
-NAME                     DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                             SELECTOR
-nginx-deploy-5597c8b45   8         8         8       10m   nginx-pod    harbor.od.com/public/nginx:v1.12   app=nginx,partition=website,pod-template-hash=5597c8b45,release=stable,tier=slb
-[root@hdss7-21 ~]# kubectl get deployment -n app -o wide
-NAME           READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                             SELECTOR
-nginx-deploy   8/8     8            8           11m   nginx-pod    harbor.od.com/public/nginx:v1.12   app=nginx,partition=website,release=stable,tier=slb
-```
-
-#### 2.3.2. 模拟蓝绿发布
-
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deploy
-  namespace: app
-spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: nginx
-      release: stable
-      tier: slb
-      partition: website
-  strategy:
-    rollingUpdate:
-      # 最大浪涌数量为5
-      maxSurge: 5
-      maxUnavailable: 0
-  template:
-    metadata:
-      labels:
-        app: nginx
-        release: stable
-        tier: slb
-        partition: website
-        # 修改版本信息，用于查看当前版本
-        version: v1.13
-    spec:
-      containers:
-      - name: nginx-pod
-        # 修改镜像
-        image: harbor.od.com/public/nginx:v1.13
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - /bin/bash
-                - -c
-                - "echo 'health check ok!' > /usr/share/nginx/html/health.html"
-        readinessProbe: 
-          initialDelaySeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-        livenessProbe:
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-```
-
-
-
-```
-[root@hdss7-21 ~]# kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.13.yaml --record=true
-[root@hdss7-21 ~]# kubectl rollout history deployment nginx-deploy -n app
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.12.yaml --record=true
-2         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.13.yaml --record=true
-[root@hdss7-21 ~]# kubectl get rs -n app -l tier=slb -L version # 多个ReplicaSet对应不同版本
-NAME                      DESIRED   CURRENT   READY   AGE     VERSION
-nginx-deploy-5597c8b45    0         0         0       10m     v1.12
-nginx-deploy-6bd88df699   5         5         5       9m31s   v1.13
-```
-
-
-
-```
-# 升级过程中的状态变化:
-[root@hdss7-21 ~]# kubectl rollout status deployment nginx-deploy -n app 
-Waiting for deployment "nginx-deploy" rollout to finish: 5 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 5 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 5 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 4 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 4 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 4 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 3 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 3 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 3 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 2 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 2 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 2 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 1 old replicas are pending termination...
-Waiting for deployment "nginx-deploy" rollout to finish: 1 old replicas are pending termination...
-deployment "nginx-deploy" successfully rolled out
-[root@hdss7-21 ~]# kubectl get pod -n app -l partition=website -L version -w
-NAME                           READY   STATUS    RESTARTS   AGE   VERSION
-nginx-deploy-5597c8b45-t5plt   1/1     Running   0          19s   v1.12
-nginx-deploy-5597c8b45-tcq69   1/1     Running   0          19s   v1.12
-nginx-deploy-5597c8b45-vdjxg   1/1     Running   0          19s   v1.12
-nginx-deploy-5597c8b45-vqn9x   1/1     Running   0          19s   v1.12
-nginx-deploy-5597c8b45-zl6qr   1/1     Running   0          19s   v1.12
----- 立刻创建5个新版本pod，Pending调度中
-nginx-deploy-6bd88df699-242fr   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-242fr   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-8pmdg   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-4kj8z   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-n7x6n   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-8pmdg   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-4kj8z   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-8j85n   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-n7x6n   0/1     Pending   0          0s    v1.13
-nginx-deploy-6bd88df699-8j85n   0/1     Pending   0          0s    v1.13
----- 创建pod中
-nginx-deploy-6bd88df699-242fr   0/1     ContainerCreating   0          0s    v1.13
-nginx-deploy-6bd88df699-8pmdg   0/1     ContainerCreating   0          0s    v1.13
-nginx-deploy-6bd88df699-4kj8z   0/1     ContainerCreating   0          0s    v1.13
-nginx-deploy-6bd88df699-n7x6n   0/1     ContainerCreating   0          0s    v1.13
-nginx-deploy-6bd88df699-8j85n   0/1     ContainerCreating   0          0s    v1.13
----- 启动pod
-nginx-deploy-6bd88df699-242fr   0/1     Running             0          1s    v1.13
-nginx-deploy-6bd88df699-8j85n   0/1     Running             0          1s    v1.13
-nginx-deploy-6bd88df699-4kj8z   0/1     Running             0          1s    v1.13
-nginx-deploy-6bd88df699-n7x6n   0/1     Running             0          1s    v1.13
-nginx-deploy-6bd88df699-8pmdg   0/1     Running             0          1s    v1.13
----- Pod逐个就绪，且替换旧版本的pod
-nginx-deploy-6bd88df699-242fr   1/1     Running             0          6s    v1.13
-nginx-deploy-5597c8b45-t5plt    1/1     Terminating         0          50s   v1.12
-nginx-deploy-6bd88df699-8j85n   1/1     Running             0          7s    v1.13
-nginx-deploy-5597c8b45-vdjxg    1/1     Terminating         0          51s   v1.12
-nginx-deploy-5597c8b45-t5plt    0/1     Terminating         0          51s   v1.12
-nginx-deploy-5597c8b45-t5plt    0/1     Terminating         0          51s   v1.12
-nginx-deploy-6bd88df699-4kj8z   1/1     Running             0          7s    v1.13
-nginx-deploy-5597c8b45-zl6qr    1/1     Terminating         0          51s   v1.12
-nginx-deploy-5597c8b45-vdjxg    0/1     Terminating         0          52s   v1.12
-nginx-deploy-5597c8b45-vdjxg    0/1     Terminating         0          52s   v1.12
-nginx-deploy-5597c8b45-zl6qr    0/1     Terminating         0          53s   v1.12
-nginx-deploy-5597c8b45-t5plt    0/1     Terminating         0          54s   v1.12
-nginx-deploy-5597c8b45-t5plt    0/1     Terminating         0          54s   v1.12
-nginx-deploy-5597c8b45-zl6qr    0/1     Terminating         0          56s   v1.12
-nginx-deploy-5597c8b45-zl6qr    0/1     Terminating         0          56s   v1.12
-nginx-deploy-6bd88df699-n7x6n   1/1     Running             0          13s   v1.13
-nginx-deploy-5597c8b45-tcq69    1/1     Terminating         0          57s   v1.12
-nginx-deploy-5597c8b45-tcq69    0/1     Terminating         0          58s   v1.12
-nginx-deploy-5597c8b45-tcq69    0/1     Terminating         0          59s   v1.12
-nginx-deploy-6bd88df699-8pmdg   1/1     Running             0          15s   v1.13
-nginx-deploy-5597c8b45-vqn9x    1/1     Terminating         0          59s   v1.12
-nginx-deploy-5597c8b45-vqn9x    0/1     Terminating         0          60s   v1.12
-nginx-deploy-5597c8b45-vqn9x    0/1     Terminating         0          61s   v1.12
-nginx-deploy-5597c8b45-vqn9x    0/1     Terminating         0          61s   v1.12
-nginx-deploy-5597c8b45-vdjxg    0/1     Terminating         0          64s   v1.12
-nginx-deploy-5597c8b45-vdjxg    0/1     Terminating         0          64s   v1.12
-nginx-deploy-5597c8b45-tcq69    0/1     Terminating         0          64s   v1.12
-nginx-deploy-5597c8b45-tcq69    0/1     Terminating         0          64s   v1.12
-```
-
-#### 2.3.3. 滚动发布
-
-通过定义 maxsurge 和 maxUnavailable 来实现滚动升级的速度，滚动升级中，可以使用 kubectl rollout pause 来实现暂停。
-
-```
-[root@hdss7-200 deployment]# vim /data/k8s-yaml/base_resource/deployment/nginx-v1.14.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deploy
-  namespace: app
-spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: nginx
-      release: stable
-      tier: slb
-      partition: website
-  strategy:
-    rollingUpdate:
-      # 以下两项，控制升级速度
-      maxSurge: 1
-      maxUnavailable: 0
-  template:
-    metadata:
-      labels:
-        app: nginx
-        release: stable
-        tier: slb
-        partition: website
-        # 修改版本
-        version: v1.14
-    spec:
-      containers:
-      - name: nginx-pod
-        # 修改镜像版本
-        image: harbor.od.com/public/nginx:v1.14
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - /bin/bash
-                - -c
-                - "echo 'health check ok!' > /usr/share/nginx/html/health.html"
-        readinessProbe: 
-          initialDelaySeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-        livenessProbe:
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-```
-
-
-
-```
-[root@hdss7-21 ~]# kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.14.yaml --record=true
-[root@hdss7-21 ~]# kubectl get rs -n app -l tier=slb -L version  # replicaset 数量增加
-NAME                      DESIRED   CURRENT   READY   AGE    VERSION
-nginx-deploy-5597c8b45    0         0         0       155m   v1.12
-nginx-deploy-6bd88df699   0         0         0       154m   v1.13
-nginx-deploy-7c5976dcd9   5         5         5       83s    v1.14
-[root@hdss7-21 ~]# kubectl rollout history deployment nginx-deploy -n app # 升级记录
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.12.yaml --record=true
-2         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.13.yaml --record=true
-3         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.14.yaml --record=true
-```
-
-
-
-```
-[root@hdss7-21 ~]# kubectl get pod -n app -l partition=website -L version -w  # 逐个滚动升级
-NAME                            READY   STATUS    RESTARTS   AGE    VERSION
-nginx-deploy-6bd88df699-242fr   1/1     Running   0          152m   v1.13
-nginx-deploy-6bd88df699-4kj8z   1/1     Running   0          152m   v1.13
-nginx-deploy-6bd88df699-8j85n   1/1     Running   0          152m   v1.13
-nginx-deploy-6bd88df699-8pmdg   1/1     Running   0          152m   v1.13
-nginx-deploy-6bd88df699-n7x6n   1/1     Running   0          152m   v1.13
-nginx-deploy-7c5976dcd9-ttlqx   0/1     Pending   0          0s     v1.14
-nginx-deploy-7c5976dcd9-ttlqx   0/1     Pending   0          0s     v1.14
-nginx-deploy-7c5976dcd9-ttlqx   0/1     ContainerCreating   0          0s     v1.14
-nginx-deploy-7c5976dcd9-ttlqx   0/1     Running             0          1s     v1.14
-nginx-deploy-7c5976dcd9-ttlqx   1/1     Running             0          9s     v1.14
-nginx-deploy-6bd88df699-8pmdg   1/1     Terminating         0          153m   v1.13
-......
-```
-
-
-
-#### 2.3.4. 模拟灰度(金丝雀)发布
-
-灰度发布在不同场景中实现方式不同，如果当前灰度机器仅对测试开放，可以定义一个新的deployment来配合service来实现。如果需要切入一部分随机真实用户的流量，可以将生产机器中一台机器作为灰度机器，通过灰度后再升级其它的机器。
-
-```
-# nginx-v1.15.yaml 与 nginx-v1.14.yaml 一致，仅仅修改了镜像文件
-[root@hdss7-21 ~]# kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.15.yaml --record=true && kubectl rollout pause deployment nginx-deploy -n app
-[root@hdss7-21 ~]# kubectl rollout history deployment nginx-deploy -n app
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.12.yaml --record=true
-2         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.13.yaml --record=true
-3         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.14.yaml --record=true
-4         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.15.yaml --record=true
-[root@hdss7-21 ~]# kubectl get rs -n app -l tier=slb -L version  # 存在两个ReplicaSet对外提供服务
-NAME                      DESIRED   CURRENT   READY   AGE     VERSION
-nginx-deploy-5597c8b45    0         0         0       177m    v1.12
-nginx-deploy-6695fd9655   1         1         1       2m22s   v1.15
-nginx-deploy-6bd88df699   0         0         0       176m    v1.13
-nginx-deploy-7c5976dcd9   5         5         5       23m     v1.14
-[root@hdss7-21 ~]# kubectl get pod -n app -l partition=website -L version -w # 新老共存
-NAME                            READY   STATUS    RESTARTS   AGE   VERSION
-nginx-deploy-6695fd9655-tcm76   1/1     Running   0          17s   v1.15
-nginx-deploy-7c5976dcd9-4tnv4   1/1     Running   0          21m   v1.14
-nginx-deploy-7c5976dcd9-bpjc2   1/1     Running   0          20m   v1.14
-nginx-deploy-7c5976dcd9-gv8qm   1/1     Running   0          20m   v1.14
-nginx-deploy-7c5976dcd9-ttlqx   1/1     Running   0          21m   v1.14
-nginx-deploy-7c5976dcd9-xq2qs   1/1     Running   0          21m   v1.14
-```
-
-
-
-```
-# 手动暂停
-[root@hdss7-21 ~]# kubectl rollout resume deployment nginx-deploy -n app && kubectl rollout pause deployment nginx-deploy -n app
-[root@hdss7-21 ~]# kubectl get pod -n app -l partition=website -L version -w
-NAME                            READY   STATUS    RESTARTS   AGE     VERSION
-nginx-deploy-6695fd9655-jmb94   1/1     Running   0          19s     v1.15
-nginx-deploy-6695fd9655-tcm76   1/1     Running   0          6m19s   v1.15
-nginx-deploy-7c5976dcd9-4tnv4   1/1     Running   0          27m     v1.14
-nginx-deploy-7c5976dcd9-gv8qm   1/1     Running   0          26m     v1.14
-nginx-deploy-7c5976dcd9-ttlqx   1/1     Running   0          27m     v1.14
-nginx-deploy-7c5976dcd9-xq2qs   1/1     Running   0          27m     v1.14
-# 升级剩余所有机器
-[root@hdss7-21 ~]# kubectl rollout resume deployment nginx-deploy -n app
-```
-
-#### 2.3.5. 版本回滚
-
-当升级出现异常时，执行回滚即可。
-
-```
-[root@hdss7-21 ~]# kubectl rollout history deployment nginx-deploy -n app # 查看历史版本记录
-deployment.extensions/nginx-deploy 
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.12.yaml --record=true
-2         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.13.yaml --record=true
-3         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.14.yaml --record=true
-4         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.15.yaml --record=true
-[root@hdss7-21 ~]# kubectl rollout undo deployment nginx-deploy -n app
-[root@hdss7-21 ~]# kubectl rollout history deployment nginx-deploy -n app # 版本3已经被版本5替代
-deployment.extensions/nginx-deploy 
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.12.yaml --record=true
-2         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.13.yaml --record=true
-4         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.15.yaml --record=true
-5         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.14.yaml --record=true
-[root@hdss7-21 ~]# kubectl get pod -n app -l partition=website -L version 
-NAME                            READY   STATUS    RESTARTS   AGE     VERSION
-nginx-deploy-7c5976dcd9-2kps8   1/1     Running   0          2m20s   v1.14
-nginx-deploy-7c5976dcd9-bqs28   1/1     Running   0          2m6s    v1.14
-nginx-deploy-7c5976dcd9-jdvps   1/1     Running   0          2m13s   v1.14
-nginx-deploy-7c5976dcd9-vs8l4   1/1     Running   0          116s    v1.14
-nginx-deploy-7c5976dcd9-z99mb   1/1     Running   0          101s    v1.14
-[root@hdss7-21 ~]# kubectl get rs -n app -l tier=slb -L version
-NAME                      DESIRED   CURRENT   READY   AGE    VERSION
-nginx-deploy-5597c8b45    0         0         0       3h7m   v1.12
-nginx-deploy-6695fd9655   0         0         0       12m    v1.15
-nginx-deploy-6bd88df699   0         0         0       3h7m   v1.13
-nginx-deploy-7c5976dcd9   5         5         5       34m    v1.14
-```
-
-#### 2.3.6.  常用命令
-
-```
-kubectl rollout status deployment nginx-deploy -n app  # 查看版本升级过程
-kubectl rollout history deployment nginx-deploy -n app # 查看版本升级历史
-kubectl apply -f http://k8s-yaml.od.com/base_resource/deployment/nginx-v1.15.yaml --record=true  # 升级且记录升级命令
-kubectl rollout undo deployment nginx-deploy -n app    # 回滚到上个版本
-kubectl rollout undo deployment nginx-deploy --to-revision=3 -n app # 回滚到版本3
-```
-
-
-
-## 3. DaemonSet
-
-### 3.1. DaemonSet介绍
-
-DaemonSet 确保全部（或者一些）Node 上运行一个 Pod 的副本。当有 Node 加入集群时，也会为他们新增一个 Pod 。当有 Node 从集群移除时，这些 Pod 也会被回收。删除 DaemonSet 将会删除它创建的所有 Pod。使用 DaemonSet 的一些典型用法：
-
-- 运行集群存储 daemon，例如在每个 Node 上运行 glusterd、ceph。
-- 在每个 Node 上运行日志收集 daemon，例如fluentd、logstash。
-- 在每个 Node 上运行监控 daemon，例如 Prometheus Node Exporter。
-
-### 3.2. 模板
-
-```
-apiVersion: apps/v1
-kind: DaemonSet
-metadata
-    name        <string>            # 在一个名称空间不能重复
-    namespace   <string>            # 指定名称空间，默认defalut
-    labels      <map[string]string> # 标签
-    annotations <map[string]string> # 注释
-spec
-    selector                    <Object>            # 标签选择器
-        matchExpressions        <[]Object>          # 标签选择器的一种形式,多个条件使用AND连接
-            key                 <string> -required- # 标签中的Key
-            operator            <string> -required- # 操作符，支持 In, NotIn, Exists, DoesNotExist
-            values              <[]string>          # value的数组集合，当操作符为In或NotIn时不能为空
-        matchLabels             <map[string]string> # 使用key/value的格式做筛选
-    updateStrategy              <Object>            # 更新策略
-        type                    <string>            # 更新类型，支持 Recreate, RollingUpdate。默认RollingUpdate
-        rollingUpdate           <Object>            # 滚动更新策略，仅在type为RollingUpdate时使用
-            maxUnavailable      <string>            # 最大缺失Pod数，即滚动更新时最多可少于期望值出几个pod。支持数字和百分比格式
-    template                    <Object> -required- # Pod模板，和Pod管理器yaml几乎格式一致
-        metadata                <Object>            # Pod的metadata
-        spec                    <Object>            # Pod的spec
-```
-
-### 3.3. 案例
-
-#### 3.3.1. 创建daemonset
-
-```
-[root@hdss7-200 base_resource]# cat /data/k8s-yaml/base_resource/daemonset/proxy-v1.12.yaml
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: proxy-daemonset
-  namespace: app
-  labels:
-      app: nginx
-      release: stable
-      partition: CRM
-spec:
-  selector:
-    matchLabels:
-      app: nginx
-      release: stable
-      tier: proxy
-      partition: CRM
-  updateStrategy:
-    rollingUpdate:
-      maxUnavailable: 1
-  template:
-    metadata:
-      labels:
-        app: nginx
-        release: stable
-        tier: proxy
-        partition: CRM
-        version: v1.12
-    spec:
-      containers:
-      - name: nginx-proxy
-        image: harbor.od.com/public/nginx:v1.12
-        ports:
-        - name: http
-          containerPort: 80
-          hostPort: 10080
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - /bin/bash
-                - -c
-                - "echo 'health check ok!' > /usr/share/nginx/html/health.html"
-        readinessProbe: 
-          initialDelaySeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-        livenessProbe:
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          httpGet:
-            port: 80
-            path: /health.html
-```
-
-
-
-```
-[root@hdss7-21 ~]# kubectl apply -f  http://k8s-yaml.od.com/base_resource/daemonset/proxy-v1.12.yaml --record
-[root@hdss7-21 ~]# kubectl get daemonset -n app
-NAME              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-proxy-daemonset   2         2         2       2            2           <none>          56s
-```
-
-
-
-```
-[root@hdss7-21 ~]# kubectl get pod -n app -l tier=proxy -o wide
-NAME                    READY   STATUS    RESTARTS   AGE     IP            NODE                NOMINATED NODE   READINESS GATES
-proxy-daemonset-7stgs   1/1     Running   0          8m31s   172.7.22.9    hdss7-22.host.com   <none>           <none>
-proxy-daemonset-dxgdp   1/1     Running   0          8m31s   172.7.21.10   hdss7-21.host.com   <none>           <none>
-[root@hdss7-21 ~]# curl -s 10.4.7.22:10080/info  # 通过宿主机的端口访问
-2020-01-22T13:15:58+00:00|172.7.22.9|nginx:v1.12
-[root@hdss7-21 ~]# curl -s 10.4.7.21:10080/info
-2020-01-22T13:16:05+00:00|172.7.21.10|nginx:v1.12
-```
-
-#### 3.3.2. 升级daemonset
-
-daemonset的升级方式和deployment一致
-
-```
-[root@hdss7-21 ~]# kubectl rollout history daemonset proxy-daemonset -n app
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/daemonset/proxy-v1.12.yaml --record=true
-
-[root@hdss7-21 ~]# kubectl apply -f  http://k8s-yaml.od.com/base_resource/daemonset/proxy-v1.13.yaml --record
-
-[root@hdss7-21 ~]# kubectl rollout history daemonset proxy-daemonset -n app
-daemonset.extensions/proxy-daemonset 
-REVISION  CHANGE-CAUSE
-1         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/daemonset/proxy-v1.12.yaml --record=true
-2         kubectl apply --filename=http://k8s-yaml.od.com/base_resource/daemonset/proxy-v1.13.yaml --record=true
-[root@hdss7-21 ~]# kubectl get pod -n app -l tier=proxy -L version
-NAME                    READY   STATUS    RESTARTS   AGE     VERSION
-proxy-daemonset-7wr4f   1/1     Running   0          119s    v1.13
-proxy-daemonset-clhqk   1/1     Running   0          2m11s   v1.13
-```
