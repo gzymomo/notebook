@@ -1,6 +1,18 @@
-## 1. Deployment
+## 1. （Controller）-Deployment
 
 ### 1.1. 介绍
+
+​	Controller，在集群上管理和运行容器的对象。
+
+
+
+- 确保预期的Pod副本数量
+- 无状态应用部署
+- 有状态应用部署
+- 确保所有的node运行同一个pod
+- 一次性任务和定时任务
+
+
 
 #### 1. 简介
 
@@ -12,6 +24,8 @@ ReplicaSet一般不会直接使用，而是采用Deployment，Deployment是用�
 - 滚动升级和回滚应用
 - 扩容和缩容
 - 暂停部署功能和手动部署
+
+
 
 #### 2. 部署方式
 
@@ -89,7 +103,87 @@ spec
         spec                    <Object>            # Pod的spec
 ```
 
-### 1.3. 案例
+### 1.3 Pod和Controller关系
+
+- Pod是通过Controller实现应用的运维，比如伸缩，滚动升级等。
+- Pod和Controller之间通过label标签建立关系
+
+
+
+### 1.4 Deployment控制器应用场景
+
+- 部署无状态应用（Web，微服务，nginx等）
+- 管理Pod和ReplicaSet（副本数量）
+- 部署，滚动升级等功能
+
+
+
+### 1.5 yaml文件字段说明
+
+
+
+![](..\img\yaml2.png)
+
+
+
+
+
+### 1.6 Deployment控制器应用部署
+
+```bash
+# 1.生成yaml文件到Web.yaml，导出yaml文件
+kubectl create deployment web --image=nginx --dry-run -o yaml > web.yaml
+```
+
+部署：
+
+```bash
+# 2.使用yaml部署应用
+kubectl apply -f web.yaml
+# 3.查看
+kubectl get pods
+# 4.对外发布（暴露对外端口号）-----先生成yaml文件
+kubectl expose deployment web --port=80 --type=NodePort --target-port=80 --name=web1 -o yaml >
+web1.yaml
+# 5. 使用yaml方式发布
+kubectl apply -f web1.yaml
+# 6、查看已经发布的应用
+kubectl get pods,svc
+```
+
+
+
+### 1.7 升级回滚
+
+```bash
+# 应用升级
+kubectl set image deployment web nginx=nginx:1.15
+
+# 查看升级状态
+kubectl rollout status deployment web
+
+# 查看升级的历史版本
+kubectl rollout history deployment web
+
+# 回滚，还原到上一个版本
+kubectl rollout undo deployment web
+
+# 回滚到指定的版本
+kubectl rollout undo deployment web --to-version=2
+```
+
+
+
+### 1.8 弹性伸缩
+
+```bash
+# 弹性伸缩
+kubectl scale deployment web --replicas=10
+```
+
+
+
+### 1.9. 案例
 
 #### 1. 创建deployment
 
