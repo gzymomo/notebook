@@ -142,4 +142,10 @@ public String getByMacAddress(@PathVariable String macAddress){
 
 # 五、全局异常处理
 @ControllerAdvice： 包含@Component。可以被扫描到。统一处理异常。
+
 ## @ExceptionHandler（Exception.class）： 用在方法上面表示遇到这个异常就执行以下方法。
+
+
+
+# 六、RequestingMapping
+
