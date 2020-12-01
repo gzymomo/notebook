@@ -1,14 +1,14 @@
-# 1、搭建K8S环境平台规划
+# ca1、搭建K8S环境平台规划
 
 ## 1.1 单master集群
 
-![](..\img\singlemaster.png)
+![](..\..\img\singlemaster.png)
 
 
 
 ## 1.2 多master集群(高可用)
 
-![](..\img\multimaster.png)
+![](..\..\img\multimaster.png)
 
 
 

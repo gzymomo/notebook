@@ -129,3 +129,23 @@ SonarLint 帮助你发现代码的错误和漏洞，就像是代码拼写检查�
 ![img](https://img2020.cnblogs.com/other/1843652/202010/1843652-20201021190103984-424608148.png)
 
 并且，很多项目都集成了 SonarQube,SonarLint 可以很方便地与 SonarQube 集成。
+
+# google-java-format 代码自动格式化
+
+简介：google-java-format插件可以帮助我们不通过对应的快捷键就可以实现特定方式下自动格式化代码。
+
+# Translation
+
+简介：翻译插件，支持google翻译、百度翻译、有道翻译。
+
+使用：快捷键Ctrl + Shift + O
+
+# RestfulToolkit
+
+简介：搜索URL，准确的说是搜索SpringMVC项目里，Controller层的@RequestMapping里的URL，通过URL匹配到相应的Controller层方法。
+
+使用：快捷键：Ctrl + \ 或Ctrl + Alt + N
+
+# Free Mybatis Plugin
+
+简介：可以通过mapper接口里的方法跳转到mapper.xml里。
