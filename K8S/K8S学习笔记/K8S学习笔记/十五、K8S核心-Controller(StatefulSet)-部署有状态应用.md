@@ -85,7 +85,7 @@ kubectl get pods
 
 3. 查看pod，每个都是唯一名称
 
-![](..\img\pods.png)
+![](..\..\img\pods.png)
 
 4. 查看创建无头的service
 
@@ -93,7 +93,7 @@ kubectl get pods
 kubectl get svc
 ```
 
-![](..\img\service1.png)
+![](..\..\img\service1.png)
 
 
 
