@@ -7,9 +7,7 @@ Maven的核心功能是合理叙述项目间的依赖关系，通俗点 就是�
 我们这样来理解maven项目，就是在java项目和web项目上裹了一层maven，本质上java项目还是java项目，web项目还是web项目，但是包裹了maven之后，就可以使用maven提供的一些功能，即通过pom.xml添加jar包
 就像在蜜汁鸡外面裹了一层面粉油炸一下变成了炸鸡，但是他还是一只鸡
 
-[![在这里插入图片描述](https://img-blog.csdnimg.cn/202009101907165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)](https://img-blog.csdnimg.cn/202009101907165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)
 
-[![在这里插入图片描述](https://img-blog.csdnimg.cn/20200910190747177.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)](https://img-blog.csdnimg.cn/20200910190747177.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)
 
 ## Maven能够解决什么问题
 
@@ -28,11 +26,11 @@ Maven的核心功能是合理叙述项目间的依赖关系，通俗点 就是�
 6.生成报表，
 7.部署项目，生成web站点。**
 
-[![在这里插入图片描述](https://img-blog.csdnimg.cn/20200910191612165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)](https://img-blog.csdnimg.cn/20200910191612165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)
+
 
 #  接下来我就举个例子让大家先见识见识maven的功能
 
-[![在这里插入图片描述](https://img-blog.csdnimg.cn/2020091019195014.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)](https://img-blog.csdnimg.cn/2020091019195014.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)前面我们通过web阶段的项目，要能够将项目运行起来，就必须将该项目所依赖的一些jar包添加到工程中，否则项目就不可以运行了，如果相同架构的项目有十几个，那么我们就需要将这一份jar包复制到十个不同的工程中我们一起来看看CRM工程的大小
+​	前面我们通过web阶段的项目，要能够将项目运行起来，就必须将该项目所依赖的一些jar包添加到工程中，否则项目就不可以运行了，如果相同架构的项目有十几个，那么我们就需要将这一份jar包复制到十个不同的工程中我们一起来看看CRM工程的大小
 **使用传统的CRM项目**
 
 [![在这里插入图片描述](https://img-blog.csdnimg.cn/20200910192312415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)](https://img-blog.csdnimg.cn/20200910192312415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BqaDg4,size_16,color_FFFFFF,t_70#pic_center)
