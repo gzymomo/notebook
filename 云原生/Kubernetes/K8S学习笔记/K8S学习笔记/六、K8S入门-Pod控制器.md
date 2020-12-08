@@ -4,7 +4,7 @@
 
 #### 1.1.1. Pod简介
 
-Pod 是 Kubernetes 的基本构建块，它是 Kubernetes 对象模型中创建或部署的**最小和最简单的单元**。 Pod 表示集群上正在运行的进程。Pod 封装了应用程序容器（或者在某些情况下封装多个容器）、存储资源、唯一网络 IP 以及控制容器应该如何运行的选项。 Pod 表示部署单元：*Kubernetes 中应用程序的单个实例*，它可能由单个容器或少量紧密耦合并共享资源的容器组成。
+Pod 是 Kubernetes 的基本构建块，它是 Kubernetes 对象模型中创建或部署的**最小和最简单的单元**。 Pod 表示集群上正在运行的进程。Pod 封装了应用程序容器（或者在某些情况下封装多个容器）、存储资源、唯一网络 IP 以及控制容器应该如何运行的选项。 Pod 表示部署单元：Kubernetes 中应用程序的单个实例，它可能由单个容器或少量紧密耦合并共享资源的容器组成。
 
 一个pod内部一般仅运行一个pod，也可以运行多个pod，如果存在多个pod时，其中一个为主容器，其它作为辅助容器，也被称为边车模式。同一个pod共享一个网络名称空间和外部存储卷。
 
@@ -149,7 +149,7 @@ spec
 
 Pod实现网络共享机制：
 
-![](..\img\pod_network.png)
+![](..\..\img\pod_network.png)
 
 共享网络：
 
@@ -161,7 +161,7 @@ Pod实现网络共享机制：
 
 引入数据卷概念Volume，使用数据卷进行持久化存储。
 
-![](..\img\volume.png)
+![](..\..\img\volume.png)
 
 ### 1.4 Pod镜像拉取策略
 
@@ -187,9 +187,27 @@ spec:
 
 ### 1.5 Pod资源限制
 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+```
 
 
-![](..\img\resources.png)
+
+![](..\..\img\resources.png)
 
 ### 1.6 Pod重启机制
 
@@ -257,7 +275,7 @@ Probe支持以下三种检查方法：
 
 #### 创建Pod流程
 
-![](..\img\createpod.png)
+![](..\..\img\createpod.png)
 
 
 
@@ -301,7 +319,7 @@ spec:
     image: nginx:1.15
 ```
 
-![](..\img\nodeselector.png)
+![](..\..\img\nodeselector.png)
 
 #### 影响Pod调度-节点亲和性
 
@@ -315,7 +333,7 @@ nodeAffinity和之前的nodeSelector基本一样的，根据节点上标签约�
 
 2. 软亲和性（尝试满足，不保证）
 
-![](..\img\affinity.png)
+![](..\..\img\affinity.png)
 
 
 
@@ -323,7 +341,7 @@ nodeAffinity和之前的nodeSelector基本一样的，根据节点上标签约�
 
 nodeSelecor和nodeAffinity：Pod调度到某些节点上，Pod属性，调度时候实现
 
-Taint污点：节点不做普通分配调度，是节点属性
+Taint污点：节点不做普通分配调度，是节点属性。
 
 
 

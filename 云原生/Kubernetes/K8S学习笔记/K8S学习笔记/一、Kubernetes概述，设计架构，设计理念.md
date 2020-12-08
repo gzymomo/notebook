@@ -2,6 +2,12 @@
 
 [**Kubernetes**](https://www.kubernetes.org.cn/)是一个开源的，用于管理云平台中多个主机上的容器化的应用，Kubernetes的目标是让部署容器化的应用简单并且高效（powerful）,Kubernetes提供了应用部署，规划，更新，维护的一种机制。
 
+
+
+<font color='blue'>Kubernetes是一个可移植的、可扩展的、用于管理容器化工作负载和服务的开源平台，它简化（促进）了声明式配置和自动化。</font>
+
+
+
 Kubernetes一个核心的特点就是能够自主的管理容器来保证云平台中的容器按照用户的期望状态运行着（比如用户想让apache一直运行，用户不需要关心怎么去做，Kubernetes会自动去监控，然后去重启，新建，总之，让apache一直提供服务），管理员可以加载一个微型服务，让规划器来找到合适的位置，同时，Kubernetes也系统提升工具以及人性化方面，让用户能够方便的部署自己的应用
 
 
@@ -92,7 +98,14 @@ Master组件说明：
 ### Node组件说明
 
 - kubelet：master派到node节点代表，管理本机容器
+
 - kube-proxy：提供网络代理，负载均衡等操作。
+
+- **Container Runtime**
+
+  　　容器运行时是负责运行容器的软件。
+
+  　　Kubernetes支持多个容器运行时：Docker、containerd、crio、rktlet和Kubernetes CRI(容器运行时接口)的任何实现。 
 
 
 
