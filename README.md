@@ -15,61 +15,131 @@
 
 
 
+## 安全性能测试
 
+### 安全运维
 
-## Kubernetes
+#### 安全运维
 
-### 1. K3S
-
-
-
-### 2. K8S项目交付
-
-#### 2.1 持续部署
-
-#### 2.2 持续集成
-
-#### 2.3 集群监控
-
-#### 2.4 配置中心
-
-#### 2.5 日志收集
+#### METASPLOIT
 
 
 
+### 等保测试
+
+### 基准测试
+
+### 加密算法
+
+### 全链路测试
+
+### 软件测试工具
+
+### 网站安全
+
+### 性能测试报告
+
+### 性能测试工程师
+
+### 性能测试面试
+
+### 性能测试实施指南
+
+### 性能测试系列博文
+
+### Beef
+
+### Jmter
+
+### Loadrunner
+
+### Postman
+
+### Systench
+
+### Web渗透
+
+#### 网络渗透
+
+##### Web渗透
+
+##### Web渗透博文
 
 
-### 3. K8S学习笔记
 
-#### 3.1 K8S-Helm
+## 大数据
 
-#### 3.2 K8S集群安全机制
+### Flink
 
-#### 3.3 K8S集群资源监控
+### Hadoop
 
-#### 3.4 K8S容器交付流程及部署项目
+### HBase
 
-#### 3.5 K8S学习笔记
+### Kafka
 
+### Spark
 
-
-### 4. KubeOperator
-
-#### 4.1 KubeOperator介绍
+### Zookeeper
 
 
 
-### 5. KubeSphere
+## 开发工具
 
-#### 5.1 KubeSphere容器平台的价值
+### Chrome
 
-#### 5.2 KubeSphere简介
+### Git
 
-#### 5.3 KubeSphere多租户管理平台
+### IDEA
 
 
 
-![](.\img\k8s.png)
+## 框架技术
+
+### 日志框架
+
+### Keepalived
+
+### Maven
+
+### Minio-分布式文件存储系统
+
+
+
+### MQTT-EMQ消息队列
+
+### Mybatis
+
+1. mybatis
+2. mybatis XML映射文件
+3. mybatis SQL 语句构建器
+4. mybatis 缓存
+5. mybatis 动态SQL
+
+### Nginx
+
+### Shiro
+
+
+
+### Spring-SpringMVC
+
+
+
+### SpringBoot
+
+#### SpringBoot-Docker
+
+#### SpringBoot安全权限
+
+#### SpringBoot的JVM调优
+
+#### SpringBoot基础
+
+#### SpringBoot面试题
+
+#### SpringBoot运维脚本
+
+#### SpringBoot整合中间件
 
 
 
@@ -267,13 +337,150 @@
 
 - [流媒体资源](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93)
 
-  
 
 
 
-## Docker
+## 前端相关
 
-![](.\img\docker.png)
+### HTML
+
+
+
+### Javascript
+
+
+
+### node
+
+
+
+### vue
+
+
+
+### webpack
+
+
+
+## 设计模式
+
+### 策略模式
+
+### 代理模式
+
+### 单例模式
+
+### 迭代器模式
+
+### 复合模式
+
+### 观察者模式
+
+### 简单工厂、工厂、抽象工厂
+
+### 建造者模式
+
+### 门面模式
+
+### 命令模式
+
+### 模板方法模式
+
+### 桥接模式
+
+### 生成器和责任链模式
+
+### 适配器和外观模式
+
+### 享元模式
+
+### 蝇量和解释器模式
+
+### 原型模式和访问者模式
+
+### 中介者和备忘录模式
+
+### 装饰者模式
+
+### 状态模式
+
+### 组合模式
+
+
+
+## 数据库
+
+### Druid
+
+
+
+### MongoDB
+
+
+
+### MySQL
+
+#### 分库分表
+
+#### 数据库备份
+
+#### 思维导图
+
+#### mysql笔记
+
+#### mysql脚本
+
+#### mysql面试题
+
+#### mysql权限命令
+
+#### mysql设计及规范
+
+#### mysql数据类型
+
+#### mysql索引
+
+#### mysql锁及事务
+
+#### mysql性能测试及优化
+
+#### mysql优化
+
+#### mysql中间件-工具
+
+#### mysql5.7版本配置文件
+
+
+
+### PostgresSQL
+
+#### PostGis
+
+#### Postgres
+
+
+
+### Redis
+
+### Redis实战
+
+
+
+## 微服务
+
+### SkyWalking-分布式链路追踪
+
+### SpringCloud
+
+
+
+## 微信公众号-小程序开发
+
+### 微信公众号
+
+### 微信小程序
+
+
 
 ## 项目管理
 
@@ -301,23 +508,139 @@
 
 ![](.\img\project.png)
 
-
-
-
-
 ## 研究技术
 
-### 大数据局
-
-### 监控-告警平台
-
-### ELK
+### AI-OCR图片-文字识别
 
 ### TestNG
 
 
 
+## 云原生
+
+### Kubernetes
+
+#### 1. K3S
+
+
+
+#### 2. K8S项目交付
+
+##### 2.1 持续部署
+
+##### 2.2 持续集成
+
+##### 2.3 集群监控
+
+##### 2.4 配置中心
+
+##### 2.5 日志收集
+
+
+
+
+
+#### 3. K8S学习笔记
+
+##### 3.1 K8S-Helm
+
+##### 3.2 K8S集群安全机制
+
+##### 3.3 K8S集群资源监控
+
+##### 3.4 K8S容器交付流程及部署项目
+
+##### 3.5 K8S学习笔记
+
+
+
+#### 4. KubeOperator
+
+##### 4.1 KubeOperator介绍
+
+
+
+#### 5. KubeSphere
+
+##### 5.1 KubeSphere容器平台的价值
+
+##### 5.2 KubeSphere简介
+
+##### 5.3 KubeSphere多租户管理平台
+
+
+
+![](.\img\k8s.png)
+
+
+
+- 
+
+
+
+## Docker
+
+### Docker思维导图
+
+### Docker Compose
+
+### Docker Machine
+
+### Docker Swarm
+
+### Docker基础
+
+### Docker 镜像
+
+### Docker 容器
+
+### Docker与SpringBoot
+
+### Docker运维
+
+![](.\img\docker.png)
+
+
+
+
+
+
+
+## Java
+
+### Java日志框架
+
+### Java线程池
+
+### Java爬虫
+
+![/img/java.jpg](.\img\java.png)
+
+### JVM
+
+#### CPU OOM实战
+
+#### JVM诊断工具
+
+![](.\img\jvm.png)
+
 ## 运维笔记
+
+### 堡垒机
+
+### 防火墙配置
+
+### 监控工具
+
+### 监控平台
+
+### 免密登录
+
+### 内存-CPU运维
+
+### linux杀毒软件
+
+### 新服务器配置
 
 ### 运维笔记
 
@@ -325,127 +648,15 @@
 
 ### 自动化运维
 
-### Docker
-
-### Jmeter
-
-### Postman
+### NFS
 
 ### Shell脚本
 
 
 
-## 开发工具
 
-### Idea
 
-1. Idea插件和快捷键
 
 
 
-## 性能测试
-
-### 全链路测试
-
-### 基准测试
-
-### 性能测试面试题
-
-### 性能测试实施指南
-
-### 性能测试工程师
-
-### 安全测试
-
-
-
-## 框架技术
-
-### SpringBoot
-
-#### SpringBoot-Docker
-
-#### SpringBoot安全权限
-
-#### SpringBoot的JVM调优
-
-#### SpringBoot基础
-
-#### SpringBoot面试题
-
-#### SpringBoot运维脚本
-
-#### SpringBoot整合中间件
-
-
-
-
-
-### SpringCloud
-
-#### SpringCloud配置中心
-
-#### SpringCloud基础
-
-
-
-### Mybatis
-
-1. mybatis
-2. mybatis XML映射文件
-3. mybatis SQL 语句构建器
-4. mybatis 缓存
-5. mybatis 动态SQL
-
-## 前端相关
-
-### Javascript
-
-
-
-### node
-
-
-
-### vue
-
-
-
-### webpack
-
-
-
-## 数据库
-
-### MySQL
-
-
-
-### Druid
-
-
-
-### MongoDB
-
-
-
-### PostgresSQL
-
-
-
-### redis
-
-
-
-## Java
-
-### Java日志框架、Java线程池、Java爬虫
-
-![/img/java.jpg](.\img\java.png)
-
-### JVM、CPU OOM实战、JVM诊断工具
-
-![](.\img\jvm.png)
-
-### 
 
