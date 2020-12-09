@@ -1,14 +1,40 @@
-## 1. DaemonSet-部署守护进程
+# 1. DaemonSet-部署守护进程
 
-### 1.1. DaemonSet介绍
+## 1.1. DaemonSet介绍
 
-DaemonSet 确保全部（或者一些）Node 上运行一个 Pod 的副本。当有 Node 加入集群时，也会为他们新增一个 Pod 。当有 Node 从集群移除时，这些 Pod 也会被回收。删除 DaemonSet 将会删除它创建的所有 Pod。使用 DaemonSet 的一些典型用法：
+DaemonSet 确保全部（或者一些）Node 上运行一个 Pod 的副本。当有 Node 加入集群时，也会为他们新增一个 Pod 。当有 Node 从集群移除时，这些 Pod 也会被回收。删除 DaemonSet 将会删除它创建的所有 Pod。
+
+
+
+使用 DaemonSet 的一些典型用法：
 
 - 运行集群存储 daemon，例如在每个 Node 上运行 glusterd、ceph。
 - 在每个 Node 上运行日志收集 daemon，例如fluentd、logstash。
-- 在每个 Node 上运行监控 daemon，例如 Prometheus Node Exporter。
+- 在每个 Node 上运行监控 daemon，例如 Prometheus Node Exporter、Flowmill、Sysdig 代理、collectd、Dynatrace OneAgent、AppDynamics 代理、Datadog 代理、New Relic 代理、Ganglia gmond 或者 Instana 代理。
 
-### 1.2. 模板
+一个简单的用法是在所有的节点上都启动一个 DaemonSet，并作为每种类型的 daemon 使用。
+
+一个稍微复杂的用法是单独对每种 daemon 类型使用一种DaemonSet。这样有多个 DaemonSet，但具有不同的标识，并且对不同硬件类型具有不同的内存、CPU 要求。
+
+备注：DaemonSet 中的 Pod 可以使用 hostPort，从而可以通过节点 IP 访问到 Pod；因为DaemonSet模式下Pod不会被调度到其他节点。使用示例如下：
+
+```yaml
+ports:
+    - name: httpd
+      containerPort: 80
+      #除非绝对必要，否则不要为 Pod 指定 hostPort。 将 Pod 绑定到hostPort时，它会限制 Pod 可以调度的位置数；DaemonSet除外
+      #一般情况下 containerPort与hostPort值相同
+      hostPort: 8090     #可以通过宿主机+hostPort的方式访问该Pod。例如：pod在/调度到了k8s-node02【172.16.1.112】，那么该Pod可以通过172.16.1.112:8090方式进行访问。
+      protocol: TCP
+```
+
+
+
+
+
+
+
+## 1.2. 模板
 
 ```bash
 apiVersion: apps/v1
@@ -34,9 +60,9 @@ spec
         spec                    <Object>            # Pod的spec
 ```
 
-### 1.3. 案例
+# 案例
 
-#### 1. 创建daemonset
+## 1. 创建daemonset
 
 ```bash
 [root@hdss7-200 base_resource]# cat /data/k8s-yaml/base_resource/daemonset/proxy-v1.12.yaml
@@ -117,7 +143,7 @@ proxy-daemonset-dxgdp   1/1     Running   0          8m31s   172.7.21.10   hdss7
 2020-01-22T13:16:05+00:00|172.7.21.10|nginx:v1.12
 ```
 
-#### 2. 升级daemonset
+## 2. 升级daemonset
 
 daemonset的升级方式和deployment一致
 

@@ -267,8 +267,9 @@ hbase org.apache.hadoop.hbase.mob.mapreduce.Sweeper t1 cf1
 总结：
 
 - 对集群影响：**5星**（合并MOB任务会占用大量的Yarn资源和IO，对业务影响很大）
+
 - 实用性：2星（只适合MOB场景，使用MOB会存在HMaster上compact的瓶颈暂不推荐（社区HBASE3上才支持，相关jira HBASE-22749））
 
-以上就是此次介绍的所有HBase运维工具，其他的如Bulkload批量导入，数据迁移，测试相关的pe等暂不描述。如果有写的不对的请指正，多谢。
+  以上就是此次介绍的所有HBase运维工具，其他的如Bulkload批量导入，数据迁移，测试相关的pe等暂不描述。如果有写的不对的请指正，多谢。
 
 官方文档：hbase.apache.org/book.html
