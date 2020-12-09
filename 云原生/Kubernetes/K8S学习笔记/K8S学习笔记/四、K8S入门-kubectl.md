@@ -23,7 +23,9 @@ kubectl get po pod1
 kubectl get pods
 ```
 
-- flags：指定可选的参数。例如，可用-s 或者-server参数指定Kubernetes API server的地址和端口。
+- flags：指定可选的参数。例如，可用-s 或者-server参数指定Kubernetes API server的地址和端口，-n指定名称空间；等等。。
+
+<font color='red'>注意：你从命令行指定的flags将覆盖默认值和任何相应的环境变量。优先级最高。</font>
 
 
 
@@ -39,6 +41,79 @@ kubectl --help
 
 ```bash
 kubectl get --help
+```
+
+```bash
+# 获取节点和服务版本信息
+kubectl get nodes
+# 获取节点和服务版本信息，并查看附加信息
+kubectl get nodes -o wide
+
+# 获取pod信息，默认是default名称空间
+kubectl get pod
+# 获取pod信息，默认是default名称空间，并查看附加信息【如：pod的IP及在哪个节点运行】
+kubectl get pod -o wide
+# 获取指定名称空间的pod
+kubectl get pod -n kube-system
+# 获取指定名称空间中的指定pod
+kubectl get pod -n kube-system podName
+# 获取所有名称空间的pod
+kubectl get pod -A
+# 查看pod的详细信息，以yaml格式或json格式显示
+kubectl get pods -o yaml
+kubectl get pods -o json
+
+# 查看pod的标签信息
+kubectl get pod -A --show-labels
+# 根据Selector（label query）来查询pod
+kubectl get pod -A --selector="k8s-app=kube-dns"
+
+# 查看运行pod的环境变量
+kubectl exec podName env
+# 查看指定pod的日志
+kubectl logs -f --tail 500 -n kube-system kube-apiserver-k8s-master
+
+# 查看所有名称空间的service信息
+kubectl get svc -A
+# 查看指定名称空间的service信息
+kubectl get svc -n kube-system
+
+# 查看componentstatuses信息
+kubectl get cs
+# 查看所有configmaps信息
+kubectl get cm -A
+# 查看所有serviceaccounts信息
+kubectl get sa -A
+# 查看所有daemonsets信息
+kubectl get ds -A
+# 查看所有deployments信息
+kubectl get deploy -A
+# 查看所有replicasets信息
+kubectl get rs -A
+# 查看所有statefulsets信息
+kubectl get sts -A
+# 查看所有jobs信息
+kubectl get jobs -A
+# 查看所有ingresses信息
+kubectl get ing -A
+# 查看有哪些名称空间
+kubectl get ns
+
+# 查看pod的描述信息
+kubectl describe pod podName
+kubectl describe pod -n kube-system kube-apiserver-k8s-master
+# 查看指定名称空间中指定deploy的描述信息
+kubectl describe deploy -n kube-system coredns
+
+# 查看node或pod的资源使用情况
+# 需要heapster 或metrics-server支持
+kubectl top node
+kubectl top pod
+
+# 查看集群信息
+kubectl cluster-info   或  kubectl cluster-info dump
+# 查看各组件信息【172.16.1.110为master机器】
+kubectl -s https://172.16.1.110:6443 get componentstatuses
 ```
 
 
@@ -401,3 +476,420 @@ RESOURCE: containers <[]Object>
 3. help：所有命令帮助
 4. plugin：运行一个命令行插件
 5. version：打印客户端和服务版本信息
+
+# 操作类命令
+
+```bash
+# 创建资源
+kubectl create -f xxx.yaml
+# 应用资源
+kubectl apply -f xxx.yaml
+# 应用资源，该目录下的所有 .yaml, .yml, 或 .json 文件都会被使用
+kubectl apply -f <directory>
+# 创建test名称空间
+kubectl create namespace test
+
+# 删除资源
+kubectl delete -f xxx.yaml
+kubectl delete -f <directory>
+# 删除指定的pod
+kubectl delete pod podName
+# 删除指定名称空间的指定pod
+kubectl delete pod -n test podName
+# 删除其他资源
+kubectl delete svc svcName
+kubectl delete deploy deployName
+kubectl delete ns nsName
+# 强制删除
+kubectl delete pod podName -n nsName --grace-period=0 --force
+kubectl delete pod podName -n nsName --grace-period=1
+kubectl delete pod podName -n nsName --now
+
+# 编辑资源
+kubectl edit pod podName
+```
+
+# 进阶命令操作
+
+```bash
+# kubectl exec：进入pod启动的容器
+kubectl exec -it podName -n nsName /bin/sh    #进入容器
+kubectl exec -it podName -n nsName /bin/bash  #进入容器
+
+# kubectl label：添加label值
+kubectl label nodes k8s-node01 zone=north  #为指定节点添加标签
+kubectl label nodes k8s-node01 zone-       #为指定节点删除标签
+kubectl label pod podName -n nsName role-name=test    #为指定pod添加标签
+kubectl label pod podName -n nsName role-name=dev --overwrite  #修改lable标签值
+kubectl label pod podName -n nsName role-name-        #删除lable标签
+
+# kubectl滚动升级； 通过 kubectl apply -f myapp-deployment-v1.yaml 启动deploy
+kubectl apply -f myapp-deployment-v2.yaml     #通过配置文件滚动升级
+kubectl set image deploy/myapp-deployment myapp="registry.cn-beijing.aliyuncs.com/google_registry/myapp:v3"   #通过命令滚动升级
+kubectl rollout undo deploy/myapp-deployment 或者 kubectl rollout undo deploy myapp-deployment    #pod回滚到前一个版本
+kubectl rollout undo deploy/myapp-deployment --to-revision=2  #回滚到指定历史版本
+
+# kubectl scale：动态伸缩
+kubectl scale deploy myapp-deployment --replicas=5  # 动态伸缩
+kubectl scale --replicas=8 -f myapp-deployment-v2.yaml  #动态伸缩【根据资源类型和名称伸缩，其他配置「如：镜像版本不同」不生效】
+```
+
+上面滚动更新和动态伸缩涉及的deploy的yaml文件
+
+```yaml
+[root@k8s-master deploy]# cat myapp-deployment-v1.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+spec:
+  replicas: 10
+  # 重点关注该字段
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: registry.cn-beijing.aliyuncs.com/google_registry/myapp:v1
+        ports:
+        - containerPort: 80
+
+[root@k8s-master deploy]#
+[root@k8s-master deploy]# cat myapp-deployment-v2.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+spec:
+  replicas: 10
+  # 重点关注该字段
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: registry.cn-beijing.aliyuncs.com/google_registry/myapp:v2
+        ports:
+        - containerPort: 80
+```
+
+# 按类型和名称指定资源：
+
+```bash
+# 查看一个资源类型中的多个资源
+[root@k8s-master ~]# kubectl get pod -n kube-system coredns-6955765f44-c9zfh kube-proxy-28dwj
+NAME                       READY   STATUS    RESTARTS   AGE
+coredns-6955765f44-c9zfh   1/1     Running   8          6d7h
+kube-proxy-28dwj           1/1     Running   9          6d6h
+[root@k8s-master ~]#
+# 查看多个资源类型
+[root@k8s-master ~]# kubectl get svc,node
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   45h
+
+NAME              STATUS   ROLES    AGE   VERSION
+node/k8s-master   Ready    master   45h   v1.17.4
+node/k8s-node01   Ready    <none>   45h   v1.17.4
+node/k8s-node02   Ready    <none>   45h   v1.17.4
+```
+
+# 使用一个或多个文件指定资源：-f file1 -f file2 -f file<#>
+
+```bash
+# 使用YAML而不是JSON，因为YAML更容易使用，特别是对于配置文件。
+kubectl get pod -f pod.yaml
+```
+
+
+
+# kubectl语法中的command操作
+
+下表包括常见kubectl操作的简短描述和通用语法：
+
+也可在命令行可通过kubectl -h 命令获取部分信息
+或者通过以下地址查看更多详情：
+
+```
+1 https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+2 https://kubernetes.io/docs/reference/kubectl/overview/#operations
+```
+
+ 
+
+| Operation      | Syntax                                                       | Description                                                  |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| create         | kubectl create -f FILENAME [flags]                           | 从文件或标准输入创建一个或多个资源★★★                        |
+| expose         | kubectl expose (-f FILENAME                                  | TYPE NAME                                                    |
+| run            | kubectl run NAME –image=image [–env=”key=value”] [–port=port] [–replicas=replicas] [–dry-run=bool] [–overrides=inline-json] [flags] | 在集群上运行指定的镜像★★★                                    |
+| explain        | kubectl explain [–recursive=false] [flags]                   | 获取各种资源的文档。例如pods、nodes、services等。★★★★★       |
+| get            | kubectl get (-f FILENAME                                     | TYPE [NAME                                                   |
+| edit           | kubectl edit (-f FILENAME                                    | TYPE NAME                                                    |
+| delete         | kubectl delete (-f FILENAME                                  | TYPE [NAME                                                   |
+| rollout        | kubectl rollout SUBCOMMAND [options]                         | 对资源进行管理。有效的资源类型包括：deployments，daemonsets 和statefulsets |
+| scale          | kubectl scale (-f FILENAME                                   | TYPE NAME                                                    |
+| autoscale      | kubectl autoscale (-f FILENAME                               | TYPE NAME                                                    |
+| cluster-info   | kubectl cluster-info [flags]                                 | 显示集群信息，显示关于集群中的主机和服务的端点信息。★★★      |
+| top            | kubectl top node、kubectl top pod 需要heapster 或metrics-server支持 | 显示资源(CPU/内存/存储)使用情况★★★                           |
+| cordon         | kubectl cordon NODE [options]                                | 将node标记为不可调度                                         |
+| uncordon       | kubectl uncordon NODE [options]                              | 将node标记为可调度                                           |
+| drain          | kubectl drain NODE [options]                                 | 排除指定node节点，为维护做准备                               |
+| taint          | kubectl taint NODE NAME KEY_1=VAL_1:TAINT_EFFECT_1 … KEY_N=VAL_N:TAINT_EFFECT_N [options] | 更新一个或多个节点上的污点★★★                                |
+| describe       | kubectl describe (-f FILENAME                                | TYPE [NAME_PREFIX                                            |
+| logs           | kubectl logs POD [-c CONTAINER] [–follow] [flags]            | 打印pod中一个容器的日志★★★★★                                 |
+| exec           | kubectl exec POD [-c CONTAINER] [-i] [-t] [flags] [– COMMAND [args…]] | 对pod中的容器执行命令或进入Pod容器★★★★★                      |
+| proxy          | kubectl proxy [–port=PORT] [–www=static-dir] [–www-prefix=prefix] [–api-prefix=prefix] [flags] | 运行Kubernetes API服务的代理                                 |
+| cp             | kubectl cp [options]                                         | 从宿主机复制文件和目录到一个容器；或则从容器中复制文件和目录到宿主机★★★ |
+| auth           | kubectl auth [flags] [options]                               | 检查授权                                                     |
+| apply          | kubectl apply -f FILENAME [flags]                            | 通过文件名中的内容或stdin将配置应用于资源★★★★★               |
+| patch          | kubectl patch (-f FILENAME                                   | TYPE NAME                                                    |
+| replace        | kubectl replace -f FILENAME                                  | 通过文件或stdin替换资源                                      |
+| rolling-update | kubectl rolling-update OLD_CONTROLLER_NAME ([NEW_CONTROLLER_NAME] –image=NEW_CONTAINER_IMAGE | -f NEW_CONTROLLER_SPEC) [flags]                              |
+| label          | kubectl label (-f FILENAME                                   | TYPE NAME                                                    |
+| annotate       | kubectl annotate (-f FILENAME                                | TYPE NAME                                                    |
+| api-resources  | kubectl api-resources [flags] [options]                      | 打印支持的API资源★★★                                         |
+| api-versions   | kubectl api-versions [flags]                                 | 列出可用的API版本★★★                                         |
+| config         | kubectl config SUBCOMMAND [flags]                            | 修改kubeconfig文件。有关详细信息，请参见各个子命令           |
+| plugin         | kubectl plugin [flags] [options]                             | 提供与插件交互的实用工具                                     |
+| version        | kubectl version [–client] [flags]                            | 显示在客户端和服务器上运行的Kubernetes版本★★★                |
+
+ 
+
+# kubectl语法中的TYPE资源
+
+下表包含常用的资源类型及其缩写别名的列表。
+
+也可以在命令行通过kubectl api-resources得到。
+
+| Resource Name                   | Short Names | Namespaced | Resource Kind                  |
+| ------------------------------- | ----------- | ---------- | ------------------------------ |
+| bindings                        |             | TRUE       | Binding                        |
+| componentstatuses               | cs          | FALSE      | ComponentStatus                |
+| configmaps                      | cm          | TRUE       | ConfigMap                      |
+| endpoints                       | ep          | TRUE       | Endpoints                      |
+| events                          | ev          | TRUE       | Event                          |
+| limitranges                     | limits      | TRUE       | LimitRange                     |
+| namespaces                      | ns          | FALSE      | Namespace                      |
+| nodes                           | no          | FALSE      | Node                           |
+| persistentvolumeclaims          | pvc         | TRUE       | PersistentVolumeClaim          |
+| persistentvolumes               | pv          | FALSE      | PersistentVolume               |
+| pods                            | po          | TRUE       | Pod                            |
+| podtemplates                    |             | TRUE       | PodTemplate                    |
+| replicationcontrollers          | rc          | TRUE       | ReplicationController          |
+| resourcequotas                  | quota       | TRUE       | ResourceQuota                  |
+| secrets                         |             | TRUE       | Secret                         |
+| serviceaccounts                 | sa          | TRUE       | ServiceAccount                 |
+| services                        | svc         | TRUE       | Service                        |
+| mutatingwebhookconfigurations   |             | FALSE      | MutatingWebhookConfiguration   |
+| validatingwebhookconfigurations |             | FALSE      | ValidatingWebhookConfiguration |
+| customresourcedefinitions       | crd, crds   | FALSE      | CustomResourceDefinition       |
+| apiservices                     |             | FALSE      | APIService                     |
+| controllerrevisions             |             | TRUE       | ControllerRevision             |
+| daemonsets                      | ds          | TRUE       | DaemonSet                      |
+| deployments                     | deploy      | TRUE       | Deployment                     |
+| replicasets                     | rs          | TRUE       | ReplicaSet                     |
+| statefulsets                    | sts         | TRUE       | StatefulSet                    |
+| tokenreviews                    |             | FALSE      | TokenReview                    |
+| localsubjectaccessreviews       |             | TRUE       | LocalSubjectAccessReview       |
+| selfsubjectaccessreviews        |             | FALSE      | SelfSubjectAccessReview        |
+| selfsubjectrulesreviews         |             | FALSE      | SelfSubjectRulesReview         |
+| subjectaccessreviews            |             | FALSE      | SubjectAccessReview            |
+| horizontalpodautoscalers        | hpa         | TRUE       | HorizontalPodAutoscaler        |
+| cronjobs                        | cj          | TRUE       | CronJob                        |
+| jobs                            |             | TRUE       | Job                            |
+| certificatesigningrequests      | csr         | FALSE      | CertificateSigningRequest      |
+| leases                          |             | TRUE       | Lease                          |
+| endpointslices                  |             | TRUE       | EndpointSlice                  |
+| events                          | ev          | TRUE       | Event                          |
+| ingresses                       | ing         | TRUE       | Ingress                        |
+| networkpolicies                 | netpol      | TRUE       | NetworkPolicy                  |
+| runtimeclasses                  |             | FALSE      | RuntimeClass                   |
+| poddisruptionbudgets            | pdb         | TRUE       | PodDisruptionBudget            |
+| podsecuritypolicies             | psp         | FALSE      | PodSecurityPolicy              |
+| clusterrolebindings             |             | FALSE      | ClusterRoleBinding             |
+| clusterroles                    |             | FALSE      | ClusterRole                    |
+| rolebindings                    |             | TRUE       | RoleBinding                    |
+| roles                           |             | TRUE       | Role                           |
+| priorityclasses                 | pc          | FALSE      | PriorityClass                  |
+| csidrivers                      |             | FALSE      | CSIDriver                      |
+| csinodes                        |             | FALSE      | CSINode                        |
+| storageclasses                  | sc          | FALSE      | StorageClass                   |
+| volumeattachments               |             | FALSE      | VolumeAttachment               |
+
+ 
+
+# kubectl 输出选项
+
+## 格式化输出
+
+所有kubectl命令的默认输出格式是人类可读的纯文本格式。
+
+要将详细信息以特定的格式输出到终端窗口，可以将 -o 或 --output标识添加到受支持的kubectl命令中。
+
+ 
+
+## 语法
+
+```
+kubectl [command] [TYPE] [NAME] -o <output_format>
+```
+
+根据kubectl操作，支持以下输出格式：
+
+| Output format           | Description                                          |
+| ----------------------- | ---------------------------------------------------- |
+| -o custom-columns=      | 使用逗号分隔的自定义列列表打印表                     |
+| -o custom-columns-file= | 使用文件中的自定义列模板打印表                       |
+| -o json                 | 输出一个JSON格式的API对象                            |
+| -o jsonpath=            | 打印jsonpath表达式中定义的字段                       |
+| -o jsonpath-file=       | 通过文件打印jsonpath表达式定义的字段                 |
+| -o name                 | 只打印资源名，不打印其他任何内容                     |
+| -o wide                 | 以纯文本格式输出，包含附加信息。对于pods，包含节点名 |
+| -o yaml                 | 输出一个YAML格式的API对象                            |
+
+## 示例
+
+wide示例
+
+```bash
+[root@k8s-master ~]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   1          28h
+[root@k8s-master ~]#
+[root@k8s-master ~]# kubectl get pod -o wide
+NAME         READY   STATUS    RESTARTS   AGE   IP           NODE         NOMINATED NODE   READINESS GATES
+nginx-demo   1/1     Running   1          28h   10.244.3.9   k8s-node01   <none>           <none>
+```
+
+ 
+
+yaml示例
+
+```bash
+[root@k8s-master ~]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   1          28h
+[root@k8s-master ~]#
+[root@k8s-master ~]# kubectl get pod -o yaml
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+………………
+```
+
+ 
+
+json示例
+
+```bash
+[root@k8s-master ~]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   1          28h
+[root@k8s-master ~]#
+[root@k8s-master ~]# kubectl get pod -o json
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+………………
+```
+
+ 
+
+name示例
+
+```bash
+[root@k8s-master ~]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   1          28h
+[root@k8s-master ~]#
+[root@k8s-master ~]# kubectl get pod -o name
+pod/nginx-demo
+```
+
+ 
+
+custom-columns示例
+
+```bash
+[root@k8s-master ~]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   1          29h
+[root@k8s-master ~]#
+[root@k8s-master ~]# kubectl get pods -o custom-columns=NAME:.metadata.name,UID:.metadata.uid,imageName:.spec.containers[0].image
+NAME         UID                                    imageName
+nginx-demo   08121fc6-969b-4b4e-9aa4-b990a5d02148   registry.cn-beijing.aliyuncs.com/google_registry/nginx:1.17
+```
+
+说明：custom-columns=key:value；其中key表示列明；value表示要显示信息，这个value信息可以通过-o json或-o yaml获取。
+
+ 
+
+custom-columns-file示例
+
+```bash
+[root@k8s-master test]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   0          80s
+[root@k8s-master test]#
+# 要显示的列明和数据来源
+[root@k8s-master test]# cat custom-col.conf
+NAME          UID          imageName                containerPort
+metadata.name metadata.uid spec.containers[0].image spec.containers[0].ports[0].containerPort
+[root@k8s-master test]#
+[root@k8s-master test]# kubectl get pod -o custom-columns-file=custom-col.conf
+NAME         UID                                    imageName                                                     containerPort
+nginx-demo   769dc3f4-2ffc-407c-a351-56b74ddaba4c   registry.cn-beijing.aliyuncs.com/google_registry/nginx:1.17   80
+```
+
+
+
+ 
+
+jsonpath示例
+
+```bash
+[root@k8s-master test]# kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   0          13m
+[root@k8s-master test]#
+[root@k8s-master test]# kubectl get pods -o jsonpath='{.items[0].metadata.name},{.items[0].spec.containers[0].image}'
+nginx-demo,registry.cn-beijing.aliyuncs.com/google_registry/nginx:1.17
+```
+
+ 
+
+jsonpath-file示例
+
+```bash
+[root@k8s-master test]# kubectl get pod
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-demo   1/1     Running   0          16m
+[root@k8s-master test]#
+# 要显示的数据来源
+[root@k8s-master test]# cat custom-json.conf
+{.items[0].metadata.name},{.items[0].spec.containers[0].image},{.items[0].spec.containers[0].ports[0].containerPort}
+[root@k8s-master test]#
+[root@k8s-master test]# kubectl get pod -o jsonpath-file=custom-json.conf
+nginx-demo,registry.cn-beijing.aliyuncs.com/google_registry/nginx:1.17,80
+```

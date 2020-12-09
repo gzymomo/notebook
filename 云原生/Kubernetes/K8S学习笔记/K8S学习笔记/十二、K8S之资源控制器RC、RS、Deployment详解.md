@@ -2,6 +2,8 @@
 
 ### 1.1. 介绍
 
+​	kubernetes中内建了很多controller（控制器），这些相当于一个状态机，用来控制pod的具体状态和行为。
+
 ​	Controller，在集群上管理和运行容器的对象。
 
 
@@ -11,6 +13,15 @@
 - 有状态应用部署
 - 确保所有的node运行同一个pod
 - 一次性任务和定时任务
+
+**部分控制器类型如下：**
+
+- ReplicationController 和 ReplicaSet
+- Deployment
+- DaemonSet
+- StatefulSet
+- Job/CronJob
+- HorizontalPodAutoscaler
 
 
 
@@ -110,7 +121,7 @@ spec
 
 
 
-### 1.4 Deployment控制器应用场景
+# 2、Deployment控制器应用场景
 
 - 部署无状态应用（Web，微服务，nginx等）
 - 管理Pod和ReplicaSet（副本数量）
@@ -118,17 +129,17 @@ spec
 
 
 
-### 1.5 yaml文件字段说明
+## 2.1 yaml文件字段说明
 
 
 
-![](..\img\yaml2.png)
+![](..\..\img\yaml2.png)
 
 
 
 
 
-### 1.6 Deployment控制器应用部署
+## 2.2 Deployment控制器应用部署
 
 ```bash
 # 1.生成yaml文件到Web.yaml，导出yaml文件
@@ -153,7 +164,7 @@ kubectl get pods,svc
 
 
 
-### 1.7 升级回滚
+# 3、 升级回滚
 
 ```bash
 # 应用升级
@@ -174,7 +185,7 @@ kubectl rollout undo deployment web --to-version=2
 
 
 
-### 1.8 弹性伸缩
+# 3、 弹性伸缩
 
 ```bash
 # 弹性伸缩
@@ -183,7 +194,7 @@ kubectl scale deployment web --replicas=10
 
 
 
-### 1.9. 案例
+#  案例
 
 #### 1. 创建deployment
 
