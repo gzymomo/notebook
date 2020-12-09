@@ -1,10 +1,12 @@
 [TOC]
 
-Spring Cloud Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一个Spring Cloud构建的微服务和基础设施中。因为微服务间的调用，API网关的请求转发等内容，实际上都是通过Ribbon来实现的，包括后续我们将要介绍的Feign，它也是基于Ribbon实现的工具。
+Spring Cloud Ribbon是一个<font color='blue'>基于HTTP和TCP的客户端负载均衡工具，它基于Netflix Ribbon实现</font>。通过Spring Cloud的封装，可以让我们轻松地将面向服务的REST模版请求自动转换成客户端负载均衡的服务调用。Spring Cloud Ribbon虽然只是一个工具类框架，它不像服务注册中心、配置中心、API网关那样需要独立部署，但是它几乎存在于每一个Spring Cloud构建的微服务和基础设施中。
+
+因为微服务间的调用，API网关的请求转发等内容，实际上都是通过Ribbon来实现的，包括后续我们将要介绍的Feign，它也是基于Ribbon实现的工具。
 
 Ribbon为我们提供了很多负载均衡算法，例如轮询、随机等等，也可以自己定义算法。
 
-Ribbon默认使用轮询的负载均衡模式。
+<font color='blue'>Ribbon默认使用轮询的负载均衡模式。</font>
 
 # 1、Ribbon内置的负载均衡规则
 在 com.netflix.loadbalancer 包下有一个接口 IRule，它可以根据特定的算法从服务列表中选取一个要访问的服务，默认使用的是「轮询机制」
@@ -171,3 +173,10 @@ Nginx是接收了所有的请求进行负载均衡的，而对于Ribbon来说它
 
 > 请注意Request的位置，在Nginx中请求是先进入负载均衡器，而在Ribbon中是先在客户端进行负载均衡才进行请求的。
 
+# 6、Ribbon总结
+
+1. Ribbon 没有类似@EnableRibbon这样的注解
+2. 新版的SpringCloud已经不使用Ribbon作为默认的负载均衡器了
+3. 可以使用`@RibbonClients` 或`@RibbonClient` 注解来负载均衡相关策略的配置
+4. 实现对应的接口就可以完成自定义负载均衡策略
+5. Ribbon 配置的所有key都可以在`CommonClientConfigKey`类中查看
