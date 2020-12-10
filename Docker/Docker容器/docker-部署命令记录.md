@@ -32,19 +32,17 @@ docker run -d -p 9000:9000 --name minio -e MINIO_ACCESS_KEY=zlkjminio -e MINIO_S
 
 ```bash
 docker run --name redis -p 6379:6379 -v /var/project/redis/data:/data -v /var/project/redis/conf:/usr/local/etc/redis/redis.conf -d redis redis-server --appendonly yes
+
+# 命令说明
+--name redis         　　　　　　　　 　   启动后容器名为 my-redis
+-p 6379:6379           　　　　　　　　　　  将容器的 6379 端口映射到宿主机的 6379 端口
+-v /usr/local/workspace/redis/data:/data           将容器  /usr/local/workspace/redis/data 日志目录挂载到宿主机的 /data
+-v /home/redis/conf:/usr/local/etc/redis/redis.conf    将容器  /usr/local/etc/redis/redis.conf 配置目录挂载到宿主机的 /conf
+redis-server --appendonly yes　　　          在容器执行redis-server启动命令，并打开redis持久化配置
+redis-server --requirepass 123456              配置redis的登录密码
 ```
 
-**--name** redis         　　　　　　　　 　   **启动后容器名为 my-redis**
 
-**-p** 6379:6379           　　　　　　　　　　  **将容器的 6379 端口映射到宿主机的 6379 端口**
-
-**-v** /usr/local/workspace/redis/data:/data           **将容器  /usr/local/workspace/redis/data 日志目录挂载到宿主机的 /data**
-
-**-v** /home/redis/conf:/usr/local/etc/redis/redis.conf    **将容器  /usr/local/etc/redis/redis.conf 配置目录挂载到宿主机的 /conf**
-
-**redis-server --appendonly yes**　　　　          **在容器执行redis-server启动命令，并打开redis持久化配置**
-
-**redis-server --requirepass 123456              配置redis的登录密码**
 
 # 七、halo
 

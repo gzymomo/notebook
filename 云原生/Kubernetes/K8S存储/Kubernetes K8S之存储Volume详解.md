@@ -1,3 +1,5 @@
+[Kubernetes K8S之存储Volume详解](https://www.cnblogs.com/zhanglianghhh/p/13844062.html)
+
 # Volume概述
 
 在容器中的文件在磁盘上是临时存放的，当容器关闭时这些临时文件也会被一并清除。这给容器中运行的特殊应用程序带来一些问题。

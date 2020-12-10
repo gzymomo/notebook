@@ -1,5 +1,7 @@
 [一次MySQL两千万数据大表的优化过程，三种解决方案！](https://segmentfault.com/a/1190000038190089)
 
+[从零到千万用户，我是如何一步步优化MySQL数据库的？](https://www.cnblogs.com/binghe001/p/13955864.html)
+
 
 
 #### 方案概述
