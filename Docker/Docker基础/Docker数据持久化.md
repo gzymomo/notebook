@@ -22,7 +22,7 @@
 示例：
 
 ```
-docker run --name nginx-data -``v` `/mydir` `nginx
+docker run --name nginx-data -v /mydir nginx
 ```
 
 执行如下命令即可查看容器构造的详情：
@@ -41,15 +41,15 @@ docker inspect 容器ID
 数据卷是被设计来持久化数据的，因此，删除容器并不会删除数据卷。如果想要在删除容器时同时删除数据卷，可使用如下命令：
 
 ```
-docker ``rm` `-``v` `容器ID
+docker rm -v 容器ID
 ```
 
 这样既可在删除容器的同时也将数据卷删除。
 
 **挂载宿主机目录作为数据卷**
 
-```
-docker run --name nginx-data2 -``v` `/host-dir``:``/container-dir` `nginx
+```bash
+docker run --name nginx-data2 -v /host-dir:/container-dir nginx
 ```
 
 这样既可将宿主机的/host-dir路径加载到容器的/container-dir中。
@@ -69,7 +69,7 @@ Dockerfile暂时不支持这种形式。
 **挂载宿主机文件作为数据卷**
 
 ```
-docker run --name nginx-data3 -``v` `/文件路径:``/container``路径 nginx
+docker run --name nginx-data3 -v /文件路径:/container 路径 nginx
 ```
 
 **指定权限**
@@ -78,8 +78,8 @@ docker run --name nginx-data3 -``v` `/文件路径:``/container``路径 nginx
 
 示例：
 
-```
-docker run --name nginx-data4 -``v` `/host-dir``:``/container-dir``:ro nginx
+```bash
+docker run --name nginx-data4 -v /host-dir:/container-dir:ro nginx
 ```
 
 这样，在容器中就只能读取/container-dir中的文件，而不能修改了。
@@ -91,13 +91,14 @@ docker run --name nginx-data4 -``v` `/host-dir``:``/container-dir``:ro nginx
 创建数据卷容器：
 
 ```
-docker run --name nginx-volume -``v` `/data` `nginx
+docker run --name nginx-volume -v /data nginx
 ```
 
 在其他容器中使用-volumes-from 来挂载nginx-volume容器中的数据卷。
 
 ```
-docker run --name v1 --volumes-from nginx-volume nginx``docker run --name v2 --volumes-from nginx-volume nginx
+docker run --name v1 --volumes-from nginx-volume nginx
+docker run --name v2 --volumes-from nginx-volume nginx
 ```
 
 这样：
