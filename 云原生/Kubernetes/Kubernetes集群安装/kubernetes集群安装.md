@@ -26,28 +26,28 @@
 
 ```bash
 ssh-keygen -t rsa
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys 
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 ```
 
 将binghe102和binghe103服务器上的id_rsa.pub文件复制到binghe101服务器。
 
 ```bash
-[root@binghe102 ~]# scp .ssh/id_rsa.pub binghe101:/root/.ssh/102
-[root@binghe103 ~]# scp .ssh/id_rsa.pub binghe101:/root/.ssh/103
+[root@binghe102 ~]# scp /root/.ssh/id_rsa.pub binghe101:/root/.ssh/102
+[root@binghe103 ~]# scp /root/.ssh/id_rsa.pub binghe101:/root/.ssh/103
 ```
 
 在binghe101服务器上执行如下命令。
 
 ```bash
-cat ~/.ssh/102 >> ~/.ssh/authorized_keys
-cat ~/.ssh/103 >> ~/.ssh/authorized_keys
+cat /root/.ssh/142 >> ~/.ssh/authorized_keys
+cat /root/.ssh/144 >> ~/.ssh/authorized_keys
 ```
 
 然后将authorized_keys文件分别复制到binghe102、binghe103服务器。
 
 ```bash
-[root@binghe101 ~]# scp .ssh/authorized_keys binghe102:/root/.ssh/authorized_keys
-[root@binghe101 ~]# scp .ssh/authorized_keys binghe103:/root/.ssh/authorized_keys
+[root@binghe101 ~]# scp /root/.ssh/authorized_keys binghe102:/root/.ssh/authorized_keys
+[root@binghe101 ~]# scp /root/.ssh/authorized_keys binghe103:/root/.ssh/authorized_keys
 ```
 
 删除binghe101节点上~/.ssh下的102和103文件。
@@ -133,6 +133,7 @@ source /etc/profile
 在所有服务器上创建install_docker.sh脚本，脚本内容如下所示。
 
 ```bash
+#!/bin/bash
 export REGISTRY_MIRROR=https://registry.cn-hangzhou.aliyuncs.com
 dnf install yum*
 yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -867,7 +868,7 @@ kubectl apply -f ingress-nginx-mandatory.yaml
 
 主要是用来用于暴露pod：nginx-ingress-controller。
 
-创建service-nodeport.yaml文件，文件内容如下所示。
+创建service-nodeport.yaml文件，文件内容如下所示。ls
 
 ```yaml
 apiVersion: v1

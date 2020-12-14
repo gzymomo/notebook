@@ -1,3 +1,7 @@
+- 博客园：[容器编排系统之Kubectl工具的基础使用](https://www.cnblogs.com/qiuhom-1874/p/14130540.html)
+
+
+
 # Kubernetes集群命令行工具kubectl
 
 ​	kubectl是Kubernetes集群的命令行工具，通过kubectl能够对集群本身进行管理，并能够在集群上进行容器化应用的安装部署。

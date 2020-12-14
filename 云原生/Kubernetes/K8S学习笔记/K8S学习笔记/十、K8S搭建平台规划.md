@@ -186,7 +186,7 @@ kubectl get nodes
 
 
 
-![](..\img\load.png)
+![](..\..\img\load.png)
 
 ### 3.1.6 加入Kubernetes Node
 
