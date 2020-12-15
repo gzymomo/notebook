@@ -262,7 +262,7 @@ hostPath 卷能将主机node节点文件系统上的文件或目录挂载到你�
 | CharDevice        | 在给定路径上必须存在的字符设备                               |
 | BlockDevice       | 在给定路径上必须存在的块设备                                 |
 
-##  
+
 
  
 
@@ -443,3 +443,41 @@ Sat Jun 13 16:23:05 CST 2020
 file====
 ```
 
+
+
+# 网络文件系统nfs
+
+`yml`文件中配置如下
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: goserver
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: goserver
+    spec:
+      containers:
+      - name: goserver
+        image: registry.cn-hangzhou.aliyuncs.com/magina-centos7/goserver:1.0
+        ports:
+        - containerPort: 4040
+        volumeMounts:
+        - mountPath: /mnt/logs
+          name: go-logs
+  volumes:
+  - name: go-log
+    nfs:
+      server: nfs4.yinnote.com
+      path: /prod/logs/goserver
+```
+
+> 这里使用了nfs标签，也就是将当前目录挂载到了远程文件系统，这里的server指的是远程文件系统路径，需要自己去配置，或者直接买其他云服务厂商的文件系统，这样做的好处是，不管哪个节点，哪个pod，都可以将日志打到统一的地方
+
+另外，如果我们使用了nfs文件系统，必须要在每台节点上面安装nfs-utils工具包，否则pod会无法启动
+
+> yum install nfs-utils
