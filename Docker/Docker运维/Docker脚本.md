@@ -6,8 +6,6 @@
 ```bash
 #使用阿里云镜像中心
 export REGISTRY_MIRROR=https://registry.cn-hangzhou.aliyuncs.com
-#安装yum工具
-dnf install yum*
 #安装docker环境
 yum install -y yum-utils device-mapper-persistent-data lvm2
 #配置Docker的yum源

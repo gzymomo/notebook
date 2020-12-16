@@ -1,3 +1,34 @@
+//stop停止所有容器
+
+```bash
+docker stop $(docker ps -a -q)
+```
+
+
+//remove删除所有容器 
+
+```bash
+docker  rm $(docker ps -a -q) 
+```
+
+
+//删除所有exit的容器
+
+```bash
+docker rm $(sudo docker ps -qf status=exited)
+```
+
+
+//删除所有镜像
+
+```bash
+docker rmi -f $(docker images -qa)
+```
+
+
+
+# 卸载docker
+
 1.卸载主机上的Docker
 
 - 　查看现有Docker版本

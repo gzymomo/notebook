@@ -1,6 +1,10 @@
 
 
-博客园：[陈彦斌](https://www.cnblogs.com/chenyanbin/)：[Mysql数据安全备份](https://www.cnblogs.com/chenyanbin/p/14020293.html)
+博客园：
+
+- [陈彦斌](https://www.cnblogs.com/chenyanbin/)：[Mysql数据安全备份](https://www.cnblogs.com/chenyanbin/p/14020293.html)
+
+- [Grey Zeng](https://home.cnblogs.com/u/greyzeng/):[Linux下MySQL数据库的备份与恢复](https://www.cnblogs.com/greyzeng/p/14139141.html)
 
 
 
