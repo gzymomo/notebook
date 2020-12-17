@@ -1,8 +1,14 @@
-## 1. Pod
+博客园：
 
-### 1.1. Pod介绍
+- [容器编排系统之Pod生命周期、健康/就绪状态探测以及资源限制](https://www.cnblogs.com/qiuhom-1874/p/14143610.html)
 
-#### 1.1.1. Pod简介
+
+
+# 1. Pod
+
+## 1.1. Pod介绍
+
+### 1.1.1. Pod简介
 
 Pod 是 Kubernetes 的基本构建块，它是 Kubernetes 对象模型中创建或部署的**最小和最简单的单元**。 Pod 表示集群上正在运行的进程。Pod 封装了应用程序容器（或者在某些情况下封装多个容器）、存储资源、唯一网络 IP 以及控制容器应该如何运行的选项。 Pod 表示部署单元：Kubernetes 中应用程序的单个实例，它可能由单个容器或少量紧密耦合并共享资源的容器组成。
 
@@ -27,7 +33,7 @@ Pod存在意义：
 
 ![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579339190487-a1f2c303-a092-4f16-a7e2-2bba306fe3d2.png)
 
-#### 1.1.2. Pod生命周期
+### 1.1.2. Pod生命周期
 
 Pod的生命周期中可以经历多个阶段，在一个Pod中在主容器(Main Container)启动前可以由init container来完成一些初始化操作。初始化完毕后，init Container 退出，Main Container启动。
 
@@ -55,7 +61,7 @@ UTS命名空间：Pod中的多个容器共享一个主机名；Volumes（共享�
 
 Pod中的各个容器可以访问在Pod级别定义的Volumes。
 
-##### Init Container容器
+#### Init Container容器
 
 Pod可以包含多个容器，应用运行在这些容器里面，同时 Pod 也可以有一个或多个先于应用容器启动的 Init 容器。
 
@@ -63,7 +69,7 @@ Pod可以包含多个容器，应用运行在这些容器里面，同时 Pod 也
 
  
 
-**Init容器与普通的容器非常像，除了以下两点：**
+#### **Init容器与普通的容器非常像，除了以下两点：**
 
 1、Init容器总是运行到成功完成且正常退出为止
 
@@ -79,7 +85,7 @@ Pod可以包含多个容器，应用运行在这些容器里面，同时 Pod 也
 
 
 
-##### Init 容器能做什么？
+#### Init 容器能做什么？
 
 因为 Init 容器是与应用容器分离的单独镜像，其启动相关代码具有如下优势：
 
@@ -95,7 +101,7 @@ Pod可以包含多个容器，应用运行在这些容器里面，同时 Pod 也
 
 
 
-#### 1.1.3. Pod状态
+### 1.1.3. Pod状态
 
 - Pending: Pod 已被 Kubernetes 系统接受，但有一个或者多个容器尚未创建。
 - Running: 该 Pod 已经绑定到了一个节点上，Pod 中所有的容器都已被创建。至少有一个容器正在运行，或者正处于启动或重启状态。
@@ -105,16 +111,32 @@ Pod可以包含多个容器，应用运行在这些容器里面，同时 Pod 也
 
 ![image](https://cdn.nlark.com/yuque/0/2020/jpeg/378176/1579446234452-ef9fedb8-e923-4aef-a8c3-6862d4729009.jpeg?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_14%2Ctext_TGludXgt5rih5rih6bif%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10%2Fresize%2Cw_1500)
 
-### 1.2. Pod清单
+### 1.1.4. Pod创建过程
 
-#### 1.2.1. apiversion/kind
+[![img](https://img2020.cnblogs.com/blog/1503305/202012/1503305-20201216132714632-1243109247.png)](https://img2020.cnblogs.com/blog/1503305/202012/1503305-20201216132714632-1243109247.png)
+
+　　提示：首先用户通过客户端工具将请求提交给apiserver，apiserver收到用户的请求以后，它会尝试将用户提交的请求内容存进etcd中，etcd存入完成后就反馈给apiserver写入数据完成，此时apiserver就返回客户端，说某某资源已经创建；随后apiserver要发送一个watch信号给scheduler，说要创建一个新pod，请你看看在那个节点上创建合适，scheduler收到信号以后，就开始做调度，并把调度后端结果反馈给apiserver，apiserver收到调度器的调度信息以后，它就把对应调度信息保存到etcd中，随后apiServer要发送一个watch信号给对应被调度的主机上的kubelet，对应主机上的kubelet收到消息后，立刻调用docker，并把对应容器跑起来；当容器运行起来以后，docker会向kubelet返回容器的状体；随后kubelet把容器的状态反馈给apiserver,由apiserver把容器的状态信息保存到etcd中；最后当etcd中的容器状态信息更新完成后，随后apiserver把容器状态信息更新完成的消息发送给对应主机的kubelet；
+
+
+
+### 1.1.5. Pod终止过程
+
+[![img](https://img2020.cnblogs.com/blog/1503305/202012/1503305-20201216145048637-28038042.jpg)](https://img2020.cnblogs.com/blog/1503305/202012/1503305-20201216145048637-28038042.jpg)
+
+　　提示：用户通过客户端工具想APIserver发送删除pod的指令，在APIserver收到用户发来的删除指令后，首先APIserver会把对应的操作写到etcd中，并设置其宽限期，然后etcd把对应数据写好以后，响应APIserver，随后APIserver响应客户端说对应容器已经标记为terminating状态；随后APIserver会发送一个把对应pod标记为terminating状态的消息给endpoint端点控制，让其删除与当前要删除pod相关的所有service，（其实在k8s上我们创建service关联pod不是直接关联pod，是现关联endpoint端点控制器，然后端点控制器再关联pod），随后APIserver会向对应要删除pod所在主机上的kubelet发送将pod标记为terminating状态的消息，当对应主机收到APIserver发送的标记pod为terminating状态消息后，对应主机上的kubelet会向对应pod里运行的容器发送TERM信号，随后再执行preStop中定义的操作；随后等待宽限期超时，如果对应的pod还没有被删除，此时APIserver就会向对应pod所在主机上的kubelet发送宽限期超时的消息，此时对应kubelet会向对应容器发送SIGKILL信号来强制删除对应的容器，随后docker把对应容器删除后，把删除完容器的消息响应给APIserver，此时APIserver会向etcd发送删除对应pod在etcd中的所有信息；
+
+
+
+## 1.2. Pod清单
+
+### 1.2.1. apiversion/kind
 
 ```bash
 apiVersion: v1
 kind: Pod
 ```
 
-#### 1.2.2. metadata
+### 1.2.2. metadata
 
 ```bash
 metadata
@@ -124,7 +146,7 @@ metadata
     annotations <map[string]string> # 注释，不能作为被筛选
 ```
 
-#### 1.2.3. spec
+### 1.2.3. spec
 
 ```bash
 spec
@@ -180,22 +202,22 @@ spec
         name            <string>        # secrets 对象名
 ```
 
-#### 1.2.4. k8s和image中的命令
+### 1.2.4. k8s和image中的命令
 
 ![image.png](https://cdn.nlark.com/yuque/0/2020/png/378176/1579444125794-e27d08bb-7811-44c1-806b-86745f8f9093.png)
 
-#### 1.2.4. 就绪性探测和存活性探测
+### 1.2.4. 就绪性探测和存活性探测
 
 - 就绪性探测失败不会重启pod，只是让pod不处于ready状态。存活性探测失败会触发pod重启。
 - 就绪性探测和存活性探测会持续进行下去，直到pod终止。
 
 
 
-### 1.3 Pod实现机制
+## 1.3 Pod实现机制
 
 
 
-#### 1.3.1 共享网络
+### 1.3.1 共享网络
 
 容器本身之间是相互隔离的，是通过namespace和group实现隔离。
 
@@ -213,13 +235,13 @@ Pod实现网络共享机制：
 
 
 
-#### 1.3.2 共享存储
+### 1.3.2 共享存储
 
 引入数据卷概念Volume，使用数据卷进行持久化存储。
 
 ![](..\..\img\volume.png)
 
-### 1.4 Pod镜像拉取策略
+## 1.4 Pod镜像拉取策略
 
 ```yaml
 apiVersion: v1
@@ -241,7 +263,7 @@ spec:
 
 
 
-### 1.5 Pod资源限制
+## 1.5 Pod资源限制
 
 ```yaml
 apiVersion: v1
@@ -265,7 +287,7 @@ spec:
 
 ![](..\..\img\resources.png)
 
-### 1.6 Pod重启机制
+## 1.6 Pod重启机制
 
 PodSpec 中有一个 restartPolicy 字段，可能的值为 Always、OnFailure 和 Never。默认为 Always。
 
@@ -293,7 +315,7 @@ spec:
 - OnFailure：当容器异常退出（退出状态码非0）时，才重启容器
 - Never：当容器终止退出，从不重启容器。（场景：执行批量任务，只需执行一次）
 
-### 1.7 Pod健康检查
+## 1.7 Pod健康检查
 
 ```yaml
 apiVersion: v1
@@ -333,7 +355,7 @@ Probe支持以下三种检查方法：
 - exec：执行Shell命令返回状态码是0位成功。
 - tcpSocket：发起TCP Socket建立成功。
 
-### 1.8 Pod调度策略
+## 1.8 Pod调度策略
 
 #### 创建Pod流程
 
