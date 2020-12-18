@@ -24,8 +24,10 @@ Helm是一个Kubernetes的包管理工具，就像Linux下的包管理器，如y
 
 Helm有3个重要概念：
 
-- **helm：**一个命令行客户端工具，主要用于Kubernetes应用chart的创建、打包、发布和管理。
+- **helm：**一个命令行客户端工具，主要用于Kubernetes应用chart的创建、打包、发布和管理。一个helm程序包，是创建一个应用的信息集合，包含各种Kubernetes对象的配置模板、参数定义、依赖关系、文档说明等。可以将Chart比喻为yum中的软件安装包；
+- **Repository**：Charts仓库，用于集中存储和分发Charts；
 - **Chart：**应用描述，一系列用于描述 k8s 资源相关文件的集合。
+- **Config**：应用程序实例化安装运行时所需要的配置信息；
 - **Release：**基于Chart的部署实体，一个 chart 被 Helm 运行后将会生成对应的一个 release；将在k8s中创建出真实运行的资源对象。
 
 
@@ -946,4 +948,47 @@ helm plugin install https://github.com/chartmuseum/helm-push
 ```
 # helm push mysql-1.4.0.tgz --username=admin --password=Harbor12345 http://192.168.0.241/chartrepo/library
 # helm install web --version 1.4.0 myrepo/demo
+```
+
+# 五、helm命令说明
+
+##### helm的使用
+
+```
+helm常用命令：
+- helm search:    搜索charts
+- helm fetch:     下载charts到本地目录
+- helm install:   安装charts
+- helm list:      列出charts的所有版本
+
+用法:
+  helm [command]
+
+命令可用选项:
+  completion  为指定的shell生成自动补全脚本（bash或zsh）
+  create      创建一个新的charts
+  delete      删除指定版本的release
+  dependency  管理charts的依赖
+  fetch       下载charts并解压到本地目录
+  get         下载一个release
+  history     release历史信息
+  home        显示helm的家目录
+  init        在客户端和服务端初始化helm
+  inspect     查看charts的详细信息
+  install     安装charts
+  lint        检测包的存在问题
+  list        列出release
+  package     将chart目录进行打包
+  plugin      add(增加), list（列出）, or remove（移除） Helm 插件
+  repo        add(增加), list（列出）, remove（移除）, update（更新）, and index（索引） chart仓库
+  reset       卸载tiller
+  rollback    release版本回滚
+  search      关键字搜索chart
+  serve       启动一个本地的http server
+  status      查看release状态信息
+  template    本地模板
+  test        release测试
+  upgrade     release更新
+  verify      验证chart的签名和有效期
+  version     打印客户端和服务端的版本信息
 ```

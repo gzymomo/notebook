@@ -1,8 +1,12 @@
-[基于Kubernetes构建Jenkins微服务发布平台](https://www.cnblogs.com/yuezhimi/p/13091889.html)
+- [基于Kubernetes构建Jenkins微服务发布平台](https://www.cnblogs.com/yuezhimi/p/13091889.html)
+
+- [kubernetes-jenkins CI/CD平台（十八）](https://www.cnblogs.com/yuezhimi/p/11083362.html)
 
 
 
-### 发布流程设计
+
+
+# 发布流程设计
 
 软件环境：Jenkins + Kubernetes + Gitlab + Harbor+helm
 
@@ -10,18 +14,16 @@
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611112650105-784913644.png)
 
-##### 准备基础前提环境
+## 准备基础前提环境
 
-```
-1、K8s（Ingress Controller，CoreDNS，PV自动供给）
-2、Helm v3
-3、Gitlab
-4、Harbor，并启用Chart存储功能
-5、MySQL（微服务数据库）
-6、Eureka（注册中心）
-```
+1. K8s（Ingress Controller，CoreDNS，PV自动供给）
+2. Helm v3
+3. Gitlab
+4. Harbor，并启用Chart存储功能
+5. MySQL（微服务数据库）
+6. Eureka（注册中心）
 
-### 在Kubernetes中部署Jenkins
+# 在Kubernetes中部署Jenkins
 
 参考：https://github.com/jenkinsci/kubernetes-plugin/tree/fc40c869edfd9e3904a9a56b0f80c5a25e988fa1/src/main/kubernetes
 
@@ -39,7 +41,7 @@ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611120306974-541048066.png)
 
-##### Jenkins Pipeline 及参数化构建
+## Jenkins Pipeline 及参数化构建
 
 参考：https://jenkins.io/doc/book/pipeline/syntax/
 
@@ -53,7 +55,7 @@ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611120603561-1796434446.png)
 
-##### Jenkins在Kubernetes中动态创建代理
+## Jenkins在Kubernetes中动态创建代理
 
 Jenkins Master/Slave架构
 
@@ -68,7 +70,7 @@ Kubernetes插件：Jenkins在Kubernetes集群中运行动态代理
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611121642928-779182373.png)
 
-##### 自定义构建Jenkins Slave镜像
+## 自定义构建Jenkins Slave镜像
 
 参考：https://github.com/jenkinsci/docker-jnlp-slave
 
@@ -97,7 +99,7 @@ docker build . -t 192.168.0.241/library/jenkins-slave:jdk-1.8
 docker push 192.168.0.241/library/jenkins-slave:jdk-1.8
 ```
 
-######  基于Kubernetes构建Jenkins CI系统
+###  基于Kubernetes构建Jenkins CI系统
 
 添加凭据
 
