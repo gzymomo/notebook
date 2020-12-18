@@ -2,6 +2,9 @@
 
 - [k8s集群部署高可用完整版](https://www.cnblogs.com/yuezhimi/p/12931002.html)
 - [kubernetes 1.16 二进制集群高可用安装实操踩坑篇](https://blog.csdn.net/sfdst/article/details/105813485)
+- [冰河教你一次性成功安装K8S集群（基于一主两从模式）](https://www.cnblogs.com/binghe001/p/14083312.html)
+
+
 
 
 
@@ -205,8 +208,6 @@ curl -k --header "Authorization: Bearer 8762670119726309a80b1fe94eb66e93" https:
 
 
 
-
-
 # Haproxy+keepalive搭建高可用
 
 ## 安装配置haproxy服务
@@ -281,27 +282,31 @@ dnf install yum*
 yum install -y yum-utils device-mapper-persistent-data lvm2
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 dnf install https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.13-3.1.el7.x86_64.rpm
+#指定Docker的版本进行安装 
 yum install -y docker-ce-19.03.8 docker-ce-cli-19.03.8
-#配置docker镜像加速
-vi /etc/docker/daemon.json 
-{
-  "registry-mirrors": ["https://bk6kzfqm.mirror.aliyuncs.com"],
-  "insecure-registries": ["192.168.0.241"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2",
-  "storage-opts": [
-    "overlay2.override_kernel_check=true"
-  ]
-}
+
 systemctl enable docker.service
 systemctl start docker.service
-docker version
+
+
+#配置docker镜像加速
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://zz3sblpi.mirror.aliyuncs.com"]
+}
+EOF
+systemctl daemon-reload
+systemctl restart docker
 ```
 
-在每台服务器上为install_docker.sh脚本赋予可执行权限，并执行脚本即可。
+使用如下命令赋予auto_install_docker.sh文件可执行权限。
+
+```bash
+chmod a+x ./auto_install_docker.sh
+```
+
+
 
 # 安装K8S集群环境
 
@@ -408,6 +413,133 @@ docker version
 ```
 
 在每台服务器上为install_k8s.sh脚本赋予可执行权限，并执行脚本即可。
+
+
+
+## 综合安装脚本
+
+```bash
+#!/bin/bash
+#安装Docker
+export REGISTRY_MIRROR=https://registry.cn-hangzhou.aliyuncs.com
+dnf install yum*
+yum install -y yum-utils device-mapper-persistent-data lvm2
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+dnf install https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.13-3.1.el7.x86_64.rpm
+#指定Docker的版本进行安装 
+yum install -y docker-ce-19.03.8 docker-ce-cli-19.03.8
+
+systemctl enable docker.service
+systemctl start docker.service
+
+
+#配置docker镜像加速
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://zz3sblpi.mirror.aliyuncs.com"]
+}
+EOF
+systemctl daemon-reload
+systemctl restart docker
+
+
+#基础环境配置
+#设置hosts
+cat >> /etc/hosts << EOF
+192.168.0.140 master
+192.168.0.142 slave3
+192.168.0.144 slave4
+EOF
+
+#安装nfs-utils
+yum install -y nfs-utils
+yum install -y wget
+
+#同步系统时间：
+yum install -y ntpdate
+ntpdate time.windows.com
+
+#启动nfs-server
+systemctl start nfs-server
+systemctl enable nfs-server
+
+#关闭防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+
+#关闭SeLinux
+#临时关闭
+setenforce 0	
+#永久关闭
+sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+
+# 关闭 swap
+# 临时关闭
+swapoff -a
+#永久关闭
+sed -i 's/.*swap.*/#&/' /etc/fstab
+cat /etc/fstab
+
+#修改 /etc/sysctl.conf
+# 如果有配置，则修改
+sed -i "s#^net.ipv4.ip_forward.*#net.ipv4.ip_forward=1#g"  /etc/sysctl.conf
+sed -i "s#^net.bridge.bridge-nf-call-ip6tables.*#net.bridge.bridge-nf-call-ip6tables=1#g"  /etc/sysctl.conf
+sed -i "s#^net.bridge.bridge-nf-call-iptables.*#net.bridge.bridge-nf-call-iptables=1#g"  /etc/sysctl.conf
+sed -i "s#^net.ipv6.conf.all.disable_ipv6.*#net.ipv6.conf.all.disable_ipv6=1#g"  /etc/sysctl.conf
+sed -i "s#^net.ipv6.conf.default.disable_ipv6.*#net.ipv6.conf.default.disable_ipv6=1#g"  /etc/sysctl.conf
+sed -i "s#^net.ipv6.conf.lo.disable_ipv6.*#net.ipv6.conf.lo.disable_ipv6=1#g"  /etc/sysctl.conf
+sed -i "s#^net.ipv6.conf.all.forwarding.*#net.ipv6.conf.all.forwarding=1#g"  /etc/sysctl.conf
+# 可能没有，追加
+echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.conf
+echo "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.all.forwarding = 1"  >> /etc/sysctl.conf
+# 执行命令以应用
+sysctl -p
+
+# 配置K8S的yum源
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+       http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+
+# 卸载旧版本K8S
+yum remove -y kubelet kubeadm kubectl
+
+# 安装kubelet、kubeadm、kubectl，这里我安装的是1.18.2版本
+yum install -y kubelet-1.18.2 kubeadm-1.18.2 kubectl-1.18.2
+
+# 修改docker Cgroup Driver为systemd
+# # 将/usr/lib/systemd/system/docker.service文件中的这一行 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+# # 修改为 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --exec-opt native.cgroupdriver=systemd
+# 如果不修改，在添加 worker 节点时可能会碰到如下错误
+# [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". 
+# Please follow the guide at https://kubernetes.io/docs/setup/cri/
+sed -i "s#^ExecStart=/usr/bin/dockerd.*#ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --exec-opt native.cgroupdriver=systemd#g" /usr/lib/systemd/system/docker.service
+
+# 设置 docker 镜像，提高 docker 镜像下载速度和稳定性
+# 如果访问 https://hub.docker.io 速度非常稳定，亦可以跳过这个步骤
+# curl -sSL https://kuboard.cn/install-script/set_mirror.sh | sh -s ${REGISTRY_MIRROR}
+
+# 重启 docker，并启动 kubelet
+systemctl daemon-reload
+systemctl restart docker
+systemctl enable kubelet && systemctl start kubelet
+
+docker version
+```
+
+
 
 # 初始化Master节点
 
