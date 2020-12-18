@@ -1,4 +1,11 @@
-## 服务器规划
+相关博文：
+
+- [k8s集群部署高可用完整版](https://www.cnblogs.com/yuezhimi/p/12931002.html)
+- [kubernetes 1.16 二进制集群高可用安装实操踩坑篇](https://blog.csdn.net/sfdst/article/details/105813485)
+
+
+
+# 服务器规划
 
 | IP              | 主机名    | 节点       | 操作系统        |
 | --------------- | --------- | ---------- | --------------- |
@@ -6,21 +13,15 @@
 | 192.168.175.102 | binghe102 | K8S Worker | CentOS 8.0.1905 |
 | 192.168.175.103 | binghe103 | K8S Worker | CentOS 8.0.1905 |
 
-## 安装环境版本
+# 安装环境版本
 
-| 软件名称       | 软件版本  | 说明                                                         |
-| -------------- | --------- | ------------------------------------------------------------ |
-| Docker         | 19.03.8   | 提供容器环境                                                 |
-| docker-compose | 1.25.5    | 定义和运行由多个容器组成的应用                               |
-| K8S            | 1.8.12    | 是一个开源的，用于管理云平台中多个主机上的容器化的应用，Kubernetes的目标是让部署容器化的应用简单并且高效（powerful）,Kubernetes提供了应用部署，规划，更新，维护的一种机制。 |
-| GitLab         | 12.1.6    | 代码仓库（与SVN安装一个即可）                                |
-| Harbor         | 1.10.2    | 私有镜像仓库                                                 |
-| Jenkins        | 2.89.3    | 持续集成交付                                                 |
-| SVN            | 1.10.2    | 代码仓库（与GitLab安装一个即可）                             |
-| JDK            | 1.8.0_202 | Java运行基础环境                                             |
-| maven          | 3.6.3     | 构建项目的基础插件                                           |
+| 软件名称       | 软件版本 | 说明                                                         |
+| -------------- | -------- | ------------------------------------------------------------ |
+| Docker         | 19.03.8  | 提供容器环境                                                 |
+| docker-compose | 1.25.5   | 定义和运行由多个容器组成的应用                               |
+| K8S            | 1.8.12   | 是一个开源的，用于管理云平台中多个主机上的容器化的应用，Kubernetes的目标是让部署容器化的应用简单并且高效（powerful）,Kubernetes提供了应用部署，规划，更新，维护的一种机制。 |
 
-## 服务器免密码登录
+# 服务器免密码登录
 
 在各服务器执行如下命令。
 
@@ -57,76 +58,217 @@ rm ~/.ssh/102
 rm ~/.ssh/103
 ```
 
-## 安装JDK
-
-需要在每台服务器上安装JDK环境。到Oracle官方下载JDK，我这里下的JDK版本为1.8.0_202，下载后解压并配置系统环境变量。
+# 部署nginx负载均衡（与Haproxy+Keepalive二选一）
 
 ```bash
-tar -zxvf jdk1.8.0_212.tar.gz
-mv jdk1.8.0_212 /usr/local
+rpm -vih http://nginx.org/packages/rhel/7/x86_64/RPMS/nginx-1.16.0-1.el7.ngx.x86_64.rpm
+# vim /etc/nginx/nginx.conf
+……
+stream {
+
+    log_format  main  '$remote_addr $upstream_addr - [$time_local] $status $upstream_bytes_sent';
+
+    access_log  /var/log/nginx/k8s-access.log  main;
+
+    upstream k8s-apiserver {
+                server 192.168.0.131:6443;
+                server 192.168.0.132:6443;
+            }
+    
+    server {
+       listen 6443;
+       proxy_pass k8s-apiserver;
+    }
+}
+……
+
+#启动nginx
+systemctl start nginx
+systemctl enable nginx
 ```
 
-接下来，配置系统环境变量。
+## Nginx+keepalived高可用
 
 ```bash
-vim /etc/profile
+###主节点
+# yum install keepalived
+# vi /etc/keepalived/keepalived.conf
+global_defs { 
+   notification_email { 
+     acassen@firewall.loc 
+     failover@firewall.loc 
+     sysadmin@firewall.loc 
+   } 
+   notification_email_from Alexandre.Cassen@firewall.loc  
+   smtp_server 127.0.0.1 
+   smtp_connect_timeout 30 
+   router_id NGINX_MASTER
+} 
+
+vrrp_script check_nginx {
+    script "/etc/keepalived/check_nginx.sh"
+}
+
+vrrp_instance VI_1 { 
+    state MASTER 
+    interface ens32
+    virtual_router_id 51 # VRRP 路由 ID实例，每个实例是唯一的 
+    priority 100    # 优先级，备服务器设置 90 
+    advert_int 1    # 指定VRRP 心跳包通告间隔时间，默认1秒 
+    authentication { 
+        auth_type PASS      
+        auth_pass 1111 
+    }  
+    virtual_ipaddress { 
+        192.168.0.130/24
+    } 
+    track_script {
+        check_nginx
+    } 
+}
+
+# cat /etc/keepalived/check_nginx.sh 
+#!/bin/bash
+count=$(ps -ef |grep nginx |egrep -cv "grep|$$")
+
+if [ "$count" -eq 0 ];then
+    exit 1
+else
+    exit 0
+fi
+# systemctl start keepalived
+# systemctl enable keepalived
+
+###备节点
+#vim /etc/keepalived/keepalived.conf
+global_defs { 
+   notification_email { 
+     acassen@firewall.loc 
+     failover@firewall.loc 
+     sysadmin@firewall.loc 
+   } 
+   notification_email_from Alexandre.Cassen@firewall.loc  
+   smtp_server 127.0.0.1 
+   smtp_connect_timeout 30 
+   router_id NGINX_BACKUP
+} 
+
+vrrp_script check_nginx {
+    script "/etc/keepalived/check_nginx.sh"
+}
+
+vrrp_instance VI_1 { 
+    state BACKUP 
+    interface ens32
+    virtual_router_id 51 # VRRP 路由 ID实例，每个实例是唯一的 
+    priority 90    # 优先级，备服务器设置 90 
+    advert_int 1    # 指定VRRP 心跳包通告间隔时间，默认1秒 
+    authentication { 
+        auth_type PASS      
+        auth_pass 1111 
+    }  
+    virtual_ipaddress { 
+        192.168.0.130/24
+    } 
+    track_script {
+        check_nginx
+    } 
+}
+
+# cat /etc/keepalived/check_nginx.sh 
+#!/bin/bash
+count=$(ps -ef |grep nginx |egrep -cv "grep|$$")
+
+if [ "$count" -eq 0 ];then
+    exit 1
+else
+    exit 0
+fi
+
+# systemctl start keepalived
+# systemctl enable keepalived
+
+###测试VIP是否正常工作
+curl -k --header "Authorization: Bearer 8762670119726309a80b1fe94eb66e93" https://192.168.0.130:6443/version
+{
+  "major": "1",
+  "minor": "18",
+  "gitVersion": "v1.18.2",
+  "gitCommit": "52c56ce7a8272c798dbc29846288d7cd9fbae032",
+  "gitTreeState": "clean",
+  "buildDate": "2020-04-16T11:48:36Z",
+  "goVersion": "go1.13.9",
+  "compiler": "gc",
+  "platform": "linux/amd64"
+}
 ```
 
-配置项内容如下所示。
+
+
+
+
+# Haproxy+keepalive搭建高可用
+
+## 安装配置haproxy服务
 
 ```bash
-JAVA_HOME=/usr/local/jdk1.8.0_212
-CLASS_PATH=.:$JAVA_HOME/lib
-PATH=$JAVA_HOME/bin:$PATH
-export JAVA_HOME CLASS_PATH PATH
+1.安装haproxy
+[root@k8s-master01 ~]# yum install -y  haproxy
+2.配置haproxy
+cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.ori
+cat /etc/haproxy/haproxy.cfg
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats socket /var/run/haproxy-admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+    nbproc 1
+defaults
+    log global
+    timeout connect 5000
+    timeout client 10m
+    timeout server 10m
+listen admin_stats
+    bind 0.0.0.0:10080
+    mode http
+    log 127.0.0.1 local0 err
+    stats refresh 30s
+    stats uri /status
+    stats realm welcome login\ Haproxy
+    stats auth along:along123
+    stats hide-version
+    stats admin if TRUE
+listen kube-master
+    bind 0.0.0.0:8443
+    mode tcp
+    option tcplog
+    balance source
+    server 192.168.10.11 192.168.10.11:6443 check inter 2000 fall 2 rise 2 weight 1
+    server 192.168.10.12 192.168.10.12:6443 check inter 2000 fall 2 rise 2 weight 1
+    server 192.168.10.13 192.168.10.13:6443 check inter 2000 fall 2 rise 2 weight 1
+
+3.启动haproxy
+systemctl restart haproxy
+[root@k8s-master01 ~]# systemctl enable haproxy
+Created symlink from /etc/systemd/system/multi-user.target.wants/haproxy.service to /usr/lib/systemd/system/haproxy.service.
+[root@k8s-master01 ~]# systemctl status haproxy
+● haproxy.service - HAProxy Load Balancer
+   Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled; vendor preset: disabled)
+   Active: active (running) since 五 2020-04-10 16:35:46 CST; 24s ago
+ Main PID: 10235 (haproxy-systemd)
+   CGroup: /system.slice/haproxy.service
+           ├─10235 /usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+           ├─10236 /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
+           └─10237 /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -Ds
 ```
 
-接下来执行如下命令使系统环境变量生效。
 
-```bash
-source /etc/profile
-```
 
-## 安装Maven
-
-到Apache官方下载Maven，我这里下载的Maven版本为3.6.3。下载后直接解压并配置系统环境变量。
-
-```bash
-tar -zxvf apache-maven-3.6.3-bin.tar.gz
-mv apache-maven-3.6.3-bin /usr/local
-```
-
-接下来，就是配置系统环境变量。
-
-```bash
-vim /etc/profile
-```
-
-配置项内容如下所示。
-
-```bash
-JAVA_HOME=/usr/local/jdk1.8.0_212
-MAVEN_HOME=/usr/local/apache-maven-3.6.3-bin
-CLASS_PATH=.:$JAVA_HOME/lib
-PATH=$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH
-export JAVA_HOME CLASS_PATH MAVEN_HOME PATH
-```
-
-接下来执行如下命令使系统环境变量生效。
-
-```bash
-source /etc/profile
-```
-
-接下来，修改Maven的配置文件，如下所示。
-
-```xml
-<localRepository>/home/repository</localRepository>
-```
-
-将Maven下载的Jar包存储到/home/repository目录下。
-
-## 安装Docker环境
+# 安装Docker环境
 
 **本文档基于Docker 19.03.8 版本搭建Docker环境。**
 
@@ -140,6 +282,20 @@ yum install -y yum-utils device-mapper-persistent-data lvm2
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 dnf install https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.13-3.1.el7.x86_64.rpm
 yum install -y docker-ce-19.03.8 docker-ce-cli-19.03.8
+#配置docker镜像加速
+vi /etc/docker/daemon.json 
+{
+  "registry-mirrors": ["https://bk6kzfqm.mirror.aliyuncs.com"],
+  "insecure-registries": ["192.168.0.241"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2",
+  "storage-opts": [
+    "overlay2.override_kernel_check=true"
+  ]
+}
 systemctl enable docker.service
 systemctl start docker.service
 docker version
@@ -147,54 +303,30 @@ docker version
 
 在每台服务器上为install_docker.sh脚本赋予可执行权限，并执行脚本即可。
 
-## 安装docker-compose
-
-**注意：在每台服务器上安装docker-compose**
-
-**1.下载docker-compose文件**
-
-```bash
-curl -L https://github.com/docker/compose/releases/download/1.25.5/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose 
-```
-
-### 2.为docker-compose文件赋予可执行权限
-
-```bash
-chmod a+x /usr/local/bin/docker-compose
-```
-
-### 3.查看docker-compose版本
-
-```bash
-[root@binghe ~]# docker-compose version
-docker-compose version 1.25.5, build 8a1c60f6
-docker-py version: 4.1.0
-CPython version: 3.7.5
-OpenSSL version: OpenSSL 1.1.0l  10 Sep 2019
-```
-
-## 安装K8S集群环境
+# 安装K8S集群环境
 
 **本文档基于K8S 1.8.12版本来搭建K8S集群**
 
-### 安装K8S基础环境
+## 安装K8S基础环境
 
 在所有服务器上创建install_k8s.sh脚本文件，脚本文件的内容如下所示。
 
 ```bash
-#配置阿里云镜像加速器
-mkdir -p /etc/docker
-tee /etc/docker/daemon.json <<-'EOF'
-{
-  "registry-mirrors": ["https://zz3sblpi.mirror.aliyuncs.com"]
-}
+#!/bin/bash
+#设置hosts
+cat >> /etc/hosts << EOF
+192.168.0.140 master
+192.168.0.142 slave3
+192.168.0.144 slave4
 EOF
-systemctl daemon-reload
-systemctl restart docker
 
 #安装nfs-utils
 yum install -y nfs-utils
 yum install -y wget
+
+#同步系统时间：
+yum install -y ntpdate
+ntpdate time.windows.com
 
 #启动nfs-server
 systemctl start nfs-server
@@ -205,13 +337,17 @@ systemctl stop firewalld
 systemctl disable firewalld
 
 #关闭SeLinux
-setenforce 0
+#临时关闭
+setenforce 0	
+#永久关闭
 sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 
 # 关闭 swap
+# 临时关闭
 swapoff -a
-yes | cp /etc/fstab /etc/fstab_bak
-cat /etc/fstab_bak |grep -v swap > /etc/fstab
+#永久关闭
+sed -i 's/.*swap.*/#&/' /etc/fstab
+cat /etc/fstab
 
 #修改 /etc/sysctl.conf
 # 如果有配置，则修改
@@ -248,7 +384,7 @@ EOF
 # 卸载旧版本K8S
 yum remove -y kubelet kubeadm kubectl
 
-# 安装kubelet、kubeadm、kubectl，这里我安装的是1.18.2版本，你也可以安装1.17.2版本
+# 安装kubelet、kubeadm、kubectl，这里我安装的是1.18.2版本
 yum install -y kubelet-1.18.2 kubeadm-1.18.2 kubectl-1.18.2
 
 # 修改docker Cgroup Driver为systemd
@@ -273,11 +409,11 @@ docker version
 
 在每台服务器上为install_k8s.sh脚本赋予可执行权限，并执行脚本即可。
 
-### 初始化Master节点
+# 初始化Master节点
 
 **只在binghe101服务器上执行的操作。**
 
-**1.初始化Master节点的网络环境**
+## 1.初始化Master节点的网络环境
 
 注意：下面的命令需要在命令行手动执行。
 
@@ -292,7 +428,7 @@ export POD_SUBNET=172.18.0.1/16
 echo "${MASTER_IP}    ${APISERVER_NAME}" >> /etc/hosts
 ```
 
-**2.初始化Master节点**
+## 2.初始化Master节点
 
 在binghe101服务器上创建init_master.sh脚本文件，文件内容如下所示。
 
@@ -342,7 +478,7 @@ kubectl apply -f calico-3.13.1.yaml
 
 赋予init_master.sh脚本文件可执行权限并执行脚本。
 
-**3.查看Master节点的初始化结果**
+## 3.查看Master节点的初始化结果
 
 **（1）确保所有容器组处于Running状态**
 
@@ -383,9 +519,9 @@ NAME        STATUS   ROLES    AGE     VERSION   INTERNAL-IP       EXTERNAL-IP   
 binghe101   Ready    master   3m28s   v1.18.2   192.168.175.101   <none>        CentOS Linux 8 (Core)   4.18.0-80.el8.x86_64   docker://19.3.8
 ```
 
-### 初始化Worker节点
+# 初始化Worker节点
 
-**1.获取join命令参数**
+## 1.获取join命令参数
 
 在Master节点（binghe101服务器）上执行如下命令获取join命令参数。
 
@@ -411,7 +547,7 @@ kubeadm join k8s.master:6443 --token 8nblts.62xytoqufwsqzko2     --discovery-tok
 
 > 注意：join命令中的token的有效时间为 2 个小时，2小时内，可以使用此 token 初始化任意数量的 worker 节点。
 
-**2.初始化Worker节点**
+## 2.初始化Worker节点
 
 针对所有的 worker 节点执行，在这里，就是在binghe102服务器和binghe103服务器上执行。
 
@@ -458,7 +594,7 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 
 > 注意：kubeadm join…就是master 节点上 kubeadm token create 命令输出的join。
 
-**3.查看初始化结果**
+## 3.查看初始化结果
 
 在Master节点（binghe101服务器）执行如下命令查看初始化结果。
 
@@ -478,33 +614,13 @@ binghe103   Ready    <none>   2m46s   v1.18.2
 
 > 注意：kubectl get nodes命令后面加上-o wide参数可以输出更多的信息。
 
-## 重启K8S集群引起的问题
+> 
 
-### 1.Worker节点故障不能启动
-
-Master 节点的 IP 地址发生变化，导致 worker 节点不能启动。需要重新安装K8S集群，并确保所有节点都有固定的内网 IP 地址。
-
-### 2.Pod崩溃或不能正常访问
-
-重启服务器后使用如下命令查看Pod的运行状态。
-
-```bash
-kubectl get pods --all-namespaces
-```
-
-发现很多 Pod 不在 Running 状态，此时，需要使用如下命令删除运行不正常的Pod。
-
-```bash
-kubectl delete pod <pod-name> -n <pod-namespece>
-```
-
-> 注意：如果Pod 是使用 Deployment、StatefulSet 等控制器创建的，K8S 将创建新的 Pod 作为替代，重新启动的 Pod 通常能够正常工作。
-
-## K8S安装ingress-nginx
+# K8S安装ingress-nginx
 
 **注意：在Master节点（binghe101服务器上执行）**
 
-### 1.创建ingress-nginx命名空间
+## 1.创建ingress-nginx命名空间
 
 创建ingress-nginx-namespace.yaml文件，文件内容如下所示。
 
@@ -523,7 +639,7 @@ metadata:
 kubectl apply -f ingress-nginx-namespace.yaml
 ```
 
-### 2.安装ingress controller
+## 2.安装ingress controller
 
 创建ingress-nginx-mandatory.yaml文件，文件内容如下所示。
 
@@ -864,7 +980,7 @@ spec:
 kubectl apply -f ingress-nginx-mandatory.yaml
 ```
 
-### 3.安装K8S SVC：ingress-nginx
+## 3.安装K8S SVC：ingress-nginx
 
 主要是用来用于暴露pod：nginx-ingress-controller。
 
@@ -903,7 +1019,7 @@ spec:
 kubectl apply -f service-nodeport.yaml
 ```
 
-### 4.访问K8S SVC：ingress-nginx
+## 4.访问K8S SVC：ingress-nginx
 
 查看ingress-nginx命名空间的部署情况，如下所示。
 
@@ -938,3 +1054,47 @@ default backend - 404
 
 也可以在浏览器打开http://192.168.175.101:30080 来访问ingress-nginx，如下所示。
 ![img](https://img-blog.csdnimg.cn/20200521003920255.jpg#pic_center)
+
+# 重启K8S集群引起的问题
+
+## 1.Worker节点故障不能启动
+
+Master 节点的 IP 地址发生变化，导致 worker 节点不能启动。需要重新安装K8S集群，并确保所有节点都有固定的内网 IP 地址。
+
+## 2.Pod崩溃或不能正常访问
+
+重启服务器后使用如下命令查看Pod的运行状态。
+
+```bash
+kubectl get pods --all-namespaces
+```
+
+发现很多 Pod 不在 Running 状态，此时，需要使用如下命令删除运行不正常的Pod。
+
+```bash
+kubectl delete pod <pod-name> -n <pod-namespece>
+```
+
+> 注意：如果Pod 是使用 Deployment、StatefulSet 等控制器创建的，K8S 将创建新的 Pod 作为替代，重新启动的 Pod 通常能够正常工作。
+
+# kubernetes的node重新加入
+
+注意:以下操作在node下操作
+
+## 1. 停掉kubelet
+
+```bash
+systemctl stop kubelet
+```
+
+## 2. 删除之前的相关文件
+
+```bash
+rm -rf /etc/kubernetes/*
+```
+
+## 3. 加入集群
+
+```bash
+kubeadm join 192.168.233.3:6443 
+```

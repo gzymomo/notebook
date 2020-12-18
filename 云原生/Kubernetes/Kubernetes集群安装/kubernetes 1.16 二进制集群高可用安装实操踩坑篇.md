@@ -13,8 +13,6 @@ CSDN：
 CentOS Linux release 7.7.1908 (Core)
 [root@k8s-master01 ~]# uname -r
 3.10.0-693.el7.x86_64
-
-12345
 ```
 
 ## 1.2 主机名设置
@@ -25,7 +23,6 @@ hostnamectl set-hostname k8s-master02
 hostnamectl set-hostname k8s-master03
 hostnamectl set-hostname k8s-node01
 hostnamectl set-hostname k8s-node02
-12345
 ```
 
 ## 1.3 服务器角色规划
