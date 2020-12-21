@@ -239,7 +239,7 @@ Pod实现网络共享机制：
 
 引入数据卷概念Volume，使用数据卷进行持久化存储。
 
-![](..\..\img\volume.png)
+![](..\....\..\img\volume.png)
 
 ## 1.4 Pod镜像拉取策略
 
@@ -285,9 +285,22 @@ spec:
 
 
 
-![](..\..\img\resources.png)
+![](..\....\..\img\resources.png)
 
 ## 1.6 Pod重启机制
+
+容器重启策略：
+
+```yaml
+spec:
+  restartPolicy: [Always|Never|OnFailure] 
+```
+
+- Always：Pod一旦终止运行，kubelet都会进行重启，这也是默认值。
+- Never：不会进行重启
+- OnFailure：容器非正常退出（即是退出码不为0），kubelet会重启容器，反之不会重启。
+
+
 
 PodSpec 中有一个 restartPolicy 字段，可能的值为 Always、OnFailure 和 Never。默认为 Always。
 
@@ -357,9 +370,11 @@ Probe支持以下三种检查方法：
 
 ## 1.8 Pod调度策略
 
+
+
 #### 创建Pod流程
 
-![](..\..\img\createpod.png)
+![](..\....\..\img\createpod.png)
 
 
 
@@ -403,7 +418,7 @@ spec:
     image: nginx:1.15
 ```
 
-![](..\..\img\nodeselector.png)
+![](..\....\..\img\nodeselector.png)
 
 #### 影响Pod调度-节点亲和性
 
@@ -417,7 +432,7 @@ nodeAffinity和之前的nodeSelector基本一样的，根据节点上标签约�
 
 2. 软亲和性（尝试满足，不保证）
 
-![](..\..\img\affinity.png)
+![](..\....\..\img\affinity.png)
 
 
 
@@ -1375,6 +1390,235 @@ Hello from the preStop handler
 ```
 
 由上可知，当在容器被终结之前， Kubernetes 将发送一个 preStop 事件。
+
+
+
+# 4、Pod-Containers
+
+containers是Pod中的容器列表，数组类型。
+
+```yaml
+spec:
+  containers:  #容器列表
+  - name: string  #容器名称
+    image: string  #所用镜像
+    imagePullPolicy: [Always|Never|IfNotPresent]  #镜像拉取策略
+    command: [string]  #容器的启动命令列表
+    args: [string]  #启动命令参数列表
+    workingDir: string  #工作目录
+    volumeMounts:  #挂载在容器内部的存储卷配置
+    - name: string  #共享存储卷名称
+      mountPath: string  #存储卷绝对路径
+      readOnly: boolean  #是否只读
+    ports:  #容器需要暴露的端口号列表
+    - name: string  #端口名称
+      containerPort: int  #容器监听端口
+      hostPort: int  #映射宿主机端口
+      protocol: string  #端口协议
+    env:  #环境变量
+    - name: string
+      value: string
+    resources:  #资源限制
+      limits:
+        cpu: string  #单位是core
+        memory: string  #单位是MiB、GiB
+    livenessProbe:  #探针，对Pod各容器健康检查的设置，如几次无回应，则会自动重启
+      exec:
+        command: [string]
+      httpGet:
+        path: string
+        port: number
+        host: string
+        scheme: string
+        httpHeaders:
+        - name: string
+          value: string
+      tcpSocket:
+        port: number
+      initialDelaySeconds: 0  #启动后多久进行检测
+      timeoutSeconds: 0  #超时时间
+      periodSeconds: 0  #间隔时间
+      successThreshold: 0  #
+      failureThreshold: 0
+    securityContext: #权限设置
+      privileged: false  #是否允许创建特权模式的Pod
+```
+
+探针测试：
+
+列出文件或文件夹aaa（此目录是不存在的），容器启动后5s开始执行探针，每隔5s执行一次。
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test
+  labels:
+    app: nginx-test
+spec:
+  containers:
+  - name: nginx-test
+    image: nginx:latest
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80
+    livenessProbe:
+      exec:
+        command: ["ls","aaa"]
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+```
+
+# 5、nodeSelector
+
+指定Pod被调度到哪个节点运行。
+
+```
+spec:
+  nodeSelector:
+    K: V
+```
+
+　　
+
+比如想把一个Pod调度给cnode-2节点运行：
+
+获取集群中所有节点列表：
+
+![img](https://p26-tt.byteimg.com/img/pgc-image/833f97cb0b104bd29ea23419c386372e~tplv-tt-shrink:640:0.image)
+
+ 
+
+给cnode-2节点打标签：
+
+```
+kubectl label nodes/cnode-2 name=cnode-2
+```
+
+　　
+
+![img](https://p1-tt-ipv6.byteimg.com/img/pgc-image/d5d27b62994544c78761c7080019abfe~tplv-tt-shrink:640:0.image)
+
+ 
+
+查看cnode-2节点标签信息：
+
+![img](https://p9-tt-ipv6.byteimg.com/img/pgc-image/e87e1487dd8d47d2a8cb24917825283c~tplv-tt-shrink:640:0.image)
+
+ 
+
+定义Pod的yaml文件：nginx-ns.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test
+  labels:
+    app: nginx-test
+spec:
+  containers:
+  - name: nginx-test
+    image: nginx:latest
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80
+  nodeSelector:
+    name: cnode-2
+```
+
+　　
+
+使用如下命令创建Pod：
+
+```
+kubectl create -f nginx-ns.yaml
+```
+
+　　
+
+查看这个Pod运行在哪个节点：
+
+![img](https://p26-tt.byteimg.com/img/pgc-image/a4eaf0ba402449e4a3ff8054bebc496f~tplv-tt-shrink:640:0.image)
+
+# 6、imagePullSecrets
+
+拉取镜像时使用的Secret名称，以name：secretKey格式指定
+
+```yaml
+spec:
+  imagePullSecrets:
+    name: secretKey
+```
+
+Secret是用来保存私密凭据的，比如密码等信息
+
+
+
+# 7、hostNetwork
+
+是否使用主机网络模式
+
+```yaml
+spec:
+  hostNetwork: true|false
+```
+
+　　
+
+如果使用主机网络模式的话，Pod的IP就是跟宿主机IP是一样的
+
+例如：创建下列Pod
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test
+  labels:
+    app: nginx-test
+spec:
+  containers:
+  - name: nginx-test
+    image: nginx:latest
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80
+  nodeSelector:
+    name: cnode-3
+  hostNetwork: true
+```
+
+　　
+
+然后查看Pod被分配的IP与主机IP是否相同
+
+![img](https://p1-tt-ipv6.byteimg.com/img/pgc-image/f9dcc2b31dae405eb1dd646520ae40e3~tplv-tt-shrink:640:0.image)
+
+# 8、volumes
+
+Pod上定义的共享存储列表：
+
+```yaml
+spec:
+  volumes:  #存储卷
+  - name: string
+    emptyDir: {}  #表示与Pod同生命周期的一个临时目录
+    hostPath:  #宿主机Host
+      path: string
+    secret: #挂载集群预定义的secret对象到容器内部
+      secretName: string
+      items:
+      - key: string
+        path: string
+    configMap: #挂载集群预定义的configMap对象到容器内部
+      name: string
+      items:
+      - key: string
+        path: string
+```
+
+
 
 #  案例
 
