@@ -1,6 +1,12 @@
 [TOC]
 
-[CSDN：Moshow郑锴：基于ELK打造强大的日志收集分析系统（springboot2+logback+logstash+elasticsearch+kibana）](https://blog.csdn.net/moshowgame/article/details/98851656)
+- [CSDN：Moshow郑锴：基于ELK打造强大的日志收集分析系统（springboot2+logback+logstash+elasticsearch+kibana）](https://blog.csdn.net/moshowgame/article/details/98851656)
+
+- [ElasticSearch实战系列九: ELK日志系统介绍和安装](https://www.cnblogs.com/xuwujing/p/13870806.html)
+
+
+
+
 
 springboot2+logback+logstash+elasticsearch的日志分析系统，借助es强大的生态圈以及全文搜索能力，实现日志收集/分析/检索不再是难事。
 

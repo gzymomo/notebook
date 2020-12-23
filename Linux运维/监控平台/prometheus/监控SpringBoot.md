@@ -171,3 +171,71 @@ public class OperationController {
 ![](https://img-blog.csdnimg.cn/20190816004154208.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhcnNvbjA0MDg=,size_16,color_FFFFFF,t_70)
 然后选中数据源，并进行metrics语句编写，如下图所示，sum(request_add_total) ,其中sum函数中的字段可以模糊搜索，只要prometheus中的服务是up的。然后图就如下所示，可以看出，调用情况：
 ![](https://img-blog.csdnimg.cn/20190816004433796.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NhcnNvbjA0MDg=,size_16,color_FFFFFF,t_70)
+
+# 三、SpringBoot应用实现案例
+
+## 3.1 在pom文件添加
+
+```
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-prometheus</artifactId>
+</dependency>
+<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+## 3.2 在代码中添加如下配置：
+
+```
+private Counter requestErrorCount;
+    private final MeterRegistry registry;
+    @Autowired
+    public PrometheusCustomMonitor(MeterRegistry registry) {
+        this.registry = registry;
+    }
+    @PostConstruct
+    private void init() {
+        requestErrorCount = registry.counter("requests_error_total", "status", "error");
+    }
+    public Counter getRequestErrorCount() {
+        return requestErrorCount;
+    }
+```
+
+## 3.3 在异常处理中添加如下记录:
+
+```
+monitor.getRequestErrorCount().increment();
+```
+
+## 3.4 在prometheus的配置中添加springboot应用服务监控
+
+```
+-  job_name: 'springboot' 
+     metrics_path: '/actuator/prometheus' 
+     scrape_interval: 5s
+     static_configs:
+     - targets: ['192.168.8.45:8080'] 
+```
+
+## 3.5 Prometheu.yml配置如下:
+
+```
+  - job_name: 'springboot' 
+    metrics_path: '/actuator/prometheus' 
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['192.168.8.45:8080']  
+```
+
+规则文件配置如下:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201130234644566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FhendzeHBjbQ==,size_16,color_FFFFFF,t_70)
+
+## 3.6 在prometheus监控即可查看
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201130234528701.png)
+企业微信告警效果图:
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201130234707687.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FhendzeHBjbQ==,size_16,color_FFFFFF,t_70)

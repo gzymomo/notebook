@@ -1,13 +1,21 @@
+- [容器日志采集实践](https://www.cnblogs.com/spec-dog/p/12624470.html)
+
+
+
 Docker  日志分为两类：
 
 - Docker 引擎日志(也就是 dockerd 运行时的日志)，
 - 容器的日志，容器内的服务产生的日志。
 
-### ** **
+# 一 、Docker 引擎日志（Docker Daemon日志）
 
-### **一 、Docker 引擎日志**
+Docker 引擎日志一般是交给了 Upstart(Ubuntu 14.04) 或者 systemd (CentOS 7, Ubuntu 16.04)。
 
-Docker 引擎日志一般是交给了 Upstart(Ubuntu 14.04) 或者 systemd (CentOS 7, Ubuntu 16.04)。前者一般位于 /var/log/upstart/docker.log 下，后者我们一般 通过  `journalctl -u docker` 来进行查看。
+前者一般位于 /var/log/upstart/docker.log 下，后者我们一般 通过  `journalctl -u docker` 来进行查看。
+
+
+
+Docker Daemon在Linux中本身作为systemd service启动，因此可以通过 `sudo journalctl -u docker` 命令来查看Daemon本身的日志。
 
 | 系统                   | 日志位置                                                     |
 | :--------------------- | :----------------------------------------------------------- |
@@ -23,20 +31,41 @@ Docker 引擎日志一般是交给了 Upstart(Ubuntu 14.04) 或者 systemd (Cent
 
 
 
-### **二、容器日志**
+# 二、容器日志
 
-####  
+通过 `docker logs container_id|container_name` 可以查看Docker容器的输出日志，但这里的日志只包含容器的标准输出（STDOUT）与标准错误输出（STDERR），适用于一些将日志输出到STDOUT的容器,比如Nginx，查看nginx的dockerfile可发现其是将日志文件链接到了STDOUT与STDERR来实现的，
 
-#### **2.1、常用查看日志命令——docker logs**
+```shell
+    RUN ln -sf /dev/stdout /var/log/nginx/access.log
+    && ln -sf /dev/stderr /var/log/nginx/error.log
+```
 
-`docker logs CONTAINER` 显示当前运行的容器的日志信息， UNIX 和 Linux 的命令有三种 输入输出，分别是 STDIN(标准输入)、STDOUT(标准输出)、STDERR(标准错误输出)，docker logs  显示的内容包含 STOUT 和 STDERR。在生产环境，如果我们的应用输出到我们的日志文件里，所以我们在使用  docker  logs 一般收集不到太多重要的日志信息。
+但如果容器内部应用日志是输出到日志文件（比如Spring Boot项目或Tomcat容器，一般将日志输出到日志文件中），则无法通过 `docker logs` 命令查看。
+
+> `docker logs` 会显示历史日志，日志太多的话要等半天才能看到最新日志，同时也对Docker Daemon造成一定的压力，可使用 `docker logs --tail 200 container_id`来查看最新的N条或使用`docker logs -f container_id`（类似于tail -f）
+
+
+
+在生产环境，如果我们的应用输出到我们的日志文件里，所以我们在使用  docker  logs 一般收集不到太多重要的日志信息。
 
 > - nginx 官方镜像，使用了一种方式，让日志输出到 STDOUT，也就是 创建一个符号链接`/var/log/nginx/access.log` 到 `/dev/stdout`。
 > - httpd 使用的是 让其输出到指定文件 ，正常日志输出到 `/proc/self/fd/1` (STDOUT) ，错误日志输出到 `/proc/self/fd/2` (STDERR)。
-> - 当日志量比较大的时候，我们使用 docker logs  来查看日志，会对 docker daemon 造成比较大的压力，容器导致容器创建慢等一系列问题。
-> - **只有使用了 `local 、json-file、journald`  的日志驱动的容器才可以使用 docker logs 捕获日志，使用其他日志驱动无法使用 `docker logs`**
 
-#### 2.2 、Docker 日志 驱动
+
+
+当日志量比较大的时候，我们使用 docker logs  来查看日志，会对 docker daemon 造成比较大的压力，容器导致容器创建慢等一系列问题。
+
+**只有使用了 `local 、json-file、journald`  的日志驱动的容器才可以使用 docker logs 捕获日志，使用其他日志驱动无法使用 `docker logs`**。
+
+
+
+## 2.1 Docker 日志驱动（日志处理机制）
+
+当我们启动一个容器时，其实是作为Docker Daemon的一个子进程运行，Docker Daemon可以拿到容器里进程的标准输出与标准错误输出，然后通过Docker的Log Driver模块来处理。如下图所示
+
+![docker-log-driver.png](https://img2020.cnblogs.com/other/632381/202004/632381-20200403091632758-1162008992.png)
+
+
 
 Docker 提供了两种模式用于将消息从容器到日志驱动。
 
@@ -64,7 +93,7 @@ Docker 提供了两种模式用于将消息从容器到日志驱动。
 | `gcplogs`    | 将日志消息写入Google Cloud Platform（GCP）Logging。          |
 | `logentries` | 将日志消息写入Rapid7 Logentries。                            |
 
-使用 Docker-CE 版本，`docker logs`命令 仅仅适用于以下驱动程序(前面 docker logs 详解也提及到了)
+<font color='blue'>使用 Docker-CE 版本，`docker logs`命令 仅仅适用于以下驱动程序(前面 docker logs 详解也提及到了)</font>
 
 - local
 - json-file
@@ -74,43 +103,47 @@ Docker 提供了两种模式用于将消息从容器到日志驱动。
 
 ![1558055133186](https://mmbiz.qpic.cn/mmbiz_png/NW4iaKVI4GNOvqkw3xribUiaMYKsJRkuIxagkWX61Xu0feRDQicjDySAIPnk1mLhCDFAIOMj5pJ3hnEicI4Ria4J3Jzg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)1558055133186
 
-###### Docker 日志驱动常用命令
+## 2.2 Docker 日志驱动常用命令
 
 查看系统当前设置的日志驱动
 
-```
+```bash
 docker  info |grep  "Logging Driver"  / docker info --format '{{.LoggingDriver}}'
 ```
 
 查看单个容器的设置的日志驱动
 
-```
+```bash
 docker inspect  -f '{{.HostConfig.LogConfig.Type}}'   容器id
 ```
 
-###### Docker 日志驱动全局配置更改
+## 2.3 Docker 日志驱动全局配置更改
 
 修改日志驱动，在配置文件 `/etc/docker/daemon.json`（注意该文件内容是 JSON 格式的）进行配置即可。
 
 示例：
 
-```
+```yaml
 {
-  "log-driver": "syslog"
+    "log-driver": "local",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": 3
+    }
 }
 ```
 
 以上更改是针对所有的容器的日志驱动的。我们也可以单独为单一容器设置日志驱动。
 
-###### Docker 单一容器日志驱动配置
+## Docker 单一容器日志驱动配置
 
 在 运行容器的时候指定 日志驱动 `--log-driver`。
 
-```
+```bash
 docker  run  -itd --log-driver none alpine ash # 这里指定的日志驱动为 none 
 ```
 
-###### 日志驱动 一 、local
+## 日志驱动 一 、local
 
 `local` 日志驱动 记录从容器的 `STOUT/STDERR` 的输出，并写到宿主机的磁盘。
 
@@ -130,7 +163,7 @@ local 日志驱动的储存位置 `/var/lib/docker/containers/容器id/local-log
 
 在配置文件 `/etc/docker/daemon.json`（注意该文件内容是 JSON 格式的）进行配置即可。
 
-```
+```yaml
 {
   "log-driver": "local",
   "log-opts": {
@@ -145,7 +178,7 @@ local 日志驱动的储存位置 `/var/lib/docker/containers/容器id/local-log
 
 运行容器并设定为 `local` 驱动。
 
-```
+```bash
 #  运行一个容器 ，并设定日志驱动为 local ，并运行命令 ping www.baidu.com
 [root@localhost docker]# docker run  -itd  --log-driver  local  alpine  ping www.baidu.com 
 3795b6483534961c1d5223359ad1106433ce2bf25e18b981a47a2d79ad7a3156#  查看运行的容器的 日志驱动是否是 local
@@ -158,25 +191,22 @@ NNdout?μ???:64 bytes from 14.215.177.38: seq=817 ttl=55 time=4.950 ms
 
 > 注意事项：经过测试，当我们产生了100 MB 大小的日志时 会有 四个压缩文件和一个`container.log`：
 >
-> ```
+> ```bash
 > [root@localhost local-logs]# ls -l
 > total 32544
 > -rw-r-----. 1 root root 18339944 May 16 09:41 container.log
 > -rw-r-----. 1 root root  3698660 May 16 09:41 container.log.1.gz
-> -rw-r-----. 1 root root  3726315 May 16 09:41 container.log.2.gz
-> -rw-r-----. 1 root root  3805668 May 16 09:41 container.log.3.gz
-> -rw-r-----. 1 root root  3744104 May 16 09:41 container.log.4.gz
 > ```
->
+> 
+> 
+> 
+>那么当超过了 100MB 的日志文件，日志文件会继续写入到  `container.log`，但是会将  `container.log` 日志中老的日志删除，追加新的，也就是 当写满 100MB 日志后 ，再产生一条新日志，会删除  `container.log` 中的一条老日志，保存 100MB 的大小。**这个 对我们是会有一些影响的，**
 >  
->
-> 那么当超过了 100MB 的日志文件，日志文件会继续写入到  `container.log`，但是会将  `container.log` 日志中老的日志删除，追加新的，也就是 当写满 100MB 日志后 ，再产生一条新日志，会删除  `container.log` 中的一条老日志，保存 100MB 的大小。**这个 对我们是会有一些影响的，**
->
-> ```
+>```
 > 当我运行系统时 第一天由于bug产生了 100MB 日志，那么之前的日志就已经有 80MB 日志变成的压缩包，所以我在后续的运行中，只能获取最近的 20MB日志。
-> ```
+>```
 
-###### 日志驱动 二、 默认的日志驱动—JSON
+## 日志驱动 二、 默认的日志驱动—JSON
 
 **所有容器默认的日志驱动** **`json-file`**。
 
@@ -201,7 +231,7 @@ json-file  日志的路径位于 `/var/lib/docker/containers/container_id/contai
 
 **`json-file` 的日志驱动示例**
 
-```
+```bash
 # 设置 日志驱动为 json-file ，我们也可以不设置，因为默认就是 json-file
 docker run  -itd  --name  test-log-json  --log-driver json-file   alpine  ping www.baidu.com
 199608b2e2c52136d2a17e539e9ef7fbacf97f1293678aded421dadbdb006a5e
@@ -211,13 +241,9 @@ tail -f /var/lib/docker/containers/199608b2e2c52136d2a17e539e9ef7fbacf97f1293678
 
 {"log":"64 bytes from 14.215.177.39: seq=13 ttl=55 time=15.023 ms\r\n","stream":"stdout","time":"2019-05-16T14:13:54.003118877Z"}
 {"log":"64 bytes from 14.215.177.39: seq=14 ttl=55 time=9.640 ms\r\n","stream":"stdout","time":"2019-05-16T14:13:54.999011017Z"}
-{"log":"64 bytes from 14.215.177.39: seq=15 ttl=55 time=8.938 ms\r\n","stream":"stdout","time":"2019-05-16T14:13:55.998612636Z"}
-{"log":"64 bytes from 14.215.177.39: seq=16 ttl=55 time=18.086 ms\r\n","stream":"stdout","time":"2019-05-16T14:13:57.011235913Z"}
-{"log":"64 bytes from 14.215.177.39: seq=17 ttl=55 time=12.615 ms\r\n","stream":"stdout","time":"2019-05-16T14:13:58.007104112Z"}
-{"log":"64 bytes from 14.215.177.39: seq=18 ttl=55 time=11.001 ms\r\n","stream":"stdout","time":"2019-05-16T14:13:59.007559413Z"}
 ```
 
-###### 日志驱动 三、syslog
+## 日志驱动 三、syslog
 
 syslog 日志驱动将日志路由到 syslog 服务器，syslog 以原始的字符串作为 日志消息元数据，接收方可以提取以下的消息：
 
@@ -231,7 +257,7 @@ syslog 日志驱动将日志路由到 syslog 服务器，syslog 以原始的字�
 
 编辑 `/etc/docker/daemon.json` 文件
 
-```
+```yaml
 {
   "log-driver": "syslog",
   "log-opts": {
@@ -260,7 +286,7 @@ syslog 日志驱动将日志路由到 syslog 服务器，syslog 以原始的字�
 
 `Linux` 系统中 我们用的系统日志模块时  `rsyslog` ，它是基于`syslog` 的标准实现。我们要使用 syslog 驱动需要使用 系统自带的 `rsyslog` 服务。
 
-```
+```bash
 # 查看当前 rsyslog 版本和基本信息
 [root@localhost harbor]# rsyslogd  -v
 rsyslogd 8.24.0, compiled with:
@@ -281,7 +307,7 @@ See http://www.rsyslog.com for more information.
 
 配置 syslog , 在配置文件 `/etc/rsyslog.conf` 大约14-20行，我们可以看到两个配置，一个udp，一个tcp ，都是监听 514 端口，提供 syslog 的接收。选择 tcp 就将 tcp 的两个配置的前面 # 号注释即可。
 
-```
+```bash
 # Provides UDP syslog reception
 #$ModLoad imudp
 #$UDPServerRun 514
@@ -293,7 +319,7 @@ See http://www.rsyslog.com for more information.
 
 然后重启 rsyslog，我们可以看到514端口在监听。
 
-```
+```bash
 systemctl restart  rsyslog
 [root@localhost harbor]# netstat -ntul |grep 514
 tcp        0      0 0.0.0.0:514             0.0.0.0:*               LISTEN     
@@ -302,13 +328,13 @@ tcp6       0      0 :::514                  :::*                    LISTEN
 
 启动一个以  `syslog` 为驱动的容器。
 
-```
+```bash
 docker  run -d -it  -p 87:80 --log-driver syslog --log-opt syslog-address=tcp://127.0.0.1:514  --name nginx-syslog   nginx
 ```
 
 访问并查看日志
 
-```
+```bash
 # 访问nginx
 curl 127.0.0.1:87
 # 查看访问日志
@@ -317,7 +343,7 @@ May 17 15:56:48 localhost fe18924aefde[6141]: 172.17.0.1 - - [17/May/2019:07:56:
 May 17 15:58:16 localhost fe18924aefde[6141]: 172.17.0.1 - - [17/May/2019:07:58:16 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.29.0" "-"#015
 ```
 
-###### 日志驱动 四、Journald
+## 日志驱动 四、Journald
 
 `journald` 日志驱动程序将容器的日志发送到 `systemd journal`, 可以使用 `journal API` 或者使用 `docker logs` 来查日志。
 
@@ -344,7 +370,7 @@ May 17 15:58:16 localhost fe18924aefde[6141]: 172.17.0.1 - - [17/May/2019:07:58:
 
 编辑 `/etc/docker/daemon.json` 文件
 
-```
+```yaml
 {
   "log-driver": "journald"
 }
@@ -352,7 +378,7 @@ May 17 15:58:16 localhost fe18924aefde[6141]: 172.17.0.1 - - [17/May/2019:07:58:
 
 **单个容器日志驱动设置为—****`journald`**
 
-```
+```bash
 docker  run  -d -it --log-driver=journald \
     --log-opt labels=location \
     --log-opt env=TEST \
@@ -365,7 +391,7 @@ docker  run  -d -it --log-driver=journald \
 
 查看日志 `journalctl`
 
-```
+```bash
 # 只查询指定容器的相关消息
  journalctl CONTAINER_NAME=webserver
 # -b 指定从上次启动以来的所有消息
@@ -385,16 +411,13 @@ docker  run  -d -it --log-driver=journald \
 >
 > 显示`[104B blob data]` 而不是完整日志原因是因为有 `\r` 的存在，如果我们要完整显示，需要加上参数 `--all` 。
 
-### ** **
 
-### **三、 生产环境中该如何储存容器中的日志**
 
-**
-**
+# 三、 生产环境中该如何储存容器中的日志
 
 我们在上面看到了 Docker 官方提供了 很多日志驱动，但是上面的这些驱动都是针对的 标准输出的日志驱动。
 
-###### 容器日志分类
+## 3.1 容器日志分类
 
 容器的日志实际是有两大类的：
 
@@ -402,7 +425,7 @@ docker  run  -d -it --log-driver=journald \
 
   示例：Nginx 日志，Nginx 日志有 `access.log` 和 `error.log` ，我们在 Docker Hub 上可以看到  Nginx 的 dockerfile  对于这两个日志的处理是：
 
-  ```
+  ```bash
   RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
   ```
@@ -413,41 +436,40 @@ docker  run  -d -it --log-driver=journald \
 
   示例：Tomcat 日志，Tomcat 有 catalina、localhost、manager、admin、host-manager，我们可以在 Docker Hub 看到 Tomcat 的 dockerfile 只有对于 catalina 进行处理，其它日志将储存在容器里。
 
-  ```
+  ```bash
   CMD ["catalina.sh", "run"]
   ```
 
   我们运行了一个 Tomcat 容器 ，然后进行访问后，并登陆到容器内部，我们可以看到产生了文本日志：
 
-  ```
+  ```bash
   root@25ba00fdab97:/usr/local/tomcat/logs# ls -l
   total 16
   -rw-r-----. 1 root root 6822 May 17 14:36 catalina.2019-05-17.log
   -rw-r-----. 1 root root    0 May 17 14:36 host-manager.2019-05-17.log
-  -rw-r-----. 1 root root  459 May 17 14:36 localhost.2019-05-17.log
-  -rw-r-----. 1 root root 1017 May 17 14:37 localhost_access_log.2019-05-17.txt
-  -rw-r-----. 1 root root    0 May 17 14:36 manager.2019-05-17.log
   ```
-
+  
   这类容器我们下面有专门的方案来应对。
 
-#### 一、当是完全是标准输出的类型的容器
 
-我们可以选择  json-file 、syslog、local 等 Docker 支持的日志驱动。
 
-#### 二、当有文件文本日志的类型容器
+## 3.2 当是完全是标准输出的类型的容器
 
-###### 方案一 挂载目录  bind
+选择  json-file 、syslog、local 等 Docker 支持的日志驱动。
+
+## 3.3 当有文件文本日志的类型容器
+
+### 方案一 挂载目录  bind
 
 创建一个目录，将目录挂载到 容器中产生日志的目录。
 
-```
+```bash
 --mount  type=bind,src=/opt/logs/,dst=/usr/local/tomcat/logs/ 
 ```
 
 示例：
 
-```
+```bash
 # 创建挂载目录/opt/logs
 [root@fy-local-2 /]# mkdir  /opt/logs
 # 创建容器tomcat-bind 并将 /opt/logs 挂载至 /usr/local/tomcat/logs/
@@ -456,22 +478,19 @@ docker  run  -d -it --log-driver=journald \
 total 12
 -rw-r----- 1 root root 6820 May 22 17:31 catalina.2019-05-22.log
 -rw-r----- 1 root root    0 May 22 17:31 host-manager.2019-05-22.log
--rw-r----- 1 root root  459 May 22 17:31 localhost.2019-05-22.log
--rw-r----- 1 root root    0 May 22 17:31 localhost_access_log.2019-05-22.txt
--rw-r----- 1 root root    0 May 22 17:31 manager.2019-05-22.log
 ```
 
-###### 方案二 使用数据卷 volume
+### 方案二 使用数据卷 volume
 
 创建数据卷，创建容器时绑定数据卷，
 
-```
+```bash
 --mount  type=volume  src=volume_name  dst=/usr/local/tomcat/logs/ 
 ```
 
 示例：
 
-```
+```bash
 # 创建tomcat应用数据卷名称为 tomcat
 [root@fy-local-2 /]# docker volume  create  tomcat
 # 创建容器tomcat-volume 并指定数据卷为 tomcat，绑定至 /usr/local/tomcat/logs/
@@ -481,12 +500,9 @@ total 12
 total 12
 -rw-r----- 1 root root 6820 May 22 17:33 catalina.2019-05-22.log
 -rw-r----- 1 root root    0 May 22 17:33 host-manager.2019-05-22.log
--rw-r----- 1 root root  459 May 22 17:33 localhost.2019-05-22.log
--rw-r----- 1 root root    0 May 22 17:33 localhost_access_log.2019-05-22.txt
--rw-r----- 1 root root    0 May 22 17:33 manager.2019-05-22.log
 ```
 
-###### 方案三 计算容器 rootfs 挂载点
+### 方案三 计算容器 rootfs 挂载点
 
 此方案的文字内容摘抄于 https://yq.aliyun.com/articles/672054
 
@@ -503,7 +519,7 @@ total 12
 
 **示例：**
 
-```
+```bash
 # 创建容器 tomcat-test
 [root@fy-local-2 /]# docker  run -d  --name  tomcat-test  -P  tomcat
 36510dd653ae7dcac1d017174b1c38b3f9a226f9c4e329d0ff656cfe041939ff  
@@ -518,33 +534,68 @@ drwxr-xr-x 2 root root    6 Mar 28 17:12 boot
 drwxr-xr-x 1 root root   43 May 22 17:27 dev
 lrwxrwxrwx 1 root root   33 May  8 13:08 docker-java-home -> /usr/lib/jvm/java-8-openjdk-amd64
 drwxr-xr-x 1 root root   66 May 22 17:27 etc
-drwxr-xr-x 2 root root    6 Mar 28 17:12 home
-drwxr-xr-x 1 root root    6 May 16 08:50 lib
-drwxr-xr-x 2 root root   34 May  6 08:00 lib64
-drwxr-xr-x 2 root root    6 May  6 08:00 media
-drwxr-xr-x 2 root root    6 May  6 08:00 mnt
-drwxr-xr-x 2 root root    6 May  6 08:00 opt
-drwxr-xr-x 2 root root    6 Mar 28 17:12 proc
-drwx------ 1 root root   27 May 22 17:29 root
-drwxr-xr-x 3 root root   30 May  6 08:00 run
-drwxr-xr-x 2 root root 4096 May  6 08:00 sbin
-drwxr-xr-x 2 root root    6 May  6 08:00 srv
-drwxr-xr-x 2 root root    6 Mar 28 17:12 sys
-drwxrwxrwt 1 root root   29 May 16 08:50 tmp
-drwxr-xr-x 1 root root   19 May  6 08:00 usr
-drwxr-xr-x 1 root root   41 May  6 08:00 var
 # 查看日志
 [root@fy-local-2 /]# ls -l /var/lib/docker/overlay2/c10ec54bab8f3fccd2c5f1a305df6f3b1e53068776363ab0c104d253216b799d/merged/usr/local/tomcat/logs/
 total 20
 -rw-r----- 1 root root 14514 May 22 17:40 catalina.2019-05-22.log
 -rw-r----- 1 root root     0 May 22 17:27 host-manager.2019-05-22.log
--rw-r----- 1 root root  1194 May 22 17:40 localhost.2019-05-22.log
--rw-r----- 1 root root     0 May 22 17:27 localhost_access_log.2019-05-22.txt
--rw-r----- 1 root root     0 May 22 17:27 manager.2019-05-22.log
 ```
 
-###### 方案四  在代码层中实现直接将日志写入redis
+### 方案四  在代码层中实现直接将日志写入redis
 
 docker  ——》redis ——》Logstash——》Elasticsearch，通过代码层面，直接将日志写入`redis`,最后写入 `Elasticsearch`。
 
 以上就是对 Docker 日志的所有的概念解释和方提供，具体采用什么方案，根据公司的具体的业务来选择。合适的才是最好的。
+
+
+
+# 四、查看docker日志API示例
+
+```bash
+docker logs [OPTIONS] CONTAINER ID
+```
+
+OPTIONS说明：
+
+```bash
+-f : 跟踪日志输出
+--since :显示某个开始时间的所有日志
+-t : 显示时间戳
+--tail :仅列出最新N条容器日志
+```
+
+## 4.1 查看指定时间后的日志，只显示最后100行：
+
+```bash
+docker logs -f -t --since="2020-10-01" --tail=100 CONTAINER ID
+```
+
+## 4.2 查个指定时间区段的日志
+
+```bash
+docker logs -t --since="2020-10-01T19:00:00" --until "2020-10-01T19:00:00" CONTAINER ID
+```
+
+## 4.3 查看指定时间后面的日志：
+
+```bash
+docker logs -t --since="2020-10-01T19:00:00" CONTAINER ID
+```
+
+## 4.4 查看最近5分钟的日志:
+
+```bash
+docker logs --since 5m CONTAINER ID
+```
+
+## 4.5 通过 exec 命令对指定的容器执行 bash:
+
+```bash
+docker exec hellolearn -it /bin/bash `或者` docker exec -it hellolearn bash
+```
+
+## 4.6 查看docker IP
+
+```bash
+docker inspect --format='{{.NetworkSettings.IPAddress}}' hellolearn
+```
