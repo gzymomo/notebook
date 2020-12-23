@@ -1,4 +1,4 @@
-[Docker笔记（十一）：Dockerfile详解与最佳实践](https://www.cnblogs.com/spec-dog/p/11570394.html)
+[Dockerfile详解与最佳实践](https://www.cnblogs.com/spec-dog/p/11570394.html)
 
 # DockerFile是什么？
 
