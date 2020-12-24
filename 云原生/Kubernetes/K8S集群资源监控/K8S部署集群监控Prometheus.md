@@ -1,3 +1,9 @@
+- 语雀：渡渡鸟：[K8S项目交付-集群监控](https://www.yuque.com/duduniao)
+
+- 博客园：散尽浮华：[Kubernetes容器集群管理环境 - Prometheus监控篇](https://www.cnblogs.com/kevingrace/p/11151649.html)
+
+
+
 ## 1. Prometheus
 
 ### 1.1. Prometheus介绍
@@ -67,7 +73,7 @@ Blackbox-exporter: 服务可用性探测，支持HTTP、HTTPS、TCP、ICMP等方
 
 #### 2.1.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull quay.io/coreos/kube-state-metrics:v1.5.0 # quay.io无法访问可采用以下方式
 [root@hdss7-200 ~]# docker pull quay.mirrors.ustc.edu.cn/coreos/kube-state-metrics:v1.5.0
 [root@hdss7-200 ~]# docker image tag quay.mirrors.ustc.edu.cn/coreos/kube-state-metrics:v1.5.0 harbor.od.com/public/kube-state-metrics:v1.5.0
@@ -76,7 +82,7 @@ Blackbox-exporter: 服务可用性探测，支持HTTP、HTTPS、TCP、ICMP等方
 
 #### 2.1.2. 准备资源配置清单
 
-```
+```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -170,7 +176,7 @@ subjects:
 
 
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -220,14 +226,14 @@ spec:
 
 #### 2.1.3. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/kube-state-metrics/rbac.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/kube-state-metrics/deployment.yaml
 ```
 
 
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl get pod -n kube-system -o wide -l app=kube-state-metrics
 NAME                                  READY   STATUS    RESTARTS   AGE    IP           NODE                NOMINATED NODE   READINESS GATES
 kube-state-metrics-8669f776c6-2f7gx   1/1     Running   0          100s   172.7.22.6   hdss7-22.host.com   <none>           <none>
@@ -245,7 +251,7 @@ kube_configmap_info{namespace="kube-system",configmap="kubernetes-dashboard-sett
 
 #### 2.2.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull prom/node-exporter:v0.15.0
 [root@hdss7-200 ~]# docker image tag prom/node-exporter:v0.15.0 harbor.od.com/public/node-exporter:v0.15.0
 [root@hdss7-200 ~]# docker image push harbor.od.com/public/node-exporter:v0.15.0
@@ -253,7 +259,7 @@ kube_configmap_info{namespace="kube-system",configmap="kubernetes-dashboard-sett
 
 #### 2.2.2. 准备资源配置清单
 
-```
+```yaml
 # node-exporter采用daemonset类型控制器，部署在所有Node节点，且共享了宿主机网络名称空间
 # 通过挂载宿主机的/proc和/sys目录采集宿主机的系统信息
 apiVersion: apps/v1
@@ -308,7 +314,7 @@ spec:
 
 #### 2.2.3. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/node-exporter/deamonset.yaml
 [root@hdss7-21 ~]# kubectl get pod -n kube-system -l daemon="node-exporter" -o wide
 NAME                  READY   STATUS    RESTARTS   AGE   IP          NODE                NOMINATED NODE   READINESS GATES
@@ -333,7 +339,7 @@ go_gc_duration_seconds_count 0
 
 #### 2.3.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull google/cadvisor:v0.28.3
 [root@hdss7-200 ~]# docker image tag google/cadvisor:v0.28.3 harbor.od.com/public/cadvisor:v0.28.3
 [root@hdss7-200 ~]# docker image push harbor.od.com/public/cadvisor:v0.28.3
@@ -341,7 +347,7 @@ go_gc_duration_seconds_count 0
 
 #### 2.3.2. 准备资源配置清单
 
-```
+```yaml
 # cadvisor采用daemonset方式运行在node节点上，通过污点的方式排除master
 # 同时将部分宿主机目录挂载到本地，如docker的数据目录
 apiVersion: apps/v1
@@ -410,7 +416,7 @@ spec:
 
 #### 2.3.3. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# mount -o remount,rw /sys/fs/cgroup/  # 原本是只读，现在改为可读可写
 [root@hdss7-21 ~]# ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu
 
@@ -427,7 +433,7 @@ cadvisor-xwrvq   1/1     Running   0          34s   10.4.7.22   hdss7-22.host.co
 
 #### 2.4.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull prom/blackbox-exporter:v0.15.1
 [root@hdss7-200 ~]# docker image tag prom/blackbox-exporter:v0.15.1 harbor.od.com/public/blackbox-exporter:v0.15.1
 [root@hdss7-200 ~]# docker image push harbor.od.com/public/blackbox-exporter:v0.15.1
@@ -435,7 +441,7 @@ cadvisor-xwrvq   1/1     Running   0          34s   10.4.7.22   hdss7-22.host.co
 
 #### 2.4.2. 准备资源配置清单
 
-```
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -461,7 +467,7 @@ data:
 
 
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -520,7 +526,7 @@ spec:
 
 
 
-```
+```yaml
 # 没有指定targetPort是因为Pod中暴露端口名称为 blackbox-port
 apiVersion: v1
 kind: Service
@@ -538,7 +544,7 @@ spec:
 
 
 
-```
+```yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -557,7 +563,7 @@ spec:
 
 #### 2.4.3. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/blackbox-exporter/configmap.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/blackbox-exporter/deployment.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/blackbox-exporter/ingress.yaml
@@ -566,7 +572,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-11 ~]# vim /var/named/od.com.zone 
 ......
 blackbox           A    10.4.7.10
@@ -583,7 +589,7 @@ blackbox           A    10.4.7.10
 
 ### 3.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull prom/prometheus:v2.14.0
 [root@hdss7-200 ~]# docker image tag prom/prometheus:v2.14.0 harbor.od.com/public/prometheus:v2.14.0
 [root@hdss7-200 ~]# docker image push harbor.od.com/public/prometheus:v2.14.0
@@ -591,7 +597,7 @@ blackbox           A    10.4.7.10
 
 ### 3.2. 准备资源配置清单
 
-```
+```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -651,7 +657,7 @@ subjects:
 
 
 
-```
+```yaml
 # Prometheus在生产环境中，一般采用一个单独的大内存node部署，采用污点让其它pod不会调度上来
 # --storage.tsdb.min-block-duration 内存中缓存最新多少分钟的TSDB数据，生产中会缓存更多的数据
 # --storage.tsdb.retention TSDB数据保留的时间，生产中会保留更多的数据
@@ -710,7 +716,7 @@ spec:
 
 
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -727,7 +733,7 @@ spec:
 
 
 
-```
+```yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -748,14 +754,14 @@ spec:
 
 ### 3.3. 准备Prometheus配置
 
-```
+```bash
 [root@hdss7-200 ~]# mkdir -p /data/nfs-volume/prometheus/{etc,prom-db}
 [root@hdss7-200 ~]# cp /opt/certs/{ca.pem,client.pem,client-key.pem} /data/nfs-volume/prometheus/etc/
 ```
 
 
 
-```
+```yaml
 [root@hdss7-200 ~]# vim /data/nfs-volume/prometheus/etc/prometheus.yml
 global:
   scrape_interval:     15s
@@ -930,7 +936,7 @@ scrape_configs:
 
 ### 3.4. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/prometheus-server/rbac.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/prometheus-server/deployment.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/prometheus-server/service.yaml
@@ -939,7 +945,7 @@ scrape_configs:
 
 
 
-```
+```bash
 [root@hdss7-11 ~]# vim /var/named/od.com.zone 
 ......
 prometheus         A    10.4.7.10
@@ -960,7 +966,7 @@ prometheus         A    10.4.7.10
 
 #### 4.1.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull grafana/grafana:5.4.2
 [root@hdss7-200 ~]# docker image tag grafana/grafana:5.4.2 harbor.od.com/public/grafana:v5.4.2
 [root@hdss7-200 ~]# docker image push harbor.od.com/public/grafana:v5.4.2
@@ -968,7 +974,7 @@ prometheus         A    10.4.7.10
 
 #### 4.1.2. 准备资源配置清单
 
-```
+```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -1006,7 +1012,7 @@ subjects:
 
 
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1048,7 +1054,7 @@ spec:
 
 
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -1065,7 +1071,7 @@ spec:
 
 
 
-```
+```yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -1084,7 +1090,7 @@ spec:
 
 #### 4.1.3. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/grafana/rbac.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/grafana/deployment.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/grafana/service.yaml
@@ -1093,7 +1099,7 @@ spec:
 
 
 
-```
+```bash
 [root@hdss7-11 ~]# vim /var/named/od.com.zone 
 ......
 grafana            A    10.4.7.10
@@ -1108,7 +1114,7 @@ grafana            A    10.4.7.10
 
 #### 4.1.4. 安装插件
 
-```
+```bash
 # 需要安装的插件
 grafana-kubernetes-app
 grafana-clock-panel
@@ -1119,7 +1125,7 @@ natel-discrete-panel
 
 
 
-```
+```bash
 # 插件安装有两种方式：
 # 1. 进入Container中，执行 grafana-cli plugins install $plugin_name
 # 2. 手动下载插件zip包，访问 https://grafana.com/api/plugins/repo/$plugin_name 查询插件版本号 $version
@@ -1182,7 +1188,7 @@ root@grafana-596d8dbcd5-l2466:/usr/share/grafana# grafana-cli plugins install na
 
 ### 5.1. 准备镜像
 
-```
+```bash
 [root@hdss7-200 ~]# docker pull docker.io/prom/alertmanager:v0.14.0
 [root@hdss7-200 ~]# docker image tag prom/alertmanager:v0.14.0 harbor.od.com/public/alertmanager:v0.14.0
 [root@hdss7-200 ~]# docker push harbor.od.com/public/alertmanager:v0.14.0
@@ -1192,7 +1198,7 @@ root@grafana-596d8dbcd5-l2466:/usr/share/grafana# grafana-cli plugins install na
 
 ### 5.2. 准备资源配置清单
 
-```
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -1230,7 +1236,7 @@ data:
 
 
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1266,7 +1272,7 @@ spec:
 
 
 
-```
+```yaml
 # Prometheus调用alert采用service name。不走ingress域名
 apiVersion: v1
 kind: Service
@@ -1283,7 +1289,7 @@ spec:
 
 ### 5.3. 应用资源配置清单
 
-```
+```bash
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/alertmanager/configmap.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/alertmanager/deployment.yaml
 [root@hdss7-21 ~]# kubectl apply -f http://k8s-yaml.od.com/devops/prometheus/alertmanager/service.yaml
@@ -1291,7 +1297,7 @@ spec:
 
 ### 5.4. 添加告警规则
 
-```
+```yaml
 [root@hdss7-200 ~]# cat /data/nfs-volume/prometheus/etc/rules.yml # 配置中prometheus目录下
 groups:
 - name: hostStatsAlert
@@ -1435,7 +1441,7 @@ groups:
 
 
 
-```
+```yaml
 [root@hdss7-200 ~]# vim /data/nfs-volume/prometheus/etc/prometheus.yml # 在末尾追加，关联告警规则
 ......
 alerting:
@@ -1448,7 +1454,7 @@ rule_files:
 
 
 
-```
+```bash
 # 重载配置文件，即reload
 [root@hdss7-21 ~]# kubectl exec prometheus-78f57bbb58-6tcmq -it -n kube-system -- kill -HUP 1
 ```
@@ -1459,7 +1465,7 @@ rule_files:
 
 ### 6.1. Prometheus配置文件解析
 
-```
+```yaml
 # 官方文档： https://prometheus.io/docs/prometheus/latest/configuration/configuration/
 [root@hdss7-200 ~]# vim /data/nfs-volume/prometheus/etc/prometheus.yml
 global:
@@ -1650,7 +1656,7 @@ rule_files:                           # 引用外部的告警或者监控规则�
 
 #### 6.2.1. Traefik接入
 
-```
+```yaml
 # 在traefik的daemonset.yaml的spec.template.metadata 加入注释，然后重启Pod
 annotations:
   prometheus_io_scheme: traefik
@@ -1662,7 +1668,7 @@ annotations:
 
 #### 6.2.2. 接入Blackbox监控
 
-```
+```yaml
 # 在对应pod的注释中添加，以下分别是TCP探测和HTTP探测，Prometheus中没有定义其它协议的探测
 annotations:
   blackbox_port: "20880"

@@ -1,3 +1,7 @@
+- [散尽浮华](https://home.cnblogs.com/u/kevingrace/)：[Pod容器自动伸缩(HPA) 测试](https://www.cnblogs.com/kevingrace/p/13970287.html)
+
+
+
 在 Kubernetes 的生态中，在多个维度、多个层次提供了不同的组件来满足不同的伸缩场景。
 
 有三种弹性伸缩：
