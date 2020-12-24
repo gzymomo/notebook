@@ -1,6 +1,10 @@
-[Kubernetes K8S之存储Volume详解](https://www.cnblogs.com/zhanglianghhh/p/13844062.html)
+- [Kubernetes K8S之存储Volume详解](https://www.cnblogs.com/zhanglianghhh/p/13844062.html)
 
-# Volume概述
+- [K8s之Volume的基础使用](https://www.cnblogs.com/qiuhom-1874/p/14180752.html)
+
+
+
+# 一、Volume概述
 
 在容器中的文件在磁盘上是临时存放的，当容器关闭时这些临时文件也会被一并清除。这给容器中运行的特殊应用程序带来一些问题。
 
@@ -16,7 +20,7 @@ Kubernetes Volume卷具有明确的生命周期——与包裹它的 Pod 相同�
 
 
 
-# Volume类型
+# 二、Volume类型
 
 Kubernetes 支持下列类型的卷：
 
@@ -51,9 +55,9 @@ storageos
 vsphereVolume
 ```
 
-这里我们只介绍常用的存储，包括：Secret、ConfigMap、emptyDir、hostPath。
+K8S上支持的存储接口还是很多，每一个存储接口都是一种类型；对于这些存储类型我们大致可以分为云存储，分布式存储，网络存储、临时存储，节点本地存储，特殊类型存储、用户自定义存储等等；比如awsElasticBlockStore、azureDisk、azureFile、gcePersistentDisk、vshperVolume、cinder这些类型划分为云存储；cephfs、glusterfs、rbd这些划分为分布式存储；nfs、iscsi、fc这些划分为网络存储；enptyDIR划分为临时存储；hostPath、local划分为本地存储；自定义存储csi；特殊存储configMap、secret、downwardAPId；持久卷申请persistentVolumeClaim等等；
 
-# emptyDir卷
+# 三、mptyDir卷
 
 当 Pod 指定到某个节点上时，首先创建的是一个 emptyDir 卷，并且只要 Pod 在该节点上运行，卷就一直存在。就像它的名称表示的那样，卷最初是空的。
 
@@ -65,7 +69,7 @@ vsphereVolume
 
  
 
-## emptyDir的一些用途：
+## 3.1 emptyDir的一些用途
 
 - 缓存空间，例如基于磁盘的归并排序
 - 为耗时较长的计算任务提供检查点，以便任务能方便地从崩溃前状态恢复执行
@@ -73,7 +77,7 @@ vsphereVolume
 
  
 
-## emptyDir示例
+## 3.2 emptyDir示例
 
 yaml文件
 
@@ -193,7 +197,7 @@ Events:
   Normal  Started    2s    kubelet, k8s-node02  Started container busybox-pod
 ```
 
-## emptyDir验证
+## 3.3 emptyDir验证
 
 在pod中的myapp-pod容器内操作
 
@@ -235,19 +239,19 @@ Fri Jun 12 14:56:05 UTC 2020
 
  
 
-# hostPath卷
+# 四、hostPath卷
 
 hostPath 卷能将主机node节点文件系统上的文件或目录挂载到你的 Pod 中。 虽然这不是大多数 Pod 需要的，但是它为一些应用程序提供了强大的逃生舱。
 
  
 
-## hostPath 的一些用法有
+## 4.1 hostPath 的一些用法有
 
 - 运行一个需要访问 Docker 引擎内部机制的容器；请使用 hostPath 挂载 /var/lib/docker 路径。
 - 在容器中运行 cAdvisor 时，以 hostPath 方式挂载 /sys。
 - 允许 Pod 指定给定的 hostPath 在运行 Pod 之前是否应该存在，是否应该创建以及应该以什么方式存在。
 
-## 支持类型
+## 4.2 支持类型
 
 除了必需的 path 属性之外，用户可以选择性地为 hostPath 卷指定 type。支持的 type 值如下：
 
@@ -266,7 +270,7 @@ hostPath 卷能将主机node节点文件系统上的文件或目录挂载到你�
 
  
 
-## 注意事项
+## 4.3 注意事项
 
 当使用这种类型的卷时要小心，因为：
 
@@ -276,7 +280,7 @@ hostPath 卷能将主机node节点文件系统上的文件或目录挂载到你�
 
  
 
-## hostPath示例
+## 4.4 hostPath示例
 
 yaml文件
 
@@ -384,7 +388,7 @@ Events:
   Normal  Started    12m        kubelet, k8s-node01  Started container myapp-pod
 ```
 
-## hostPath验证
+## 4.5 hostPath验证
 
 **宿主机操作**
 
@@ -445,7 +449,7 @@ file====
 
 
 
-# 网络文件系统nfs
+# 五、网络文件系统nfs
 
 `yml`文件中配置如下
 
