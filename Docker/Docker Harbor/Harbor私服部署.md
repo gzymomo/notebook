@@ -3,6 +3,10 @@
 相关优质内容来源：
 Kubernetes中文社区：[Harbor用户机制、镜像同步和与Kubernetes的集成实践](https://www.kubernetes.org.cn/1738.html)
 
+[Harbor镜像仓库（含clair镜像扫描） - 完整部署记录](https://www.cnblogs.com/kevingrace/p/13970578.html)
+
+
+
 # Harbor概述
 Docker官方提供了Registry具备此功能，但管理方面较弱，不适合企业级的应用，今天给大家介绍Harbor的使用。
 

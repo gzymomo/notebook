@@ -1,6 +1,8 @@
 CSDN：
 
 - [最强菜鸟](https://blog.csdn.net/qq_40298902)：[菜鸟的IDEA使用Docker插件](https://blog.csdn.net/qq_40298902/article/details/106543208)
+- [【Docker】Maven打包SpringBoot项目成Docker镜像并上传到Harbor仓库（Eclipse、STS、IDEA、Maven通用）](https://www.cnblogs.com/binghe001/p/12810675.html)
+- [使用Dockerfile Maven插件](https://www.cnblogs.com/zyon/p/11266952.html)
 
 
 

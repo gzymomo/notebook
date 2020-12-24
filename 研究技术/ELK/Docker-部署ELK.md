@@ -1,6 +1,11 @@
 [TOC]
 
+ [散尽浮华](https://home.cnblogs.com/u/kevingrace/)—[ELK实时日志分析平台环境部署--完整记录](https://www.cnblogs.com/kevingrace/p/5919021.html)
+
+
+
 # 1、ELK概述
+
 ELK是Elasticsearch、Logstash、Kibana三大开源框架首字母大写简称。
  - Elasticsearch是一个基于Lucene、分布式、通过Restful方式进行交互的近实时搜索平台框架。像类似百度、谷歌这种大数据全文搜索引擎的场景都可以使用Elasticsearch作为底层支持框架.
  - Logstash是ELK的中央数据流引擎，用于从不同目标（文件/数据存储/MQ）收集的不同格式数据，经过过滤后支持输出到不同目的地（文件/MQ/redis/elasticsearch/kafka等）。
