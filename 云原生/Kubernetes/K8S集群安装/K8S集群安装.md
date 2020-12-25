@@ -5,6 +5,9 @@
 - [冰河教你一次性成功安装K8S集群（基于一主两从模式）](https://www.cnblogs.com/binghe001/p/14083312.html)
 - [K8S集群的安装](https://www.cnblogs.com/MarkGuo/p/14163469.html)
 - [Kubernetes容器集群管理环境 - Node节点的移除与加入](https://www.cnblogs.com/kevingrace/p/11302555.html)
+- [Kubernetes容器集群管理环境 - 完整部署（上篇）](https://www.cnblogs.com/kevingrace/p/10961264.html)
+- [Kubernetes容器集群管理环境 - 完整部署（中篇）](https://www.cnblogs.com/kevingrace/p/11043042.html)
+- [Kubernetes容器集群管理环境 - 完整部署（下篇）](https://www.cnblogs.com/kevingrace/p/10995648.html)
 
 
 
