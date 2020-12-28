@@ -1,17 +1,14 @@
 相关内容参考地址：
 
 - [使用flv.js快速搭建html5网页直播](https://blog.csdn.net/impingo/article/details/103077380)
-
 - [B站视频开源代码flv.js的使用部署心得（代码案例应用）](https://blog.csdn.net/hj7jay/article/details/54906612)
-
 - [使用flv.js做直播](https://www.cnblogs.com/burro/p/10149566.html)
-
 - [**Flv.js** B 站 HTML5 播放器内核](https://www.oschina.net/p/flv-js)
-
 - [FLV文件格式详解](http://blog.useasp.net/archive/2016/02/28/The-flv-video-file-format-specification-version-10-1.aspx)
 - [flv格式详解+实例剖析](https://www.jianshu.com/p/7ffaec7b3be6)
 - [FLV 实例分析](https://blog.csdn.net/y_z_hyangmo/article/details/79219996)
 - [H5直播系列八 FLV文件格式](https://www.jianshu.com/p/1df4bc217dbd)
+- [js对flv提取h264、aac音视频流](https://www.cnblogs.com/suyuanli/p/14196729.html)
 
 
 

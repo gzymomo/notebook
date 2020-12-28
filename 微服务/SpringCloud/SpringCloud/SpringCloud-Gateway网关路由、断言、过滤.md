@@ -1,6 +1,9 @@
 [TOC]
 
+- [Spring Cloud Gateway的功能及综合使用](https://www.cnblogs.com/xiaowan7/p/14197270.html)
+
 # 1、GateWay简介
+
 Spring Cloud 全家桶中有个很重要的组件：网关。在 1.x 版本中使用的是 Zuul 网关，但是到了 2.x，由于Zuul的升级不断跳票，Spring Cloud 自己研发了一套网关组件：Spring Cloud Gateway。
 
 Spring Cloud Gateway基于 Spring Boot 2.x，Spring WebFlux 和 Project Reactor 构建，使用了 Webflux 中的 reactor-netty 响应式编程组件，底层使用了 Netty 通讯框架。
