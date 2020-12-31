@@ -1,4 +1,12 @@
-代码质量管理平台sonarQube安装及使用[#](https://www.cnblogs.com/chenyanbin/p/qq543210188.html#代码质量管理平台sonarqube安装及使用)代码质量管理平台sonarQube安装及使用[#](https://www.cnblogs.com/chenyanbin/p/qq543210188.html#代码质量管理平台sonarqube安装及使用)
+- [SonarQube手册](https://www.cnblogs.com/ioufev/articles/12696498.html)
+-  [Jenkins持续集成git、gitlab、sonarqube(7.0)、nexus，自动化部署实战，附安装包](https://www.cnblogs.com/chenyanbin/p/qq543210188.html)             
+
+
+
+## SonarQube如何保障代码质量
+
+它是从 Architecture Design, Coding Rule, Potential Bugs, Duplications, Comments, Unit Tests,Complexity 7个维度检查代码质量的。
+![img](https://img2020.cnblogs.com/blog/861554/202012/861554-20201228104352855-1626456173.png)
 
 
 
@@ -174,3 +182,4 @@ java-module.sonar.java.binaries=target/
 [![img](https://img2020.cnblogs.com/blog/1504448/202009/1504448-20200919231127604-429068352.gif)](https://img2020.cnblogs.com/blog/1504448/202009/1504448-20200919231127604-429068352.gif)
 
 [![img](https://img2020.cnblogs.com/blog/1504448/202009/1504448-20200919231625508-118511158.gif)](https://img2020.cnblogs.com/blog/1504448/202009/1504448-20200919231625508-118511158.gif)
+
