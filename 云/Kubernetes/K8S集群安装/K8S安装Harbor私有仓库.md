@@ -1,3 +1,20 @@
+[在 Kubernetes 中部署高可用 Harbor 镜像仓库 ](https://mp.weixin.qq.com/s?__biz=MzU1MzY4NzQ1OA==&mid=2247490731&idx=1&sn=efb113d4d2d5b1afb60cbe73e65d3132&chksm=fbee5c66cc99d5706c0eba1bfb3c503d0c65d7f856f8bea4e27f6cc82284ba2c454d8b11cb25&mpshare=1&scene=24&srcid=1230kijHEcpwOtmvQhDEwN2s&sharer_sharetime=1609332725580&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
+
+
+
+## 1. Harbor 简介
+
+### 简介
+
+Harbor 是一个开放源代码容器镜像注册表，可通过基于角色权限的访问控制来管理镜像，还能扫描镜像中的漏洞并将映像签名为受信任。Harbor 是 CNCF  孵化项目，可提供合规性，性能和互操作性，以帮助跨 Kubernetes 和 Docker 等云原生计算平台持续，安全地管理镜像。
+
+### 特性
+
+- 管理：多租户、可扩展
+- 安全：安全和漏洞分析、内容签名与验证
+
+
+
 ## 安装Harbor私有仓库
 
 **注意：这里将Harbor私有仓库安装在Master节点（binghe101服务器）上，实际生产环境中建议安装在其他服务器。**
