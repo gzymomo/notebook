@@ -1,5 +1,11 @@
 来源：[微信公众：DevOps技术栈]
 
+[DevOps技术栈:使用GitLab CI和Docker自动部署SpringBoot应用](https://mp.weixin.qq.com/s/6dVNO9xsh3TW9mZ8x0puwQ)                                                              
+
+> 译者：王延飞
+>
+> 来源：https://dzone.com/articles/automate-spring-boot-app-deployment-with-gitlab-ci
+
 
 
 GitLab CI/CD 是一个内置在GitLab中的工具，用于通过持续方法进行软件开发：
