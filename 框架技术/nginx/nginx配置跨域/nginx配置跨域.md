@@ -1,6 +1,4 @@
-
-
-冰河团队：[【Nginx】使用Nginx如何解决跨域问题？看完这篇原来很简单！！](https://www.cnblogs.com/binghe001/p/13352407.html)
+- 冰河团队：[【Nginx】使用Nginx如何解决跨域问题？看完这篇原来很简单！！](https://www.cnblogs.com/binghe001/p/13352407.html)
 
 
 

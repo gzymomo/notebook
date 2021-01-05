@@ -1,8 +1,10 @@
-# [Nginx日志运维笔记](https://www.cnblogs.com/kevingrace/p/8483089.html)
+- [Nginx日志运维笔记](https://www.cnblogs.com/kevingrace/p/8483089.html)
 
 在分析服务器运行情况和业务数据时，nginx日志是非常可靠的数据来源，而掌握常用的nginx日志分析命令的应用技巧则有着事半功倍的作用，可以快速进行定位和统计。
 
-## Nginx日志的标准格式（可参考：http://www.cnblogs.com/kevingrace/p/5893499.html）**
+## Nginx日志的标准格式
+
+- （可参考：http://www.cnblogs.com/kevingrace/p/5893499.html）
 
 ```yaml
 log_format  main  '$remote_addr - $remote_user [$time_local] "$request" ' 
@@ -19,15 +21,15 @@ log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
 
 ### **日志格式说明：**
 
-$remote_addr       远程请求使用的IP地址
-$remote_user       远端登录名
-$time_local         时间，用普通日志时间格式(标准英语格式)
-$request           请求的第一行
-$status            状态。
-$body_bytes_sent   请求返回的字节数，包括请求头的数据
-$http_referer       请求头Referer的内容
-$http_user_agent   请求头User-Agent的内容
-$request_time      处理完请求所花时间，以秒为单位
+- $remote_addr       远程请求使用的IP地址
+- $remote_user       远端登录名
+- $time_local         时间，用普通日志时间格式(标准英语格式)
+- $request           请求的第一行
+- $status            状态
+- $body_bytes_sent   请求返回的字节数，包括请求头的数据
+- $http_referer       请求头Referer的内容
+- $http_user_agent   请求头User-Agent的内容
+- $request_time      处理完请求所花时间，以秒为单位
 
 
 

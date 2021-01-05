@@ -1,12 +1,50 @@
-# [Nginx性能优化功能- Gzip压缩(大幅度提高页面加载速度)](https://www.cnblogs.com/kevingrace/p/10018914.html)
+- [Nginx性能优化功能- Gzip压缩(大幅度提高页面加载速度)](https://www.cnblogs.com/kevingrace/p/10018914.html)
 
 
 
-Nginx开启Gzip压缩功能， 可以使网站的css、js 、xml、html 文件在传输时进行压缩，提高访问速度, 进而优化Nginx性能! Web网站上的图片，视频等其它多媒体文件以及大文件，因为压缩效果不好，所以对于图片没有必要支压缩，如果想要优化，可以图片的生命周期设置长一点，让客户端来缓存。 开启Gzip功能后，Nginx服务器会根据配置的策略对发送的内容, 如css、js、xml、html等静态资源进行压缩, 使得这些内容大小减少，在用户接收到返回内容之前对其进行处理，以压缩后的数据展现给客户。这样不仅可以节约大量的出口带宽，提高传输效率，还能提升用户快的感知体验, 一举两得; 尽管会消耗一定的cpu资源，但是为了给用户更好的体验还是值得的。
+# 一、Gzip介绍
+
+Nginx开启Gzip压缩功能， 可以使网站的css、js 、xml、html 文件在传输时进行压缩，提高访问速度, 进而优化Nginx性能! Web网站上的图片，视频等其它多媒体文件以及大文件，因为压缩效果不好，所以对于图片没有必要支压缩，如果想要优化，可以图片的生命周期设置长一点，让客户端来缓存。 
+
+开启Gzip功能后，Nginx服务器会根据配置的策略对发送的内容, 如css、js、xml、html等静态资源进行压缩, 使得这些内容大小减少，在用户接收到返回内容之前对其进行处理，以压缩后的数据展现给客户。这样不仅可以节约大量的出口带宽，提高传输效率，还能提升用户快的感知体验, 一举两得; 尽管会消耗一定的cpu资源，但是为了给用户更好的体验还是值得的。
 
 经过Gzip压缩后页面大小可以变为原来的30%甚至更小，这样，用户浏览页面的时候速度会快得多。Gzip 的压缩页面需要浏览器和服务器双方都支持，实际上就是服务器端压缩，传到浏览器后浏览器解压并解析。浏览器那里不需要我们担心，因为目前的巨大多数浏览器 都支持解析Gzip过的页面。
 
-**Gzip压缩作用：**将响应报⽂发送⾄客户端之前可以启⽤压缩功能，这能够有效地节约带宽，并提⾼响应⾄客户端的速度。Gzip压缩可以配置http,server和location模块下。Nginx开启Gzip压缩参数说明：
+
+
+## 1.1 Gzip压缩作用
+
+Nginx实现资源压缩的原理是通过ngx_http_gzip_module模块拦截请求，并对需要做gzip的类型做gzip，ngx_http_gzip_module是Nginx默认集成的，**不需要重新编译，直接开启即可**。
+
+将响应报⽂发送⾄客户端之前可以启⽤压缩功能，这能够有效地节约带宽，并提⾼响应⾄客户端的速度。Gzip压缩可以配置http,server和location模块下。
+
+## 1.2 nginx中开启gzip实例
+
+```yaml
+server{
+    gzip on;
+    gzip_buffers 32 4K;
+    gzip_comp_level 6;
+    gzip_min_length 100;
+    gzip_types application/javascript text/css text/xml;
+    gzip_disable "MSIE [1-6]\."; #配置禁用gzip条件，支持正则。此处表示ie6及以下不启用gzip（因为ie低版本不支持）
+    gzip_vary on;
+}
+```
+
+**直接gzip on：在nginx的配置中就可以开启gzip压缩**
+
+
+
+## 1.3 什么样的资源不适合开启gzip压缩？
+
+二进制资源：例如图片/mp3这样的二进制文件,不必压缩；因为压缩率比较小, 比如100->80字节,而且压缩也是耗费CPU资源的。
+
+
+
+# 二、nginx开启Gzip压缩参数说明
+
+Nginx开启Gzip压缩参数说明：
 
 ```yaml
 gzip on;                 #决定是否开启gzip模块，on表示开启，off表示关闭；
@@ -40,7 +78,7 @@ gzip_disable "MSIE [1-6]\.";       #配置禁用gzip条件，支持正则。此�
 gzip vary on;    #选择支持vary header；改选项可以让前端的缓存服务器缓存经过gzip压缩的页面; 这个可以不写，表示在传送数据时，给客户端说明我使用了gzip压缩
 ```
 
-如下是线上常使用的Gzip压缩配置
+# 三、线上Nginx开启Gzip压缩常用配置
 
 ```yaml
 [root@external-lb02 ~]# cat /data/nginx/conf/nginx.conf

@@ -1,14 +1,12 @@
-# [Nginx 高性能优化配置实战总结](https://segmentfault.com/a/1190000037788252)
+- [Nginx 高性能优化配置实战总结](https://segmentfault.com/a/1190000037788252)
 
 
 
-Nginx是Apache服务不错的替代品。其特点是占有内存少，并发能力强，事实上[nginx的并发](http://mp.weixin.qq.com/s?__biz=MzI0MDQ4MTM5NQ==&mid=2247491116&idx=2&sn=e13451256e97fa889ec81043b0d04912&chksm=e91b7b30de6cf22664b0ae92e9e326aa339e0e8b0f3d49df1cfd337fe031b779e5b63dc00369&scene=21#wechat_redirect)能力在同类型的网页服务器中表现较好，因此国内知名大厂例如：淘宝，京东，百度，新浪，网易，腾讯等等都在使用[Nginx](http://mp.weixin.qq.com/s?__biz=MzI0MDQ4MTM5NQ==&mid=2247495416&idx=1&sn=bada1264baa5cc387cc2790fb87d5fc3&chksm=e9188be4de6f02f2a79586c60d1071132b8b70a83ab268808cb08139efc21b142790195383f5&scene=21#wechat_redirect)网站。
+# 一、自定义返回给客户端的404错误页面
 
+![img](https://segmentfault.com/img/remote/1460000037788255)
 
-
-## 一、如何自定义返回给客户端的404错误页面
-
-![img](https://segmentfault.com/img/remote/1460000037788255)1）优化前，客户端使用浏览器访问不存在的页面，会提示404文件未找到
+1）优化前，客户端使用浏览器访问不存在的页面，会提示404文件未找到
 
 ```
 [root@client ~]# firefox http://192.168.4.5/xxxxx        //访问一个不存在的页面
@@ -37,7 +35,7 @@ Oops,No NO no page …
 
 常见的http状态码可用参考表所示![img](https://segmentfault.com/img/remote/1460000037788256)
 
-## 二、如何查看服务器状态信息（非常重要的功能）
+# 二、如何查看服务器状态信息（非常重要的功能）
 
 1）编译安装时使用--with-http_stub_status_module开启状态页面模块
 
@@ -103,7 +101,7 @@ Reading: 0 Writing: 1 Waiting: 0
 - Writing：当前服务器正在写响应信息的数量。
 - Waiting：当前多少客户端在等待服务器的响应。
 
-## 三、[优化Nginx](http://mp.weixin.qq.com/s?__biz=MzI0MDQ4MTM5NQ==&mid=2247484627&idx=1&sn=8626a39ab0a9dc7d2a7bf26db7fd1ce8&chksm=e91b61cfde6ce8d924fd82809f5faeb334d50d371a4912dd0e1619c4d297937623e4cc09159e&scene=21#wechat_redirect)并发量
+# 三、[优化Nginx](http://mp.weixin.qq.com/s?__biz=MzI0MDQ4MTM5NQ==&mid=2247484627&idx=1&sn=8626a39ab0a9dc7d2a7bf26db7fd1ce8&chksm=e91b61cfde6ce8d924fd82809f5faeb334d50d371a4912dd0e1619c4d297937623e4cc09159e&scene=21#wechat_redirect)并发量
 
 1）优化前使用ab高并发测试
 
@@ -146,7 +144,7 @@ worker_connections 65535;        //每个worker最大并发连接数
 [root@proxy ~]# ab -n 2000 -c 2000 http://192.168.4.5/
 ```
 
-## 四、优化Nginx数据包头缓存
+# 四、优化Nginx数据包头缓存
 
 1）优化前，使用脚本测试长头部请求是否能获得响应
 
@@ -191,7 +189,7 @@ curl $URL
 [root@proxy ~]# ./buffer.sh
 ```
 
-## 五、浏览器本地缓存静态数据
+# 五、浏览器本地缓存静态数据
 
 1）使用Firefox浏览器查看缓存
 

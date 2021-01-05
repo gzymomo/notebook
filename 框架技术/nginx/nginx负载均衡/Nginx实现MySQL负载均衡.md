@@ -1,8 +1,8 @@
-[如何使用Nginx实现MySQL数据库的负载均衡？看完我懂了！！](https://www.cnblogs.com/binghe001/p/13340680.html)
+- [如何使用Nginx实现MySQL数据库的负载均衡？看完我懂了！！](https://www.cnblogs.com/binghe001/p/13340680.html)
 
 
 
-## 前提条件
+# 前提条件
 
 **注意：使用Nginx实现MySQL数据库的负载均衡，前提是要搭建MySQL的主主复制环境，关于MySQL主主复制环境的搭建，后续会在MySQL专题为大家详细阐述。这里，我们假设已经搭建好MySQL的主主复制环境，MySQL服务器的IP和端口分别如下所示。**
 
@@ -13,7 +13,7 @@
 
 - 192.168.1.100 3306
 
-## Nginx实现MySQL负载均衡
+# Nginx实现MySQL负载均衡
 
 nginx在版本1.9.0以后支持tcp的负载均衡，具体可以参照官网关于模块[ngx_stream_core_module](http://nginx.org/en/docs/stream/ngx_stream_core_module.html#tcp_nodelay)的叙述，链接地址为：http://nginx.org/en/docs/stream/ngx_stream_core_module.html#tcp_nodelay。
 
