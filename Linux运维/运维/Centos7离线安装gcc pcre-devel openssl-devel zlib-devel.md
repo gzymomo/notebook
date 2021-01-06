@@ -1,4 +1,6 @@
-## [centos7 离线安装gcc pcre-devel openssl-devel zlib-devel](https://www.cnblogs.com/chouc/p/7447039.html)
+- [centos7 离线安装gcc pcre-devel openssl-devel zlib-devel](https://www.cnblogs.com/chouc/p/7447039.html)
+
+
 
 1、先进入http://vault.centos.org/ 选择自己的centos 版本（查看命令：cat /etc/redhat-release）
 
