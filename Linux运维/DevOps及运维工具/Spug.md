@@ -1,8 +1,10 @@
+- [开源、轻量无 Agent 自动化运维平台](https://mp.weixin.qq.com/s/qofHTpYT0T5KG4cqqvciww)
+
 # Spug开源、轻量无 Agent 自动化运维平台
 
 在日常运维管理的发展过程中，可视化、自动化是一个阶段的进程必备要素，所以，对于可视化运维平台的掌握与了解也非常重要，我们运维小伙伴们也在不断的探索与挖掘当中，今天，民工哥给大家安利一款可视化的自动化运维管理平台：Spug，开源、免费，功能强大。
 
-## Spug简介
+# Spug简介
 
 Spug面向中小型企业设计的轻量级无 Agent 的自动化运维平台，整合了主机管理、主机批量执行、主机在线终端、文件在线上传下载、应用发布部署、在线任务计划、配置中心、监控、报警等一系列功能。
 
@@ -12,7 +14,7 @@ Spug面向中小型企业设计的轻量级无 Agent 的自动化运维平台，
 - 更新日志：https://www.spug.dev/docs/change-log/
 - 常见问题：https://www.spug.dev/docs/faq/
 
-## Spug的功能
+# Spug的功能
 
 - 批量执行: 主机命令在线批量执行
 - 在线终端: 主机支持浏览器在线终端登录
@@ -25,14 +27,14 @@ Spug面向中小型企业设计的轻量级无 Agent 的自动化运维平台，
 - 优雅美观: 基于 Ant Design 的 UI 界面
 - 开源免费: 前后端代码完全开源
 
-## 安装环境要求
+# 安装环境要求
 
 - Python 3.6+
 - Django 2.2
 - Node 12.14
 - React 16.11
 
-## 安装Spug
+# 安装Spug
 
 简化一切安装操作步骤，官方也建议使用docker进行安装，那么，接下来就使用docker来安装这款工具平台。本文操作基于Centos7.x操作系统。
 
@@ -80,7 +82,7 @@ $ docker restart spug
 
 ![img](https://mmbiz.qpic.cn/mmbiz_png/tuSaKc6SfPrT9SOVe6COTaltORdGkVaUo81NQZP6kzaDenTYKtr3hPd4GLibDS2MNVXNLBjG8UyMWwKMeQ7XH0w/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
 
-## 使用介绍
+# 使用介绍
 
 登录完成后，就可以看到主界面，如下
 
