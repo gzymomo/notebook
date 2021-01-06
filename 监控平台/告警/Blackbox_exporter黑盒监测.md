@@ -1,22 +1,35 @@
 [TOC]
-Prometheus 监控之 Blackbox_exporter黑盒监测[icmp、tcp、http(get\post)、dns、ssl证书过期时间]
+相关内容原文地址： 
 
-# 1、blackbox_exporter概述
+- CSDN：GeekXuShuo：[Prometheus 监控之 Blackbox_exporter黑盒监测 [icmp、tcp、http(get\post)、dns、ssl证书过期时间\]](https://blog.csdn.net/qq_25934401/article/details/84325356)
+
+- Anoxia：[blackbox_exporter+grafana+prometheus监控主机存活，端口存活及网站状态](https://blog.csdn.net/qq_43190337/article/details/100577728)
+
+- 51CTO：铁血军人：[网络探测：Blackbox Exporter](https://blog.51cto.com/13447608/2469397)
+
+
+
+# 一、Blackbox_exporter应用场景
+
 blackbox_exporter是Prometheus 官方提供的 exporter 之一，可以提供 http、dns、tcp、icmp 的监控数据采集。
-## 1.1 Blackbox_exporter 应用场景
- 1. HTTP 测试
-  - 定义 Request Header 信息
-  - 判断 Http status / Http Respones Header / Http Body 内容
- 2. TCP 测试
-  - 业务组件端口状态监听
-  - 应用层协议定义与监听
- 3. ICMP 测试
-  - 主机探活机制
- 4. POST 测试
-  - 接口联通性
- 5. SSL 证书过期时间
 
-# 2、blackbox_exporter安装
+
+
+- HTTP 测试
+  定义 Request Header 信息
+  判断 Http status / Http Respones Header / Http Body 内容
+- TCP 测试
+  业务组件端口状态监听
+  应用层协议定义与监听
+- ICMP 测试
+  主机探活机制
+- POST 测试
+  接口联通性
+- SSL 证书过期时间
+
+
+
+# 二、blackbox_exporter安装
 ## 2.1 Docker方式安装
 ```shell
 docker pull prom/blackbox-exporter
@@ -48,7 +61,7 @@ blackbox_exporter --web.listen-address=:9115 --config.file=blackbox.yml
 tcp    LISTEN     0      32768                  *:9115                  *:*      users:(("blackbox_export",29880,3))
 ```
 
-# 3、blackbox_exporter配置
+# 三、blackbox_exporter配置
 基本的配置：
 ```yml
 modules:
@@ -69,8 +82,8 @@ modules:
 ```
 
 
-# 四、prometheus配置
-## 4.1 ping检测
+# 四、Prometheus配置
+## 4.1 ping监测
 在内网可以通过ping (icmp)检测服务器的存活，以前面的最基本的module配置为例，在Prometheus的配置文件中配置使用ping module：
 ```yml
 - job_name: 'ping_all'
@@ -129,7 +142,7 @@ probe_success 1
 #TLS 的版本号
 probe_tls_version_info{version="TLS 1.2"} 1
 ```
-## 4.2 http监测
+## 4.2 http监测-监测网站状态
 以前面的最基本的module配置为例，在Prometheus的配置文件中配置使用http_2xx module：
 ```yml
 - job_name: 'http_get_all'  # blackbox_export module
@@ -140,6 +153,7 @@ probe_tls_version_info{version="TLS 1.2"} 1
     static_configs:
       - targets:
         - https://frognew.com
+        - 172.0.0.1:9090
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -150,7 +164,7 @@ probe_tls_version_info{version="TLS 1.2"} 1
 ```
 http检测除了可以探测http服务的存活外，还可以根据指标probe_ssl_earliest_cert_expiry进行ssl证书有效期预警。
 
-## 4.3 监控主机存活状态
+## 4.3 ICMP监测-监控主机存活状态
 ```yml
 - job_name: node_status
     metrics_path: /probe
@@ -168,7 +182,12 @@ http检测除了可以探测http服务的存活外，还可以根据指标probe_
         replacement: 172.19.155.133:9115
 ```
 10.165.94.31是被监控端ip，172.19.155.133是Blackbox_exporter
-## 4.4 监控主机端口存活状态
+## 4.4 TCP监测-监控主机端口存活状态
+
+- 监听 业务端口地址，用来判断服务是否在线，我觉的和telnet 差不多
+- 相关代码块添加到 Prometheus 文件内
+- 对应 blackbox.yml文件的 tcp_connect 模块
+
 ```yml
 - job_name: 'prometheus_port_status'
     metrics_path: /probe
@@ -187,26 +206,45 @@ http检测除了可以探测http服务的存活外，还可以根据指标probe_
       - target_label: __address__
         replacement: 172.19.155.133:9115
 ```
-## 4.5 监控网站状态
+## 4.5 SSL 证书过期时间监测
+
+prometheus.yml
+
 ```yml
-- job_name: web_status
+rule_files:
+  - ssl_expiry.rules
+scrape_configs:
+  - job_name: 'blackbox'
     metrics_path: /probe
     params:
-      module: [http_2xx]
+      module: [http_2xx]  # Look for a HTTP 200 response.
     static_configs:
-      - targets: ['http://www.baidu.com']
-        labels:
-          instance: user_status
-          group: 'web'
+      - targets:
+        - example.com  # Target to probe
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
       - target_label: __address__
-        replacement: 172.19.155.133:9115
+        replacement: 127.0.0.1:9115  # Blackbox exporter.
 ```
 
 
-# 5、prometheus告警规则
+
+ssl_expiry.rules 
+
+```yaml
+groups: 
+  - name: ssl_expiry.rules 
+    rules: 
+      - alert: SSLCertExpiringSoon 
+        expr: probe_ssl_earliest_cert_expiry{job="blackbox"} - time() < 86400 * 30 
+        for: 10m
+```
+
+# 五、prometheus告警规则
+
 ```yml
 groups:
 - name: example
@@ -221,7 +259,44 @@ groups:
       description: '{{$labels.instance}} 不可访问,请及时查看,当前状态码为{{$value}}'
 ```
 
-# 6、Grafana
+
+
+## 5.1 查看监听过程
+
+类似于
+
+```bash
+curl http://172.16.10.65:9115/probe?target=prometheus.io&module=http_2xx&debug=true
+```
+
+## 5.2 告警应用测试
+
+icmp、tcp、http、post 监测是否正常可以观察probe_success 这一指标
+probe_success == 0 ##联通性异常
+probe_success == 1 ##联通性正常
+告警也是判断这个指标是否等于0，如等于0 则触发异常报警
+
+```yaml
+[sss@prometheus01 prometheus]$ cat rules/blackbox-alert.rules 
+groups:
+- name: blackbox_network_stats
+  rules:
+  - alert: blackbox_network_stats
+    expr: probe_success == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Instance {{ $labels.instance }}  is down"
+      description: "This requires immediate action!"
+```
+
+参考：https://www.tidb.cc/Monitor/170603-Blackbox_exporter.html#告警测试案例
+
+
+
+# 六、Grafana
+
 grafana模板号：9965。
 此模板需要安装饼状图插件 下载地址 https://grafana.com/grafana/plugins/grafana-piechart-panel
 安装插件，重启grafana生效。

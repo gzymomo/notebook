@@ -4,7 +4,9 @@
 
 > 概念：Instance、Job、Metric、Metric Name、Metric Label、Metric Value、Metric Type（Counter、Gauge、Histogram、Summary）、DataType（Instant Vector、Range Vector、Scalar、String）、Operator、Function
 
-马云说：“虽然阿里巴巴是全球最大的零售平台，但阿里不是零售公司，是一家数据公司”。Prometheus 也是一样，本质来说是一个基于数据的监控系统。
+马云说：“虽然阿里巴巴是全球最大的零售平台，但阿里不是零售公司，是一家数据公司”。
+
+Prometheus 也是一样，本质来说是一个基于数据的监控系统。
 
 
 
@@ -111,7 +113,7 @@ TSDB 作为 Prometheus 的存储引擎完美契合了监控数据的应用场景
 
 那么 TSDB 是怎么实现以上功能的呢？
 
-```
+```json
 "labels": [{
  "latency":        "500"
 }]
@@ -179,7 +181,7 @@ file_sd_configs的方式提供简单的接口，可以实现在单独的配置�
 在prometheus文件夹目录下创建targets.json文件
 配置如下:
 
-```
+```json
 [
     {
       "targets": [ "192.168.214.129:9100"],
@@ -200,7 +202,7 @@ file_sd_configs的方式提供简单的接口，可以实现在单独的配置�
 
 然后在prometheus目录下新增如下配置:
 
-```
+```yaml
  - job_name: 'file_sd'   
     file_sd_configs:
       - files:

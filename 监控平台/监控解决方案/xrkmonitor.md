@@ -65,8 +65,6 @@ SERVER_MASTER 配置改为宿主机的IP地址， 如果需要在宿主机上部
 容器启动时传递的xrk_host_ip 相同(xrk_host_ip 已被docker 容器使用了)，IP 可以不存在，主要用于机器识别。
 关于 agent 的详细说明可以参考文档。
 
-docker 使用过程中如有问题可以加入我们的QQ群： 859052272 获取帮助。
-
 ### 使用 docker 镜像编译源码
 
 使用 docker 镜像编译源码方法如下：

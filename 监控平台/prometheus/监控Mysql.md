@@ -1,15 +1,17 @@
-码农沉思录：[Prometheus + Granafa 构建高大上的MySQL监控平台](https://mp.weixin.qq.com/s?__biz=MzAxNjM2MTk0Ng==&mid=2247494672&idx=2&sn=69d18a3bf8c5e347fab40e18d02c5c12&chksm=9bf75ca5ac80d5b39023b2991b178025cfdac6db92597ab881532a0fb8e162c586520c378aa4&mpshare=1&scene=24&srcid=1222pvdFkP3pespvABV0eIOp&sharer_sharetime=1608612421478&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
+- 码农沉思录：[Prometheus + Granafa 构建高大上的MySQL监控平台](https://mp.weixin.qq.com/s?__biz=MzAxNjM2MTk0Ng==&mid=2247494672&idx=2&sn=69d18a3bf8c5e347fab40e18d02c5c12&chksm=9bf75ca5ac80d5b39023b2991b178025cfdac6db92597ab881532a0fb8e162c586520c378aa4&mpshare=1&scene=24&srcid=1222pvdFkP3pespvABV0eIOp&sharer_sharetime=1608612421478&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
 
 
+
+# 一、prometheus监控体系之MySQL监控
 
 Prometheus+Granafa监控体系监控MySQL需使用MySQL-Exporter。
 
-### exporter 相关部署
+## 1.1 mysqld_exporter源码安装部署
 
 1. 安装exporter
 
 ```bash
-[root@controller2 opt]# https://github.com/prometheus/mysqld_exporter/releases/download/v0.10.0/mysqld_exporter-0.10.0.linux-amd64.tar.gz
+[root@controller2 opt]# wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.10.0/mysqld_exporter-0.10.0.linux-amd64.tar.gz
 [root@controller2 opt]# tar -xf mysqld_exporter-0.10.0.linux-amd64.tar.gz 
 ```
 
@@ -79,7 +81,13 @@ curl http://192.168.1.12:9104/metrics
 mysql_up 1
 ```
 
-# 监控告警规则
+## 1.2 mysqld_exporter通过docker安装部署
+
+
+
+
+
+# 二、mysql监控告警规则
 
 ```yaml
     groups:
@@ -147,6 +155,4 @@ rule_files:
   - "rules/*.yml" 
 ```
 
-打开web ui我们可以看到规则生效了：
-
-![图片](https://mmbiz.qpic.cn/mmbiz_jpg/XA3sPCPib1l5R9rKicoPuzVVAfWYhLHwiaRdZzfjybTwU4l6bibMuibofRLef2hXM3cibze7Y3211pTd2gu4gaTUje2A/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+然后打开prometheus的Web UI界面，找到监控告警栏目，即可看到监控告警是否成功！

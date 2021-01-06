@@ -1,6 +1,6 @@
 [TOC]
 
-https://www.cnblogs.com/throwable/p/9346547.html
+- [prometheus自定义监控内容](https://www.cnblogs.com/throwable/p/9346547.html)
 
 # 一、io.micrometer的使用
 在SpringBoot2.X中，spring-boot-starter-actuator引入了io.micrometer，对1.X中的metrics进行了重构，主要特点是支持tag/label，配合支持tag/label的监控系统，使得我们可以更加方便地对metrics进行多维度的统计查询及监控。io.micrometer目前支持Counter、Gauge、Timer、Summary等多种不同类型的度量方式(不知道有没有遗漏)，下面逐个简单分析一下它们的作用和使用方式。 需要在SpringBoot项目下引入下面的依赖：
