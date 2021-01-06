@@ -45,7 +45,7 @@ Canary还可以指定一些简单的参数，可以参考如下
 - 对集群影响：2星（只是简单的读操作，region个数极多的时候会占用少部分请求吞吐）
 - 实用性：2星
 
-## 
+
 
 ## **HFile工具**
 
@@ -65,7 +65,7 @@ hbase org.apache.hadoop.hbase.io.hfile.HFile -v -m -p -f /hbase/data/default/t1/
 - 对集群影响：1星（此工具不走HBase通道，只是单纯的读取文件，不影响集群）
 - 实用性：4星（可精确判断具体的HFile内容是否有问题）
 
-##  
+ 
 
 ## **RowCounter和CellCounter工具**
 
@@ -106,7 +106,7 @@ clean命令是用来清除HBase在ZooKeeper合HDFS上数据的工具。当集群
 - 对集群影响：**5星**（删除HBase集群上所有数据）
 - 实用性：2星（除开需要重新设置HBase数据的场景如要切换到HBase on OBS，平时很少会用到）
 
-##  
+
 
 ## **HBCK工具**
 
@@ -132,7 +132,7 @@ hbase hbck -fixMeta -fixAssignments t1
 - 对集群影响：4星（个别meta相关命令对集群影响极大）
 - 实用性：**5星**（hbck是HBase运维人员的最基本运维工具）
 
-##  
+
 
 ## **RegionSplitter工具**
 
@@ -163,9 +163,7 @@ hbase org.apache.hadoop.hbase.util.RegionSplitter test_table HexStringSplit -c 1
 - 对集群影响：1星（创建表操作，不影响其他集群业务）
 - 实用性：3星（实际pre-split都是按实际业务来的，对于测试来说可以使用HBase默认的split算法来构造rowkey格式）
 
-## 
 
-##  
 
 ## **FSHLog工具**
 
@@ -221,7 +219,7 @@ FSHLog是触发WAL split请求到HMaster中，会对WAL中的所有数据恢复�
 - 对集群影响：3星（起MR任务会占用部分集群资源）
 - 实用性：4星（在某些特定的场景下实用性很高，如replication预同步，表数据恢复）
 
-##  
+
 
 ## **OfflineMetaRepair工具**
 
@@ -247,7 +245,7 @@ hbck工具是HBase的在线修复工具，如果HBase没有启动是无法使用
 - 对集群影响：**5星**（备份原始元数据表后，会重建HBase元数据）
 - 实用性：4星（当HBase由于元数据原因无法启动时，此工具可以恢复HBase）
 
-##  
+
 
 ## **Sweeper工具**
 
