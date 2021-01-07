@@ -1,3 +1,8 @@
+- [基于Jenkins+Gitlab+Harbor+Rancher+k8s CI/CD实现](https://www.cnblogs.com/xiao987334176/p/13074198.html)
+- [Jenkins+harbor+gitlab+k8s 部署maven项目](https://www.cnblogs.com/xiao987334176/p/11434849.html)
+
+
+
 ### 1. Jenkins 介绍
 
 Jenkins 是一款著名的可扩展的用于自动化部署的开源 CI/CD 工具。Jenkins 是完全用 Java 编写的，是在 MIT 许可下发布的。它有一组强大的功能，可以将软件的构建、测试、部署、集成和发布等相关任务自动化。这款用于测试的自动化 CI/CD 工具可以在 macOS、Windows 和各种 UNIX 版本（例如 OpenSUSE、Ubuntu、Red Hat 等）系统上使用。除了通过本地安装包安装，它还可以在任何安装过 Java 运行时环境（Java Runtime Environment，JRE）的机器上单独安装或者作为一个 Docker 安装。Jenkins 团队还有一个子项目叫做 Jenkins X，专门运行一个与 Kubernetes 无缝衔接的开箱即用的 pipeline。Jenkins X 巧妙地集成了 Helm、Jenkins CI/CD 服务器、Kubernetes 以及其它一些工具，来提供一个内置最佳实践的规范的 CI/CD 工具 pipeline，例如使用 GitOps 来管理环境。使用 Jenkins 的一个加分点是，其脚本结构良好、易于理解并且可读性很强。Jenkins 团队已经开发了近 1000 个插件，使得应用程序可以与其它熟悉的技术混合使用。除此之外，还可以使用 Credentials Command 之类的插件。这使得向脚本中添加隐藏的身份验证凭证等变得简单可行。一旦 Jenkins pipeline 开始运行，你还可以验证每个阶段通过与否以及每个阶段的总数。但是，你不能在提供的图形化概览中检查特定作业的状态。你可以做的是跟踪终端中的作业进度。
