@@ -1,13 +1,13 @@
 [TOC]
 
-[恕我直言，你可能真没用过这些 IDEA 插件！](https://www.cnblogs.com/coding-farmer/p/13468038.html#)
+- [恕我直言，你可能真没用过这些 IDEA 插件！](https://www.cnblogs.com/coding-farmer/p/13468038.html#)
 
 # 一、IDEA配置
 ## 1.1 代码智能提示，忽略大小写
 File -> Settings -> Editor -> Code Completion里把Case sensitive completion设置为None就可以了
 
 ## 1.2 IDEA 注释模板设置
-[IDEA 注释模板设置](https://www.cnblogs.com/youngyajun/p/11588730.html)
+- [IDEA 注释模板设置](https://www.cnblogs.com/youngyajun/p/11588730.html)
 
 
 # 二、IDEA插件

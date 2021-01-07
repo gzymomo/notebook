@@ -1,4 +1,4 @@
-[IDEA代码质量插件](https://www.cnblogs.com/javaguide/p/13854134.html)
+- [IDEA代码质量插件](https://www.cnblogs.com/javaguide/p/13854134.html)
 
 
 

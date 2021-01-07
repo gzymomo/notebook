@@ -212,7 +212,7 @@ $ sudo docker-compose up -d
 镜像推送
 ```bash
 #推送
-docker login 服务器地址：port
+docker login 服务器地址:port
 
 #镜像打标签 ,要重新打标签，标签默认是官网地址
 docker tag 镜像名:标签 私服地址/仓库项目名/镜像名:标签
