@@ -123,12 +123,6 @@ docker run -i -t -d -p 6060:80 --restart=always \
 
  
 
- 
-
- 
-
- 
-
 ##  3.4 下载onlyoffice插件并配置nextcloud
 
  
@@ -136,8 +130,6 @@ docker run -i -t -d -p 6060:80 --restart=always \
 应用 》office&text 》右上角搜索onlyoffice ，点击下载并启用。
 
  ![img](https://img2020.cnblogs.com/blog/1495654/202006/1495654-20200611191147771-1379234859.png)
-
- 
 
  
 
@@ -149,17 +141,11 @@ docker run -i -t -d -p 6060:80 --restart=always \
 
  
 
- 
-
 现在回到主页面，点击如图加号，可以看到已成功加载office组件。
 
 ![img](https://img2020.cnblogs.com/blog/1495654/202006/1495654-20200611191549767-1878626707.png)
 
- 
 
- 
-
- 
 
 至此，nextcloud+onlyoffice安装完成。
 
