@@ -1,4 +1,9 @@
 - [使用docker安装Nextcloud+Onlyoffice ](https://www.cnblogs.com/cooper-73/p/13083161.html)
+- [私有云办公平台大规模集群/企业级集群/小型工作室集群解决方案：NextCloud集群部署方案--NextCloud集群架构设计](https://blog.csdn.net/Aria_Miazzy/article/details/85028421)
+
+
+
+
 
 
 

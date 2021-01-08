@@ -1,6 +1,8 @@
 - [kubernetes监控-Heapster+InfluxDB+Grafana（十五）](https://www.cnblogs.com/yuezhimi/p/10932145.html)
-
 - [kubernetes监控-prometheus（十六）](https://www.cnblogs.com/yuezhimi/p/11017155.html)
+- [基于k8s Prometheus+Grafana+Altermanager钉钉报警](https://blog.51cto.com/billy98/2362369)
+
+
 
 
 

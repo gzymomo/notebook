@@ -1,4 +1,7 @@
-[为什么要用k8s(优缺点)](https://www.cnblogs.com/cnblx/p/11653152.html)
+- [为什么要用k8s(优缺点)](https://www.cnblogs.com/cnblx/p/11653152.html)
+- [Kubernetes生产环境最佳实践](https://baijiahao.baidu.com/s?id=1687609645264653650)
+
+
 
 k8s是一个开源的容器集群管理系统，可以实现容器集群的自动化部署、自动扩缩容、维护等功能。
 
