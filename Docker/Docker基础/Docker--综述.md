@@ -1,6 +1,6 @@
 [TOC]
 
-# 1、Docker是干什么的？
+# 一、Docker是干什么的？
 docker 是一个开源的应用容器引擎（基于Go语言开发），让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的Linux机器上，也可以实现虚拟化，容器是完全使用沙箱机制，相互之间不会有任何接口。简言之，就是可以在Linux上镜像使用的这么一个容器。
 
 Docker可以在容器内部快速自动化部署应用，并可以通过内核虚拟化技术（namespaces及cgroups等）来提供容器的资源隔离与安全保障等。
@@ -18,7 +18,50 @@ Docker的思想来自于集装箱，集装箱解决了什么问题？在一艘�
 Docker 并不在乎你的应用程序是什么、做什么，Docker 提供了一组应用打包、传输和部署的方法，以便你能更好地在容器内运行任何应用。
 
 
-# 2、Docker的核心：镜像、容器、仓库
+
+## 1.1 **容器**
+
+容器=cgroup+namespace+rootfs+容器引擎（用户态工具）
+
+- Cgroup：资源控制。
+- Namespace：访问隔离。
+- rootfs：文件系统隔离。
+- 容器引擎：生命周期控制。
+
+
+
+## 1.2 **容器两个核心技术**
+
+**NameSpace**
+Namespace又称为命名空间（也可翻译为名字空间），它是将内核的全局资源做封装，使得每个Namespace都有一份独立的资源，因此不同的进程在各自的Namespace内对同一种资源的使用不会互相干扰。
+
+- IPC：隔离System V IPC和POSIX消息队列。
+- Network：隔离网络资源。
+- Mount：隔离文件系统挂载点。
+- PID：隔离进程ID。
+- UTS：隔离主机名和域名。
+- User：隔离用户ID和组ID。
+
+
+
+**Cgroup**
+Cgroup是control group的简写，属于Linux内核提供的一个特性，用于限制和隔离一组进程对系统资源的使用，也就是做资源QoS，这些资源主要包括CPU、内存、block I/O和网络带宽。
+
+- devices：设备权限控制。
+- cpuset：分配指定的CPU和内存节点。
+- cpu：控制CPU占用率。
+- cpuacct：统计CPU使用情况。
+- memory：限制内存的使用上限。
+- freezer：冻结（暂停）Cgroup中的进程。
+- net_cls：配合tc（traffic controller）限制网络带宽。
+- net_prio：设置进程的网络流量优先级。
+- huge_tlb：限制HugeTLB的使用。
+- perf_event：允许Perf工具基于Cgroup分组做性能监测。
+
+
+
+
+# 二、Docker的核心：镜像、容器、仓库
 镜像是一个可执行包，包含运行应用程序所需的所有内容——代码、运行时、库、环境变量和配置文件。
 
 **容器：**
@@ -53,9 +96,29 @@ Docker 并不在乎你的应用程序是什么、做什么，Docker 提供了一
 
 ![](https://img-blog.csdnimg.cn/20190131155147837.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FzYmJs,size_16,color_FFFFFF,t_70)
 
+# 三、Docker的五种网络
 
-# Docker作用
-![](https://img-blog.csdnimg.cn/20190131203930409.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FzYmJs,size_16,color_FFFFFF,t_70)
+**None**
+不为容器配置任何网络功能。
 
-# 3、Docker的使用
+**Container**
+与另一个运行中的容器共享NetworkNamespace，共享相同的网络视图。
+
+**Host**
+与主机共享Root Network Namespace，容器有完整的权限可以操纵主机的协议栈、路由表和防火墙等，所以被认为是不安全的。
+
+**Bridge**
+Docker设计的NAT网络模型。
+Docker网络的初始化动作包括：创建docker0网桥、为docker0网桥新建子网及路由、创建相应的iptables规则等。
+![Docker关键知识点儿汇总](https://minminmsn.com/images/docker/bridge.jpg)
+在桥接模式下，Docker容器与Internet的通信，以及不同容器之间的通信，都是通过iptables规则控制的。
+**Overlay**
+Docker原生的跨主机多子网模型。
+overlay网络模型比较复杂，底层需要类似consul或etcd的KV存储系统进行消息同步，核心是通过Linux网桥与vxlan隧道实现跨主机划分子网。
+![Docker关键知识点儿汇总](https://minminmsn.com/images/docker/overlay.jpg)
+
+
+
+# 四、Docker的使用
+
 [Docker及其使用思维导图](https://blog.csdn.net/An1090239782/article/details/85127030)
