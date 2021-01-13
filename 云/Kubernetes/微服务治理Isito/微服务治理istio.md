@@ -1,4 +1,7 @@
-[微服务治理istio](https://www.cnblogs.com/yuezhimi/p/13100265.html)
+- [微服务治理istio](https://www.cnblogs.com/yuezhimi/p/13100265.html)
+- [istio的原理和功能介绍](https://www.cnblogs.com/JoZSM/p/10902306.html)
+
+
 
 
 
