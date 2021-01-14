@@ -1,5 +1,6 @@
 - [基于Jenkins+Gitlab+Harbor+Rancher+k8s CI/CD实现](https://www.cnblogs.com/xiao987334176/p/13074198.html)
 - [Jenkins+harbor+gitlab+k8s 部署maven项目](https://www.cnblogs.com/xiao987334176/p/11434849.html)
+- [Jenkins+GitLab+SonnarQube搭建CI/CD全流程](https://www.cnblogs.com/mpolaris/p/14275351.html)
 
 
 
