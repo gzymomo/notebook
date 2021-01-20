@@ -1,4 +1,5 @@
 - [高德最佳实践：Serverless 规模化落地有哪些价值？](https://blog.51cto.com/13778063/2555576)
+- [微众银行案例｜容器化实践在金融行业落地面临的问题和挑战](https://www.cnblogs.com/tencent-cloud-native/p/14260889.html)
 
 
 
