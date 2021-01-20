@@ -2,6 +2,7 @@
 
 - [Kubernetes Service对外暴露应用详解](https://mp.weixin.qq.com/s?__biz=MzAwNTM5Njk3Mw==&mid=2247496042&idx=1&sn=e8d6ae662f6a1375b167ca44d35bf52c&chksm=9b1ff1e8ac6878fe586d43746e78965cafb36637dbce5dbbd7bf022abfba5c709c1979b9cbac&mpshare=1&scene=24&srcid=1215IEPIkCxX1XS3sYNu63bz&sharer_sharetime=1608015467956&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
 - [容器编排系统k8s之Ingress资源](https://www.cnblogs.com/qiuhom-1874/p/14167581.html)
+- [Nginx Ingress 高并发实践](https://www.cnblogs.com/tencent-cloud-native/p/13603181.html)
 
 
 
