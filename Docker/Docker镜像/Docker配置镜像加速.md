@@ -1,12 +1,16 @@
+- 创建文件夹
 
+```bash
+sudo mkdir -p /etc/docker 
+```
 
-
+- 编辑配置文件
 
 ```bash
 vi /etc/docker/daemon.json
 ```
 
-
+- 将如下配置置入配置文件中
 
 ```yaml
 {
@@ -20,7 +24,7 @@ vi /etc/docker/daemon.json
 }
 ```
 
-
+- 重启docker
 
 ```bash
 systemctl daemon-reload && systemctl restart docker

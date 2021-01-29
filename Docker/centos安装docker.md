@@ -1,4 +1,8 @@
-# yum安装
+# Centos安装Docker
+
+
+
+## 方式一：yum安装
 
 ```bash
 yum update
@@ -8,6 +12,16 @@ yum install docker-ce
 systemctl start docker
 systemctl enable docker
 ```
+
+
+
+## 方式二：（推荐）
+
+```bash
+curl -sSL https://get.daocloud.io/docker | sh
+```
+
+
 
 
 
