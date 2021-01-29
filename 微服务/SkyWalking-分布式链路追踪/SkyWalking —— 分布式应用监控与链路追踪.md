@@ -1,3 +1,9 @@
+- [主流微服务全链路监控系统之战](https://mp.weixin.qq.com/s/LaJHdCiZ-P1C1bKdbprNZA)
+
+
+
+
+
 SkyWalking 是一个应用性能监控系统，特别为微服务、云原生和基于容器（Docker, Kubernetes, Mesos）体系结构而设计。除了应用指标监控以外，它还能对分布式调用链路进行追踪。类似功能的组件还有：Zipkin、**Pinpoint**、CAT等。
 
 上几张图，看看效果，然后再一步一步搭建并使用
