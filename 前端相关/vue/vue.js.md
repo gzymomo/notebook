@@ -1,5 +1,11 @@
 [TOC]
 
+# MVVM风格开发框架
+
+MVVM（Model View ViewModel）是由微软的WPF带来的技术体验，如Sliverlight、音频、视频、3D和动画等，使得软件UI层更加细节化、可定制化。
+
+
+
 # 一、vue.js
 
 ## 1.1 基础代码与mvvm关系
