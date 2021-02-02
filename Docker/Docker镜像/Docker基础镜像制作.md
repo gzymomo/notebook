@@ -76,7 +76,6 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.161-b12, mixed mode)
 
 ```bash
 docker save -o jdk.tar imageId
-1
 ```
 
 ## 2.2 将打包镜像导入目标服务器，并使用docker导入

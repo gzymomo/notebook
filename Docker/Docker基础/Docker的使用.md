@@ -3,28 +3,7 @@
 ![](https://img2020.cnblogs.com/blog/1519601/202006/1519601-20200614140529730-20742309.png)
 
 # 一、Docker安装使用
-> 安装Docker：
-> wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O/etc/yum.repos.d/docker-ce.repo
-> yum -y install docker-ce
 
-## 安装依赖：
-```shell
-yum install -y yum-utils device-mapper-persistent-data lvm2
-```
-## 添加软件源：
-```shell
-yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo　　# 指定阿里云镜像源
-```
-## 安装docker-ce
-```shell
-yum clean all  yum makecache fast # 重新生成缓存
-yum -y install docker-ce docker-ce-cli containerd.io
-```
-## 设置自启并启动：
-```shell
-systemctl enable docker
-systemctl start docker
-```
 ## Docker设置镜像源
 `vi /etc/dockerdaemon.json`
 ```yml
@@ -32,15 +11,8 @@ systemctl start docker
  "registry-mirrors":["https://6kx4zyno.mirror.aliyuncs.com"]
 }
 ```
-## 查看版本
-```shell
-docker version
-```
-## Docker重启服务
-```shell
-systemctl daemon-reload
-systemctl restart docker
-```
+
+
 # Docker 将镜像推送至Docker Hub仓库中
 ```shell
 docker  tag  镜像id       要推入仓库的用户名/要推入的仓库名:新定义的tag 
