@@ -1,5 +1,3 @@
-[TOC]
-
 自动补齐需要依赖工具 bash-complete，如果没有，则需要手动安装，命令如下：
 
 `[root@docker ~]# yum -y install bash-completion`

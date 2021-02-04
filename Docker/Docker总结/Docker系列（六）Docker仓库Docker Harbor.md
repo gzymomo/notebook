@@ -1,18 +1,16 @@
-相关优质内容来源：
-Kubernetes中文社区：[Harbor用户机制、镜像同步和与Kubernetes的集成实践](https://www.kubernetes.org.cn/1738.html)
-
-[Harbor镜像仓库（含clair镜像扫描） - 完整部署记录](https://www.cnblogs.com/kevingrace/p/13970578.html)
+Docker仓库，重点想讲一讲Harbor，对于Registry私服个人感觉用的还是少，而且不是很方便，对于Harbor自己在上手实践也在公司项目落地过程中，均觉得十分不错，故Docker系列中专门讲解一下Harbor的相关内容。
 
 
 
-# Harbor概述
-Docker官方提供了Registry具备此功能，但管理方面较弱，不适合企业级的应用，今天给大家介绍Harbor的使用。
+# 一、Harbor概述
 
 Harbor是由VMware公司开源的企业级的Docker Registry管理项目，它包括**权限管理(RBAC)、LDAP、日志审核、管理界面、自我注册、镜像复制和中文支持**等功能。
 
 容器的核心在于镜象的概念，由于可以将应用打包成镜像，并快速的启动和停止，因此容器成为新的炙手可热的基础设施CAAS，并为敏捷和持续交付包括DevOps提供底层的支持。
 
-而Habor和Docker Registry所提供的容器镜像仓库，就是容器镜像的存储和分发服务。之所以会有这样的服务存在，是由于以下三个原因：
+而Habor和Docker Registry所提供的容器镜像仓库，就是容器镜像的存储和分发服务。
+
+之所以会有这样的服务存在，是由于以下三个原因：
 
 - 提供分层传输机制，优化网络传输
   - Docker镜像是是分层的，而如果每次传输都使用全量文件（所以用FTP的方式并不适合），显然不经济。必须提供识别分层传输的机制，以层的UUID为标识，确定传输的对象。
@@ -21,15 +19,17 @@ Harbor是由VMware公司开源的企业级的Docker Registry管理项目，它�
 - 支持水平扩展集群
   - 当有用户对镜像的上传下载操作集中在某服务器，需要对相应的访问压力作分解。
 
-## Harbor的安全机制
+## 1.1 Harbor的安全机制
+
 在Harbor中，用户主要分为两类。一类为管理员，另一类为普通用户。两类用户都可以成为项目的成员。而管理员可以对用户进行管理。
 
 成员是对应于项目的概念，分为三类：管理员、开发者、访客。管理员可以对开发者和访客作权限的配置和管理。测试和运维人员可以访客身份读取项目镜像，或者公共镜像库中的文件。
 从项目的角度出发，显然项目管理员拥有最大的项目权限，如果要对用户进行禁用或限权等，可以通过修改用户在项目中的成员角色来实现，甚至将用户移除出这个项目。
 
-![](https://www.kubernetes.org.cn/img/2017/03/20170314213441.jpg)
+![image-20210204143556213](http://lovebetterworld.com/image-20210204143556213.png)
 
-## Harbor的镜像同步
+## 1.2 Harbor的镜像同步
+
 **为什么需要镜像同步**
 由于对镜像的访问是一个核心的容器概念，在实际使用过程中，一个镜像库可能是不够用的，下例情况下，我们可能会需要部署多个镜像仓库：
 
@@ -45,7 +45,8 @@ Harbor是由VMware公司开源的企业级的Docker Registry管理项目，它�
 - 在预上线环境库，运维人员对镜像也是只读操作，一旦运行正常，即将镜像同步到生产环境库。
 - 在这个流程中，各环境的镜像库之间都需要镜像的同步和复制。
 
-## Harbor的镜像同步机制
+## 1.3 Harbor的镜像同步机制
+
 有了多个镜像仓库，在多个仓库之间进行镜像同步马上就成为了一个普遍的需求。比较传统的镜像同步方式，有两种：
 
 - 第一种方案，使用Linux提供的RSYNC服务来定义两个仓库之间的镜像数据同步。
@@ -57,18 +58,27 @@ Harbor是由VMware公司开源的企业级的Docker Registry管理项目，它�
 - 利用任务调度和监控机制进行复制任务的管理，保障复制任务的健壮性。在同步过程中，如果源镜像已删除，Harbor会自动同步删除远端的镜像。在镜像同步复制的过程中，Harbor会监控整个复制过程，遇到网络等错误，会自动重试。
 - 提供复制策略机制保证项目级的复制需求。在Harbor中，可以在项目中创建复制策略，来实现对镜像的同步。与Docker Registry的不同之处在于，Harbor的复制是推（PUSH）的策略，由源端发起，而Docker Registry的复制是拉（PULL）的策略，由目标端发起。
 
-![](https://www.kubernetes.org.cn/img/2017/03/20170314213448.jpg)
+![image-20210204143625510](http://lovebetterworld.com/image-20210204143625510.png)
 
-## Harbor的多级部署
+## 1.4 Harbor的多级部署
+
 在实际的企业级生产运维场景，往往需要跨地域，跨层级进行镜像的同步复制，比如集团企业从总部到省公司，由省公司再市公司的场景。
 这一部署场景可简化如下图：
+
+
+
 ![](https://www.kubernetes.org.cn/img/2017/03/20170314213455.jpg)
 
 更复杂的部署场景如下图：
+
+
+
 ![](https://www.kubernetes.org.cn/img/2017/03/20170314213503.jpg)
 
-# 一、安装
-## 1.1 docker安装
+# 二、安装
+
+## 2.1 docker安装
+
 ```bash
 # yum 包更新
 [root@centos7 ~]# yum update
@@ -93,6 +103,7 @@ Harbor是由VMware公司开源的企业级的Docker Registry管理项目，它�
 ```
 
 开启docker远程访问：
+
 ```bash
 vim /lib/systemd/system/docker.service
 
@@ -100,9 +111,10 @@ vim /lib/systemd/system/docker.service
 ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock  
 ```
 
-## 1.2 docker compose安装
+## 2.2 docker compose安装
 
-### 1.2.1 方式一
+### 2.2.1 方式一
+
 ```bash
 # 安装 epel-release
 [root@centos7 ~]# yum install epel-release
@@ -123,7 +135,8 @@ ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 sudo rm /usr/local/bin/docker-compose
 ```
 
-### 1.2.2 方式二
+### 2.2.2 方式二
+
 ```bash
 yum install epel-release
 yum install -y python-pip
@@ -134,8 +147,10 @@ yum install git
 ![](https://img2018.cnblogs.com/blog/1580998/201912/1580998-20191224091913658-1191936961.png)
 
 
-## 1.3 harbor安装
+## 2.3 harbor安装
+
 GitHub地址：https://github.com/goharbor/harbor/releases
+
 ```bash
 wget https://github.com/goharbor/harbor/releases/download/v1.9.3/harbor-offline-installer-v1.9.3.tgz
 ```
@@ -164,7 +179,8 @@ database:
 执行安装：
 ` sh ./install.sh `
 
-## 1.4 常用命令
+## 2.4 常用命令
+
 ```bash
 # 停止harbor
 $ sudo docker-compose stop
@@ -192,22 +208,28 @@ $ sudo prepare --with-notary --with-clair --with-chartmuseum
 $ sudo docker-compose up -d
 ```
 
-# 二、Harbor使用
-## 2.1 项目
+# 三、Harbor使用
+
+## 3.1 项目
+
 以项目的维度划分镜像，可以理解为镜像组，相同镜像的不同版本可以放在一个项目里，同样项目里有完成的仓库、成员、标签、日志的管理。
 
-## 2.2 系统管理
+## 3.2 系统管理
+
 - 用户管理 用于操作用户的增删、密码重置
 - 仓库管理 拉取其他服务器镜像到本地
 - 同步管理 可定时去拉取最新镜像
 
-# 三、镜像推送和拉取
+# 四、镜像推送和拉取
+
 镜像推送和拉取
+
 ```bash
 #从私服拉取镜像 docker pull 私服地址/仓库项目名/镜像名：标签
 ```
 
 镜像推送
+
 ```bash
 #推送
 docker login 服务器地址:port
@@ -219,9 +241,12 @@ docker tag 镜像名:标签 私服地址/仓库项目名/镜像名:标签
 docker push 私服地址/仓库项目名/镜像名：标签
 ```
 
-# 四、坑点
-## 4.1 上传项目时修改http请求为https
+# 五、坑点
+
+## 5.1 上传项目时修改http请求为https
+
 在我们上传项目的时候可能会出现一些问题：
+
 ```bash
 docker login 10.0.86.193
 Username: admin
@@ -235,6 +260,7 @@ Error response from daemon: Get https://10.0.86.193/v1/users/: dial tcp 10.0.86.
 **解决办法**：
 如果是在Harbor本机登录可以这样做如下解决
 在/etc/docker/daemon.json 加上如下内容(注意是json字符串)
+
 ```yml
      {
       "insecure-registries": [
@@ -257,6 +283,7 @@ Error response from daemon: Get https://10.0.86.193/v1/users/: dial tcp 10.0.86.
 ![](https://img-blog.csdn.net/20180926170436296?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjA4MjYzNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 远程也可直接通过以下方式解决：
+
 ```bash
 vi  /etc/docker/daemon.json
 # 增加一个daemon.json文件
@@ -268,7 +295,24 @@ vi  /etc/docker/daemon.json
 ```
 
 重启docker服务
+
 ```bash
 systemctl daemon-reload && systemctl restart docker
 ```
+
+
+
+相关内容参考原文链接：
+
+- Kubernetes中文社区：[Harbor用户机制、镜像同步和与Kubernetes的集成实践]：   https://www.kubernetes.org.cn/1738.html
+- [Harbor镜像仓库（含clair镜像扫描） - 完整部署记录]：   https://www.cnblogs.com/kevingrace/p/13970578.html
+
+
+
+# Docker思维导图总结
+
+思维导图下载链接：
+[Docker思维导图下载](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/Docker)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201218164558449.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0FuMTA5MDIzOTc4Mg==,size_16,color_FFFFFF,t_70#pic_center)
 

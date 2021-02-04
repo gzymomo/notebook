@@ -664,3 +664,13 @@ groups:
 ![image-20210203093206899](http://lovebetterworld.com/image-20210203093206899.png)
 
 钉钉机器人的安全设置，我增加了IP限制，导致多次访问不成功，由于必须添加安全设置，所以添加自定义关键字的限制，添加了如下关键字：alert、promethues、alertmanager、webhook。可自行决定添加几个。
+
+
+
+# Docker思维导图总结
+
+思维导图下载链接：
+[Docker思维导图下载](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/Docker)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201218164558449.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0FuMTA5MDIzOTc4Mg==,size_16,color_FFFFFF,t_70#pic_center)
+

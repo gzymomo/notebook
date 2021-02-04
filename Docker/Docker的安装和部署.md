@@ -23,9 +23,41 @@ curl -sSL https://get.daocloud.io/docker | sh
 
 
 
+## 方式三：脚本方式安装
+
+在所有服务器上创建install_docker.sh脚本
+
+```bash
+#使用阿里云镜像中心
+export REGISTRY_MIRROR=https://registry.cn-hangzhou.aliyuncs.com
+#安装docker环境
+yum install -y yum-utils device-mapper-persistent-data lvm2
+#配置Docker的yum源
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+#安装容器插件
+dnf install https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.13-3.1.el7.x86_64.rpm
+#指定安装docker 19.03.8版本
+yum install -y docker-ce-19.03.8 docker-ce-cli-19.03.8
+#设置Docker开机启动
+systemctl enable docker.service
+#启动Docker
+systemctl start docker.service
+#查看Docker版本
+docker version
+```
+
+在每台服务器上为install_docker.sh脚本赋予可执行权限，并执行脚本，如下所示。
+
+```bash
+# 赋予install_docker.sh脚本可执行权限
+chmod a+x ./install_docker.sh
+# 执行install_docker.sh脚本
+./install_docker.sh
+```
 
 
-# [centos7-linux安装docker(离线方式)](https://www.cnblogs.com/helf/p/12889955.html)
+
+# [Centos7-linux安装docker(离线方式)](https://www.cnblogs.com/helf/p/12889955.html)
 
 1. 下载docker的安装文件
 
