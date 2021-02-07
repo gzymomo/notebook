@@ -1,6 +1,8 @@
 [TOC]
 
-[掘金：秋天不落叶：三年 Git 使用心得 & 常见问题整理](https://juejin.im/post/5ee649ff51882542ea2b5108#heading-34)
+- [掘金：秋天不落叶：三年 Git 使用心得 & 常见问题整理](https://juejin.im/post/5ee649ff51882542ea2b5108#heading-34)
+
+- [程序员必备基础：Git 命令全方位学习](https://juejin.cn/post/6844904200111915015)
 
 
 
