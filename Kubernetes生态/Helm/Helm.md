@@ -1,4 +1,5 @@
-[Helm v3](https://www.cnblogs.com/yuezhimi/p/12981950.html)
+- [Helm v3](https://www.cnblogs.com/yuezhimi/p/12981950.html)
+- [Kubernets包管理工具—>Helm介绍与使用](https://www.cnblogs.com/v-fan/p/13949025.html)
 
 
 
