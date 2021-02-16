@@ -1,6 +1,13 @@
 [TOC]
 
+
+
+- [这些不可不知的JVM知识，我都用思维导图整理好了](https://www.cnblogs.com/three-fighter/p/14402197.html)
+
+
+
 # 1、JVM内存模型
+
 ![](https://img-blog.csdnimg.cn/20191104180307365.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0FuMTA5MDIzOTc4Mg==,size_16,color_FFFFFF,t_70)
 
 ![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzIyLzE2YzFhNDI2ZWQ5YWI0OGI_aW1hZ2VWaWV3Mi8wL3cvMTI4MC9oLzk2MC9mb3JtYXQvd2VicC9pZ25vcmUtZXJyb3IvMQ?x-oss-process=image/format,png)
