@@ -1,5 +1,9 @@
 [Dockerfile详解与最佳实践](https://www.cnblogs.com/spec-dog/p/11570394.html)
 
+[《容器高手实战： Dockerfile最佳实践》](https://www.cnblogs.com/bindot/p/dockerfile.html)
+
+
+
 # DockerFile是什么？
 
 Dockerfile是一个文本文件，包含了一条条指令，每条指令对应构建一层镜像，Docker基于它来构建一个完整镜像。
