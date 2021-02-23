@@ -36,7 +36,7 @@ npm list -g --depth 0
 ### 4、查看全局安装路径
 
 ```
-npm config ls   
+npm config ls
 ```
 
 上面命令执行后看到prefix就是模块全局安装路径
