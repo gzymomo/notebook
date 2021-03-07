@@ -1,6 +1,5 @@
 - [Docker部署ElasticSearch集群](https://www.cnblogs.com/npeng/p/14293416.html)             
-
-- 作者：LemonSquash
+- [Docker Elasticsearch 集群配置](https://www.cnblogs.com/yxy-ngu/p/14445776.html)
 
 
 

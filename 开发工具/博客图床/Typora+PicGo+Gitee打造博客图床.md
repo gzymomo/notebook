@@ -1,4 +1,5 @@
 - [Typora+PicGo+Gitee打造博客图床](https://www.cnblogs.com/xp-thebest/p/14328023.html)
+- [Typora+PicGo+Gitee + node.js 打造个人高效稳定优雅图床](https://www.cnblogs.com/xiaomotong/p/14454745.html)
 
 
 

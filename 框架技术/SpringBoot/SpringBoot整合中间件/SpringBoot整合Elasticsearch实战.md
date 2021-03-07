@@ -1,3 +1,7 @@
+[Elasticsearch 分片集群原理、搭建、与SpringBoot整合](https://www.cnblogs.com/Tom-shushu/p/14444717.html)
+
+
+
 在 ES 官方文档中发现，ES 为 Java REST Client 提供了两种方式的 Client：`Java Low Level Client` 和 `Java High Level REST Client`。
 
 低级别客户端，它允许通过 HTTP 请求与 ES 集群进行通信，API 本身不负责数据的编码解码，由用户去编码解码，它与所有的 ES 版本兼容。
