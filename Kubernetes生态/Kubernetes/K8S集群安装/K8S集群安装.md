@@ -1,6 +1,7 @@
 相关博文：
 
 - [k8s集群部署高可用完整版](https://www.cnblogs.com/yuezhimi/p/12931002.html)
+- [一文吃透如何部署kubernetes高可用集群](https://www.cnblogs.com/xunweidezui/p/14455755.html)
 - [kubernetes 1.16 二进制集群高可用安装实操踩坑篇](https://blog.csdn.net/sfdst/article/details/105813485)
 - [冰河教你一次性成功安装K8S集群（基于一主两从模式）](https://www.cnblogs.com/binghe001/p/14083312.html)
 - [K8S集群的安装](https://www.cnblogs.com/MarkGuo/p/14163469.html)

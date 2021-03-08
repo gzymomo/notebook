@@ -1,7 +1,7 @@
 相关内容参考链接：
 
 - [**FastDFS** 分布式文件系统](https://www.oschina.net/p/fastdfs)
-
+- [分布式文件系统FastDFS简介、搭建、与SpringBoot整合实现图片上传](https://www.cnblogs.com/Tom-shushu/p/14470857.html)
 - 博客园：陈彦斌：[从入门到精通(分布式文件系统架构)-FastDFS，FastDFS-Nginx整合，合并存储，存储缩略图，图片压缩，Java客户端](https://www.cnblogs.com/chenyanbin/p/12782615.html)
 
 
