@@ -1,26 +1,20 @@
 Git每次提交代码都需要写commit message，否则就不允许提交。
 
-般来说，commit message应该清晰明了，说明本次提交的目的，具体做了什么操作……
+一般来说，commit message应该清晰明了，说明本次提交的目的，具体做了什么操作……
 
 但是在日常开发中，大家的commit message千奇百怪，中英文混合使用、fix bug等各种笼统的message司空见怪，这就导致后续代码维护成本特别大，有时自己都不知道自己的fix bug修改的是什么问题。
 
-基于以上这些问题，我们希望通过某种方式来监控用户的git commit message，让规范更好的服务于质量，提高大家的研发效率。
+基于以上这些问题，通过某种方式来监控用户的git commit message，让规范更好的服务于质量，提高整理项目的研发效率。
 
 
 
 # 一、规范建设
-
-综合阿里巴巴高德地图相关部门已有的规范总结出了一套git commit规范。
-
-
 
 ## 1.1 commit message格式
 
 ```javascript
 <type>(<scope>): <subject>
 ```
-
-
 
 ## 1.2 type(必须)
 
@@ -33,8 +27,6 @@ fix/to：修复bug，可以是QA发现的BUG，也可以是研发自己发现的
 - fix：产生diff并自动修复此问题。适合于一次提交直接修复问题
 
 - to：只产生diff不自动修复此问题。适合于多次提交。最终修复问题提交时使用fix
-
-
 
 - docs：文档（documentation）。
 
@@ -54,8 +46,6 @@ fix/to：修复bug，可以是QA发现的BUG，也可以是研发自己发现的
 
 - sync：同步主线或分支的Bug。
 
-
-
 ## 1.3 scope(可选)
 
 scope用于说明 commit 影响的范围，比如数据层、控制层、视图层等等，视项目不同而不同。
@@ -63,8 +53,6 @@ scope用于说明 commit 影响的范围，比如数据层、控制层、视图�
 
 
 例如在Angular，可以是location，browser，compile，compile，rootScope， ngHref，ngClick，ngView等。如果你的修改影响了不止一个scope，你可以使用*代替。
-
-
 
 ## 1.4 subject(必须)
 
@@ -74,15 +62,11 @@ subject是commit目的的简短描述，不超过50个字符。
 
 - 结尾不加句号或其他标点符号。
 
-
-
 根据以上规范git commit message将是如下的格式：
 
 ```
 fix(DAO):用户查询缺少username属性 feat(Controller):用户查询接口开发
 ```
-
-
 
 以上就是我们梳理的git commit规范，那么我们这样规范git commit到底有哪些好处呢？
 

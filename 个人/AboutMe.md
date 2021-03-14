@@ -6,21 +6,22 @@
 - Love：猫，狗，可可爱爱的小动物，读书，篮球不能少，闲暇时遛狗、散步、听歌与友聚会
 - 个人网站地址：https://www.lovebetterworld.com/
 
-![image-20210118214723603](http://lovebetterworld.com/image-20210118214723603.png)
+![image-20210314224054253](https://lovebetterworld.com/image-20210314224054253.png)
 
 - CSDN：https://blog.csdn.net/an1090239782
 
-![image-20210118214519052](http://lovebetterworld.com/image-20210118214519052.png)
+![image-20210314224149159](https://lovebetterworld.com/image-20210314224149159.png)
 
 - 博客园：https://www.cnblogs.com/aixing/
 
-![image-20210118214555747](http://lovebetterworld.com/image-20210118214555747.png)
-
 - GItee：https://gitee.com/AiShiYuShiJiePingXing
 
-![image-20210118214533947](http://lovebetterworld.com/image-20210118214533947.png)
+![image-20210314224242261](https://lovebetterworld.com/image-20210314224242261.png)
 
 - Github：https://github.com/lovebetterworld
+- 花瓣：https://huaban.com/lovingworld/
+
+![image-20210314224317740](https://lovebetterworld.com/image-20210314224317740.png)
 
 
 
@@ -81,7 +82,7 @@
 - 微信：lovebetterworld
 - 公众号：爱是与世界平行
 
-![微信公众号](http://lovebetterworld.com/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.png)
+![image-20210314224335491](https://lovebetterworld.com/image-20210314224335491.png)
 
 ## 免责声明
 

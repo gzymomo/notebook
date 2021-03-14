@@ -1,6 +1,6 @@
 - [k8s部署mysql数据持久化](https://www.cnblogs.com/pluto-charon/p/14411780.html)
 
-
+- [kubernetes生产实践之mysql](https://www.cnblogs.com/scofield666/p/14516923.html)
 
 在这里我部署mysql的目的是为了后面将上一篇博客docker打包的el-admin镜像部署到k8s上，所以本文主要是部署mysql并实现持久化。
 

@@ -1,6 +1,6 @@
 K8S部署Redis服务
 
-
+- [kubernetes生产实践之redis-cluster](https://www.cnblogs.com/scofield666/p/14513024.html)
 
 # 一、编写yaml文件
 

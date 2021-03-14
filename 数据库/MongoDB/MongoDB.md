@@ -1,6 +1,11 @@
 [TOC]
 
+[一文全面总结MongoDB知识体系](https://www.cnblogs.com/pengdai/p/14515673.html)
+
+
+
 # 一、MangoDB简介
+
 MongoDB 是由C++语言编写的，是一个基于分布式文件存储的开源数据库系统。
 
 在高负载的情况下，添加更多的节点，可以保证服务器性能。
