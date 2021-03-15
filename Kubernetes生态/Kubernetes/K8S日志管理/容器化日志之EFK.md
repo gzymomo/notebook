@@ -1,6 +1,6 @@
 - [容器化日志之EFK](https://www.cnblogs.com/snidget/p/14414058.html)
 
-
+- [k8s 日志收集之 EFK](https://www.cnblogs.com/ninejy/p/14534842.html)
 
 ![image.png](https://img2020.cnblogs.com/other/268922/202102/268922-20210218232811290-1320870984.png)
 
