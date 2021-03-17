@@ -4,7 +4,7 @@
 - [Docker 基础知识 - 使用卷(volume)管理应用程序数据](https://www.cnblogs.com/ittranslator/p/13303417.html)
 - [Docker 基础知识 - 使用 tmpfs 挂载(tmpfs mounts)管理应用程序数据](https://www.cnblogs.com/ittranslator/p/13423921.html)
 
-
+- [Docker 数据管理介绍](https://www.escapelife.site/posts/c2e250ea.html)
 
 # 一、数据持久化
 
