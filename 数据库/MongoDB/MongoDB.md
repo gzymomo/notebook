@@ -1,8 +1,8 @@
 [TOC]
 
-[一文全面总结MongoDB知识体系](https://www.cnblogs.com/pengdai/p/14515673.html)
+- [一文全面总结MongoDB知识体系](https://www.cnblogs.com/pengdai/p/14515673.html)
 
-
+- [MongoDB 运维实战总结](https://www.jianshu.com/p/f05f65d3a1dc)
 
 # 一、MangoDB简介
 

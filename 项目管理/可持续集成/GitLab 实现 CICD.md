@@ -6,6 +6,8 @@
 >
 > 来源：https://dzone.com/articles/automate-spring-boot-app-deployment-with-gitlab-ci
 
+- [用 GitLab 做 CI/CD 是什么感觉，太强了](https://mp.weixin.qq.com/s/_ptpakliLVeZ6fWJxljSSw)
+
 
 
 GitLab CI/CD 是一个内置在GitLab中的工具，用于通过持续方法进行软件开发：
