@@ -1,6 +1,6 @@
 微信公众号：民工哥技术之路：采用 jenkins pipeline 实现自动构建并部署至 k8s
 
-
+[Jenkins API+Pipeline深度实践之input的自动化](https://mp.weixin.qq.com/s?__biz=MzkxNzAzNDA3Ng==&mid=2247484622&idx=1&sn=ef9bdc890fafdd3a079a666d0cbaf96f&chksm=c14781fdf63008eb48301a2d5e85d03b4040bcdcaf5baf99353f35c8d318eebf54c202e65a21&mpshare=1&scene=24&srcid=0324cquPD0cnS1I3OPJw6ohm&sharer_sharetime=1616542819519&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
 
 ## 前言
 
