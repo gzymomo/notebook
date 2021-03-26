@@ -1,6 +1,8 @@
 ## Jenkins + 钉钉 + SpringBoot 极简入门，一键打包部署项目
 
 > 摘要: 原创出处 http://www.iocoder.cn/Jenkins/install/ 「芋道源码」
+>
+> https://juejin.cn/post/6942098287533129765
 
 # 1. 概述
 
