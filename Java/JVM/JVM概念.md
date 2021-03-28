@@ -3,6 +3,7 @@
 
 
 - [这些不可不知的JVM知识，我都用思维导图整理好了](https://www.cnblogs.com/three-fighter/p/14402197.html)
+- [JVM万字总结](https://juejin.cn/post/6941242430737874974)
 
 
 

@@ -1,3 +1,9 @@
+- [commit记录](https://juejin.cn/post/6939766986125623304)
+
+
+
+
+
 Git每次提交代码都需要写commit message，否则就不允许提交。
 
 一般来说，commit message应该清晰明了，说明本次提交的目的，具体做了什么操作……
