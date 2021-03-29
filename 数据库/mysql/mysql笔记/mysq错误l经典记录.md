@@ -151,3 +151,14 @@ org.hibernate.util.JDBCExceptionReporter - No operations allowed after connectio
 
 解决方法：
 可以适当在程序中做判断；强烈建议在操作结束时更改应用程序逻辑以正确关闭连接；然后设置一个比较合理的timeout的值（根据业务情况来判断）
+
+# 5、MySql设置InnoDb级别和密码
+
+```yaml
+[mysqld]
+# Mysql innodb级别
+innodb_force_recovery = 6
+# 设置免密登录
+skip-grant-tables
+```
+
