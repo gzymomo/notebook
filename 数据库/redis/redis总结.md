@@ -1,4 +1,6 @@
-# [7000字 Redis 超详细总结、笔记！建议收藏](https://segmentfault.com/a/1190000024515544)
+- [7000字 Redis 超详细总结、笔记！建议收藏](https://segmentfault.com/a/1190000024515544)
+
+
 
 # Redis 简介
 

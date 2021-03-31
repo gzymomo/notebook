@@ -1,5 +1,6 @@
 - [民工哥](https://segmentfault.com/u/jishuroad)：[Nginx + Spring Boot 实现负载均衡](https://segmentfault.com/a/1190000037594169)
 - [如何使用Nginx实现MySQL数据库的负载均衡？看完我懂了！！](https://www.cnblogs.com/binghe001/p/13340680.html)
+- [Nginx+SpringBoot实现负载均衡](https://juejin.cn/post/6844904007903739917)
 
 
 
