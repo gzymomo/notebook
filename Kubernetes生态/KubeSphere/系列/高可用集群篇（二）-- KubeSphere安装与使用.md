@@ -1,4 +1,7 @@
-高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
+- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
+- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
+- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
+- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
 
 
 
@@ -39,18 +42,17 @@
     ```shell
     #直接执行脚本
     curl -L https://git.io/get_helm.sh | bash
-    复制代码
     ```
-
-  - 2、下载源码包，解压后将可执行文件`helm`拷贝到`/usr/local/bin`目录下即可，这样`Helm`客户端就在这台机器上安装完成了
-
-    [下载地址](https://github.com/helm/helm/releases)
-
-    [好用的资源下载器](https://motrix.app/zh-CN)
-
-    下载遇到卡顿，暂停或者重启下载器多试几次
-
-    ```
+  
+- 2、下载源码包，解压后将可执行文件`helm`拷贝到`/usr/local/bin`目录下即可，这样`Helm`客户端就在这台机器上安装完成了
+  
+  [下载地址](https://github.com/helm/helm/releases)
+  
+  [好用的资源下载器](https://motrix.app/zh-CN)
+  
+  下载遇到卡顿，暂停或者重启下载器多试几次
+  
+  ```
     #centos 下载amd64.tar.gz 选择指定版本
     
     #解压后将可执行文件helm拷贝到/usr/local/bin目录下即可，这样Helm客户端就在这台机器上安装完成了
@@ -58,14 +60,13 @@
     #将解压后的helm执行文件放入 /usr/local/bin/
     ln -s ln -s /var/touchAirMallVolume/k8s/linux-amd64/helm /usr/local/bin/
     helm version
-    复制代码
-    ```
-
-    ![image-20210316104202143](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4c2145267c5440fbedc9d238daa8220~tplv-k3u1fbpfcp-zoom-1.image)
-
-    现在我们可以使用`Helm`命令查看版本了，会提示无法连接到服务端`Tiller`：
-
-    ![image-20210315172317588](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c82ec777dde4eb9a58e81b4edf87b2e~tplv-k3u1fbpfcp-zoom-1.image)
+  ```
+  
+  ![image-20210316104202143](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4c2145267c5440fbedc9d238daa8220~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  现在我们可以使用`Helm`命令查看版本了，会提示无法连接到服务端`Tiller`：
+  
+  ![image-20210315172317588](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c82ec777dde4eb9a58e81b4edf87b2e~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 默认开启了`RBAC`访问控制，所以我们需要为`Tiller`创建一个`ServiceAccount`，让他拥有执行的权限，详细内容可以查看 Helm 文档中的[Role-based Access Control](https://docs.helm.sh/using_helm/#role-based-access-control)； 创建`rbac.yaml`文件：
 
@@ -88,7 +89,7 @@
     - kind: ServiceAccount
       name: tiller
       namespace: kube-system
-  复制代码
+  
   ```
 
   应用：`kubectl apply -f helm-rbac.yaml`
@@ -111,18 +112,18 @@
   
   #再次查看版本信息
   helm version
-  复制代码
   ```
+  
 
-  ![image-20210315172622131](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5967bd708bb449469f0d0bd385bbc892~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20210315172622131](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5967bd708bb449469f0d0bd385bbc892~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210316104346092](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38cf0ad9a5264fa08d8444d9310f5e88~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20210316104346092](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38cf0ad9a5264fa08d8444d9310f5e88~tplv-k3u1fbpfcp-zoom-1.image)
 
 #### 安装设置默认的存储类型
 
 - 集群已有存储类型（StorageClass），执行 `kubectl get sc`看下当前是否设置了默认的 `storageclass`
 
-  ![image-20210316081607441](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210316081607441](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/191bec597ab947a8bd3f001e4d24927e~tplv-k3u1fbpfcp-zoom-1.image)
 
   若集群还没有准备存储请参考 [安装 OpenEBS 创建 LocalPV 存储类型](https://v2-1.docs.kubesphere.io/docs/zh-CN/appendix/install-openebs) ；用作开发测试环境，生产环境请确保集群配置了稳定的持久化存储
 
@@ -136,10 +137,10 @@
   kubectl describe node k8s-node1 | grep Taint
   #临时取消master节点的taint
   kubectl taint nodes k8s-node1 node-role.kubernetes.io/master:NoSchedule-
-  复制代码
+  
   ```
 
-  ![image-20210316081728555](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210316081728555](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f59c5891f41c4ba89d406be6e46da133~tplv-k3u1fbpfcp-zoom-1.image)
 
   - 创建命名空间并安装
 
@@ -150,10 +151,10 @@
     
     #安装openEBS
     kubectl apply -f https://openebs.github.io/charts/openebs-operator-1.5.0.yaml
-    复制代码
+    
     ```
 
-    ![image-20210317095204141](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210317095204141](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5aa19558d5c443ab68500c68dc26ac2~tplv-k3u1fbpfcp-zoom-1.image)
 
   - 验证是否安装成功
 
@@ -162,19 +163,19 @@
     kubectl get pods  --all-namespaces
     #查看
     kubectl get sc --all-namespaces
-    复制代码
+    
     ```
 
-    ![image-20210316082205899](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    - ![image-20210316082205899](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7adab185d9d47f593d67946b14cb915~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 如下将 `openebs-hostpath`设置为 **默认的 StorageClass**：
 
   ```
   kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-  复制代码
+  
   ```
 
-  ![image-20210316082610958](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210316082610958](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1f5bc9cc83e4c66ac93ae5dd429e15d~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 恢复master节点的 taint暂不操作，等kubesphere全部安装完成后，恢复也不迟
 
@@ -198,32 +199,36 @@
   
   #监控整个安装过程
   kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath='{.items[0].metadata.name}') -f
-  复制代码
   ```
 
-  ![image-20210316090346841](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210316090346841](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/747e5789df0443a08cf259bea9fcc39c~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
 
   ```
   #观察kubesphere pod的创建进度
   kubectl get pods --all-namespaces
   直到所有status 都变成running
-  复制代码
   ```
 
-  服务器性能越好，安装完成就越快，我这里大概等待了10分钟才完成![image-20210316105343940](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  服务器性能越好，安装完成就越快，我这里大概等待了10分钟才完成
 
-  ![image-20210316105732014](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210316105343940](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/479a0b6459f64203947e838d033eead4~tplv-k3u1fbpfcp-zoom-1.image)
+
+  ![image-20210316105732014](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/254e62abbc0b47f7a1729fce9d3fbb24~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 等待全部变为 running 状态，登录 kubeSphere 的控制台（最小化安装完成）
 
   ```
   kubectl get pods --all-namespaces
-  复制代码
+  
   ```
 
-  ![image-20210316110300646](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210316110300646](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d40cabee14704f8481257389be069f03~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210316110102675](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210316110102675](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5e232b43e474a9b994fdadcac3c6722~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 定制化安装（可插拔组件）
 
@@ -264,21 +269,20 @@
 
   ```
   kubectl edit cm -n kubesphere-system ks-installer
-  复制代码
   ```
+  
 
-  参考如下修改 ConfigMap
+参考如下修改 ConfigMap
 
-  ```
+```
   ···
   metrics-server:
        enabled: True
-  复制代码
-  ```
+```
 
-  ![image-20210316132806889](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210316132806889](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cbfa8f4db78f4928b4322f59f86a948d~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0dbd7cb0ce3f4a6e9a76e3cb476a89ae~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 2、保存退出，参考 [验证可插拔功能组件的安装](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/verify-components) ，通过查询 ks-installer 日志或 Pod 状态验证功能组件是否安装成功
 
@@ -288,22 +292,24 @@
   kubectl get pods --all-namespaces
   #日志查看
   kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath='{.items[0].metadata.name}') -f
-  复制代码
+  
   ```
 
   > 这一步操作，由于电脑性能原因，持续了15分钟才算基本完成
 
-  ![image-20210317101557467](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317101557467](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf73a52a12584d46917198a33826315e~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317101616701](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317101616701](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd49c8d7d8074cdab8b6fbbdcca19ab4~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317101636347](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317101636347](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ceb60f0d3b864b7883bd63fb0d83db98~tplv-k3u1fbpfcp-zoom-1.image)
 
 - kubesphere的dashboard还可以对集群进行命令行操作
 
-  ![image-20210317110233023](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317110233023](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d0cb978b1ad4730b1b951cfdca2ec26~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317110209415](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210317110209415](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63fd3eb28771429cbb39353a41edb1ce~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ## 
 
 ## Kubesphere进阶
 
@@ -315,11 +321,13 @@
 
 - 目前，平台的资源一共有三个层级，包括 **集群 (Cluster)、 企业空间 (Workspace)、 项目 (Project) 和 DevOps Project (DevOps 工程)**，层级关系如下图所示，即一个集群中可以创建多个企业空间，而每个企业空间，可以创建多个项目和 DevOps工程，而集群、企业空间、项目和 DevOps工程中，默认有多个不同的内置角色
 
-  ![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/136e0a98a154441ab3b4806265387a68~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 示例逻辑
 
-  ![%E5%A4%9A%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.png](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![%E5%A4%9A%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6dd73fb0579413ea75618b0278b69bc~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 第一步：创建角色和账号
 
@@ -327,17 +335,17 @@
 
   ```
   平台角色--创建--user-manager--分配用户管理、角色管理的权限
-  复制代码
+  
   ```
 
 - 1.2、 **平台管理 → 账户管理**，可以看到当前集群中所有用户的列表，点击 **创建** 按钮
 
   ```
   touch-air-hr --> 角色为 user-manager
-  复制代码
+  
   ```
 
-  ![image-20210317132947360](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317132947360](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/205de5e35b6740738b8a6428d4ca2e57~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 1.3、**user-manager** 账户登录来创建下表中的四个账号，`ws-manager`将用于创建一个企业空间，并指定其中一个用户名为 `ws-admin`作为企业空间管理员
 
@@ -348,7 +356,9 @@
   | project-admin   | cluster-regular    | 创建和管理项目、DevOps 工程，邀请新成员加入                  |
   | project-regular | cluster-regular    | 将被 project-admin 邀请加入项目和 DevOps 工程， 用于创建项目和工程下的工作负载、Pipeline 等资源 |
 
-  ![image-20210317133918504](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317133918504](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce4a889e512f4a3288625e72ea3f0a7c~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 第二步：创建企业空间
 
@@ -356,21 +366,21 @@
 
 - 2.1、切换为 `ws-manager`登录 KubeSphere，ws-manager 有权限查看和管理平台的所有企业空间；点击左上角的 `平台管理`→ `企业空间`，可见新安装的环境只有一个系统默认的企业空间 **system-workspace**，用于运行 KubeSphere 平台相关组件和服务，禁止删除该企业空间；在企业空间列表点击 **创建**
 
-  ![image-20210317140008891](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317140008891](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c2572c9ab6a54fb0a0bcfafec661de04~tplv-k3u1fbpfcp-zoom-1.image)
 
   mall-workspace -- 企业成员 -- 邀请成员邀请 ws-admin，并赋予企业空间管理员的角色
 
-  ![image-20210317140805643](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317140805643](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da4fbf7d17e1440897b5c69c04ec9a4a~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 2.2、企业空间 `mall-workspace`创建完成后，切换为 `ws-admin`登录 KubeSphere，点击左侧「进入企业空间」进入企业空间详情页
 
-  ![image-20210317141133323](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317141133323](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e17f01f092e24396998a3e527bd35f0d~tplv-k3u1fbpfcp-zoom-1.image)
 
   ws-admin`可以从集群成员中邀请新成员加入当前企业空间，然后创建项目和 DevOps 工程。在左侧菜单栏选择 `企业空间管理`→ `成员管理`，点击 `邀请成员；这一步需要邀请在 **步骤 1.6.** 创建的两个用户 `project-admin`和 `project-regular`进入企业空间，且分别授予 `workspace-regular`和 `workspace-viewer`的角色，此时该企业空间一共有如下三个用户：
 
-  ![image-20210317141209557](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317141209557](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/090bb033c2bd4077b2a59b2b49969e15~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317141240935](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317141240935](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24c419852d7e477691a34bddbbb9e18c~tplv-k3u1fbpfcp-zoom-1.image)
 
   分别使用`project-admin`和 `project-regular`登录，观察不同，admin可以创建项目，regular只有浏览权限
 
@@ -382,25 +392,27 @@
 
   在弹窗中的 `project-regular`点击 `"+"`，在项目的内置角色中选择 `operator`角色。因此，后续在项目中创建和管理资源，都可以由 `project-regular`用户登录后进行操作
 
-  ![image-20210317141908374](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317141908374](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee24a50cd52b482fa81f7fe72987c92b~tplv-k3u1fbpfcp-zoom-1.image)
 
   3.2、再次使用 `project-regular` 账户登录，就可以看到它维护的项目
 
-  ![image-20210317142138331](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317142138331](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c8e13684a56438984b4506b43615b05~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 第四步：创建 DevOps 工程
 
 - 4.1、继续使用 `project-admin`用户创建 DevOps 工程。点击 **工作台**，在当前企业空间下，点击 **创建**，在弹窗中选择 **创建一个 DevOps 工程**。DevOps 工程的创建者 `project-admin`将默认为该工程的 Owner，拥有 DevOps 工程的最高权限
 
-  ![image-20210317142556282](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317142556282](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e39f0d5cc08143c58e72f11d16fe26c8~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 4.2、. 同上，这一步需要在 `demo-devops`工程中邀请用户 `project-regular`，并设置角色为 `maintainer`，用于对工程内的 Pipeline、凭证等创建和配置等操作。菜单栏选择 **工程管理 → 工程成员**，然后点击 **邀请成员**，为用户 `project-regular`设置角色为 `maintainer`；后续在 DevOps 工程中创建 Pipeline 和凭证等资源，都可以由 `project-regular`用户登录后进行操作
 
-  ![image-20210317142737845](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317142737845](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/175d9f8d5a834429a06e872e97e92b03~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 4.3、再次使用 `project-regular` 账户登录，就可以看到它拥有两个项目，一个是微服务商城、另一个是自动化部署的devops
 
-  ![image-20210317143015953](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317143015953](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd8688d17db6405d939db349b826f3d1~tplv-k3u1fbpfcp-zoom-1.image)
 
 ### 创建WordPress应用
 
@@ -410,7 +422,7 @@
 
   一个完整的 Wordpress 应用会包括以下 Kubernetes 对象，其中 MySQL 作为后端数据库，Wordpress 本身作为前端提供浏览器访问
 
-  ![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d61c476925ad4875b976d5a9d7325985~tplv-k3u1fbpfcp-zoom-1.image)
 
   PersistentVolume（PV）是集群中由管理员配置的一段网络存储，它是集群中的资源，就像节点是集群资源一样；PV是容量插件，如Volumes,但其生命周期独立于使用PV的任何单个pod
 
@@ -430,7 +442,7 @@
 
 - 1、以项目普通用户 `project-regular`登录 KubeSphere，在当前项目下左侧菜单栏的 **配置中心** 选择 **密钥**，点击 **创建**
 
-  ![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b688bdc322354d51a971d6738463a500~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 2、填写密钥的基本信息，完成后点击 **下一步**
 
@@ -443,23 +455,27 @@
   - 类型：选择 `默认`(Opaque)
   - Data：Data 键值对填写 `MYSQL_ROOT_PASSWORD`和 `123456`
 
-  ![image-20210317150405010](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317150405010](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbf2f632f4864add82c76a80fa2af2c1~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 创建WordPress密钥
 
 - 同上，创建一个 WordPress 密钥，Data 键值对填写 `WORDPRESS_DB_PASSWORD`和 `123456`
 
-![image-20210317150553102](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+![image-20210317150553102](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/db936c2352ec4000b91113fee2f987f3~tplv-k3u1fbpfcp-zoom-1.image)
+
+#### 
 
 #### 创建存储卷
 
 - 点击创建，配置可以都是默认的
 
-  ![image-20210317151003677](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317151003677](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ffd50188c4ee49448c71dfa966c1eb7c~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317151050263](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
-
-#### 创建应用
+    ![image-20210317151050263](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/356a8a45cbc0443198de4bd7d6827a7f~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 创建应用
 
 ##### 添加MySQL组件
 
@@ -471,25 +487,29 @@
 
 - 1、在 `工作负载`下查看 **部署** 和 **有状态副本集** 的状态，当它们都显示为 `运行中`，说明 WordPress 应用创建成功
 
-  ![image-20210317154054132](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317154054132](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d7e88a7755f64626a3f0ffede7c93419~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317154107897](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210317154107897](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5537b7bf2cc44bc89c91e2e4651de99~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 外网访问
 
 - 2、访问 Wordpress 服务前，查看 wordpress 服务，将外网访问设置为 `NodePort`
 
-  ![image-20210317154552911](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317154552911](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b7e4194819948bdad46c462dd16698b~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210317154650080](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317154650080](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/64401feee65e4878bcb44bb5760ab62a~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 3、点击 `更多操作`→ `编辑外网访问`，选择 `NodePort`，然后该服务将在每个节点打开一个节点端口，通过 `点击访问`即可在浏览器访问 `WordPress`
 
-  ![image-20210317154713036](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317154713036](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb4b24edbed845b98f2c62d11ebfbf7c~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 4、点击 `更多操作`→ `编辑配置文件`，可以看到kubesphere给我们自动生成的yaml文件
 
-  ![image-20210317155415436](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210317155415436](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef5f1efdd9744c90a5c6f4cc1447bdf4~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 创建应用总结
 
@@ -509,7 +529,7 @@
 
 - 微服务：服务自治
 
-  ![image-20210317155952043](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210317155952043](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/837033a090574e9c9e2f6302f2d97d42~tplv-k3u1fbpfcp-zoom-1.image)
 
 - DevOps：Development 和 Operations 的组合
 
@@ -519,7 +539,9 @@
 
 #### 什么是CI&CD
 
-![image-20210317165353841](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+![image-20210317165353841](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92be6016e3b54469bdf55e50d7003d26~tplv-k3u1fbpfcp-zoom-1.image)
+
+##### 
 
 ##### 持续集成（Continuous Integration）
 
@@ -558,7 +580,9 @@
 
 CI&CD持续交付工具链图
 
-![image-20210317172559183](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+![image-20210317172559183](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14da8fa4c88d48f5a26dd5b944d691d4~tplv-k3u1fbpfcp-zoom-1.image)
+
+#### 
 
 #### kubesphere流水线
 
@@ -570,8 +594,10 @@ CI&CD持续交付工具链图
 
 - 下面的流程图简单说明了流水线的完整的工作过程：
 
-  ![20190512155453.png](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![20190512155453.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/700f368c770949178ba4dcf7835022e1~tplv-k3u1fbpfcp-zoom-1.image)
 
+  > 
+  
   > **流程说明**：
   >
   > - **阶段一. Checkout SCM**: 拉取 GitHub 仓库代码
@@ -592,7 +618,7 @@ CI&CD持续交付工具链图
 
 - 1、本示例代码仓库中的 Jenkinsfile 需要用到 **DockerHub、GitHub** 和 **kubeconfig** (kubeconfig 用于访问接入正在运行的 Kubernetes 集群) 等一共 3 个凭证 (credentials) ，参考 [创建凭证](https://v2-1.docs.kubesphere.io/docs/zh-CN/devops/credential/#创建凭证) 依次创建这三个凭证
 
-  ![image-20210318084638288](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210318084638288](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f51c071d08e74ce48e2d2a4e75bcc846~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 2、然后参考 [访问 SonarQube 并创建 Token](https://v2-1.docs.kubesphere.io/docs/zh-CN/devops/sonarqube)，创建一个 Java 的 Token 并复制
 
@@ -600,14 +626,23 @@ CI&CD持续交付工具链图
 
     ```
     kubectl get svc --all-namespaces
-    复制代码
+    
     ```
 
-    可以看到以NodePort的形式暴露了32303，任意节点ip访问32303端口，admin&admin登录![image-20210318085007211](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    可以看到以NodePort的形式暴露了32303，任意节点ip访问32303端口，admin&admin登录
 
-    ![image-20210318085315560](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
 
-- 3、最后在 KubeSphere 中进入 `devops-demo`的 DevOps 工程中，与上面步骤类似，在 **凭证** 下点击 **创建**，创建一个类型为 `秘密文本`的凭证，凭证 ID 命名为 **sonar-token**，密钥为上一步复制的 token 信息，完成后点击 **确定**![image-20210318085454892](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+- ![image-20210318085007211](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9518d2b7238b48fea32aae71574a7517~tplv-k3u1fbpfcp-zoom-1.image)
+
+  ![image-20210318085315560](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/330faaf48160455c9e5808fd7aba3fb8~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+
+- 3、最后在 KubeSphere 中进入 `devops-demo`的 DevOps 工程中，与上面步骤类似，在 **凭证** 下点击 **创建**，创建一个类型为 `秘密文本`的凭证，凭证 ID 命名为 **sonar-token**，密钥为上一步复制的 token 信息，完成后点击 **确定**
+
+- ![image-20210318085454892](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd9203df30424cf785c9109f4a7a290d~tplv-k3u1fbpfcp-zoom-1.image)
+
+##### 
 
 ##### 修改jenkinsfile
 
@@ -619,7 +654,9 @@ CI&CD持续交付工具链图
 
   - 2.2、在 GitHub UI 点击编辑图标，需要修改如下环境变量 (environment) 的值
 
-    ![image-20210318085921561](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210318085921561](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6abbe2530cb4b859a2479270161b2ab~tplv-k3u1fbpfcp-zoom-1.image)
+
+    ![image-20210318085841798](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25cb5c87ee8441de871f83acae9e9991~tplv-k3u1fbpfcp-zoom-1.image)
 
     ![image-20210318085841798](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25cb5c87ee8441de871f83acae9e9991~tplv-k3u1fbpfcp-zoom-1.image)
 
@@ -628,7 +665,7 @@ CI&CD持续交付工具链图
   - 2.3、修改以上的环境变量后，点击 **Commit changes**，将更新提交到当前的 master 分支
 
   - 2.4、补充：创建完sonarqube的token之后，需要点击`continue`按钮，选择接下来将要分析的代码语言：这里选择 `Java&Maven`，然后点击finish
-
+  
     ![image-20210318091454519](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85454653d54a468f941dcb12d1442b1c~tplv-k3u1fbpfcp-zoom-1.image)
 
 ##### 创建项目
@@ -667,7 +704,7 @@ CI&CD持续交付工具链图
 
 - 2、第二步：邀请成员：第一个项目创建完后，还需要项目管理员 `project-admin`邀请当前的项目普通用户 `project-regular`进入 `kubesphere-sample-dev`项目，进入「项目设置」→「项目成员」，点击「邀请成员」选择邀请 `project-regular`并授予 `operator`角色，若对此有疑问可参考 [多租户管理快速入门 - 邀请成员](https://v2-1.docs.kubesphere.io/docs/zh-CN/quick-start/admin-quick-start/#邀请成员)
 
-  ![image-20210318092105759](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210318092105759](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9d00deeef884f7a881f5933b3656520~tplv-k3u1fbpfcp-zoom-1.image)
 
 ##### 创建流水线
 
@@ -677,7 +714,9 @@ CI&CD持续交付工具链图
 
 - 创建完成，可以通过查看 扫描仓库日志，查看失败原因或者拉取进度
 
-  ![image-20210318094301572](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210318094301572](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51db46ec7d17402e9f4493216545fcea~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 运行流水线
 
@@ -744,9 +783,3 @@ CI&CD持续交付工具链图
 - 5、点击 `release`，查看 Fork 到您个人 GitHub（Gitee） repo 中的 `v0.0.1`tag 和 release，它是由 jenkinsfile 中的 `push with tag`生成的
 
   ![image-20210318145005330](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c6440ea21c264c87a42539c0c76819e6~tplv-k3u1fbpfcp-zoom-1.image)
-
-
-作者：几个你_
-链接：https://juejin.cn/post/6942282048107347976
-来源：掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

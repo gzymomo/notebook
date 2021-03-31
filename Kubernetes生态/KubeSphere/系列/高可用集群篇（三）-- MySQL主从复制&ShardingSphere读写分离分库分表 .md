@@ -1,4 +1,12 @@
-高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
+- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
+
+- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
+
+- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
+
+- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
+
+
 
 
 
@@ -41,7 +49,9 @@
 
 - `Master-Master Replication Manager for MySQL`（mysql主主复制管理器）的简称，是Google的开源项目（Perl）脚本；MMM是基于MySQL Replication做的扩展架构，主要用来监控mysql主主复制并做失败转移；其原理是将真实数据库节点的IP（RIP）映射为虚拟IP（VIP）集；mysql-mmm的监管端会提供多个虚拟ip（VIP），包括一个可写VIP，多个可读VIP，通过监管的管理，这些IP会绑定在可用mysql之上，当某一台宕机时，监管会将VIP迁移到其他mysql；再整个监管过程中，需要在mysql添加相关授权用户，以便让mysql可以支持监理机的维护；授权的用户包括一个mmm_monitor用户和一个mmm_agent用户，如果想使用mmm备份工具则还需要添加一个mmm_tools用户
 
-  ![image-20210319111742542](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210319111742542](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91015d906b7e44e2b99ec05759bd2839~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### MHA(Master High Availability)
 
@@ -55,7 +65,9 @@
 
   MySQL Router 可以根据部署的集群状况自动的初始化，是客户端连接实例，如果有节点down机，集群会自动更新配置，集群包含单点写入和多点写入两种模式，在单主模式下，如果主节点down掉，从节点自动替换上来，MySQL Router会自动探测，并将客户端连接到新节点
 
-  ![image-20210319132451476](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210319132451476](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4fdf72091fb74e1496992b99a01cbca7~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ### 
 
 ### 企业常用的数据库解决方案
 
@@ -65,7 +77,11 @@
 
 - 第三步：**从节点角色区分**；salve1-3这三个节点，面向公众访问，承担大并发量的请求；slave4内部人员，后台管理系统；slave5 专门进行数据备份
 
-  ![image-20210319132755615](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - 内部人员，后台管理系统；slave5 专门进行数据备份
+  
+    ![image-20210319132755615](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b761de07c878406aa20d9be3211e1890~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ### 
 
 ### Docker部署MySQL集群
 
@@ -80,7 +96,6 @@
   mkdir -p /var/mall/mysql/slave/conf
   #conf目录下创建 my.cnf(master/slave)
   vim my.cnf
-  复制代码
   ```
 
 ```
@@ -104,7 +119,6 @@ docker run -p 33070:3306 --name mysql-slave33070 \
      -p 33060:3306 ：将容器的3306端口映射到主机的33060端口
      -v ：将配置文件挂载到宿主机
      -e ：初始化root用户的密码
-复制代码
 ```
 
 #### 修改配置
@@ -130,7 +144,6 @@ docker run -p 33070:3306 --name mysql-slave33070 \
   collation-server=utf8_unicode_ci
   skip-character-set-client-handshake
   skip-name-resolve
-  复制代码
   ```
 
 ##### 添加master主从复制部分配置
@@ -151,15 +164,14 @@ docker run -p 33070:3306 --name mysql-slave33070 \
   replicate-ignore-db=sys
   replicate-ignore-db=information_schema
   replicate-ignore-db=performance_schema
-  复制代码
   ```
+  
 
-  重启Master 节点
+重启Master 节点
 
-  ```
+```
   docker restart mysql-master33060
-  复制代码
-  ```
+```
 
 ##### 添加slave主从复制部分配置
 
@@ -179,15 +191,14 @@ docker run -p 33070:3306 --name mysql-slave33070 \
   replicate-ignore-db=sys
   replicate-ignore-db=information_schema
   replicate-ignore-db=performance_schema
-  复制代码
   ```
+  
 
-  重启Slave节点
+重启Slave节点
 
-  ```
+```
   docker restart mysql-slave33070
-  复制代码
-  ```
+```
 
 ##### 为master授权用户来同步数据
 
@@ -202,10 +213,11 @@ GRANT REPLICATION SLAVE ON *.* TO 'backup'@'%' IDENTIFIED BY '123456';
 flush privileges;
 4、查看 master 状态
 show master status\G;
-复制代码
 ```
 
-![image-20210319155538556](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+![image-20210319155538556](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc2ff64b27814d2fbf82451a1ffa0774~tplv-k3u1fbpfcp-zoom-1.image)
+
+##### 
 
 ##### 进入slave，配置同步master数据
 
@@ -213,7 +225,6 @@ show master status\G;
 #如果之前配置过slave节点
 stop slave;
 reset slave;
-复制代码
 ```
 
 - 同步命令
@@ -226,7 +237,6 @@ CHANGE MASTER TO MASTER_HOST='192.168.83.133',
 MASTER_USER='backup',
 MASTER_PASSWORD='123456',
 MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
-复制代码
 ```
 
 - 开启slave
@@ -235,18 +245,22 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   start slave;
   #查看slave状态
   show slave status\G;
-  复制代码
+  
   ```
 
-  ![image-20210319162356783](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210319162356783](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7d061eb182d42e6830aef579c87d14c~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210319162426898](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210319162426898](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9f8ccad823d476692fc13e3260a924e~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 测试主从同步效果
 
 - 在33060中，创建`touch-air-mall-ums`，然后插入数据，或者直接导入项目数据
 
-  ![image-20210319162802880](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210319162802880](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a718c9de960410a926c6edaee59f3d1~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ## 
 
 ## ShardingSphere
 
@@ -260,7 +274,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
 - Sharding-JDBC采用无中心化架构，适用于Java开发的高性能的轻量级OLTP应用；Sharding-Proxy提供静态入口以及异构语言的支持，适用于OLAP应用以及对分片数据库进行管理和运维的场景；ShardingSphere是多接入端共同组成的生态圈。 通过混合使用Sharding-JDBC和Sharding-Proxy，并采用同一注册中心统一配置分片策略，能够灵活的搭建适用于各种场景的应用系统，架构师可以更加自由的调整适合于当前业务的最佳系统架构
 
-  ![ShardingSphere Hybrid Architecture](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![ShardingSphere Hybrid Architecture](https://shardingsphere.apache.org/document/legacy/4.x/document/img/shardingsphere-hybrid.png)
 
   |            | Sharding-JDBC | Sharding-Proxy | Sharding-Sidecar |
   | ---------- | ------------- | -------------- | ---------------- |
@@ -302,7 +316,9 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   - 支持任何第三方的数据库连接池，如：DBCP, C3P0, BoneCP, Druid, HikariCP等
   - 支持任意实现JDBC规范的数据库。目前支持MySQL，Oracle，SQLServer，PostgreSQL以及任何遵循SQL92标准的数据库
 
-  ![Sharding-JDBC Architecture](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![Sharding-JDBC Architecture](https://shardingsphere.apache.org/document/legacy/4.x/document/img/sharding-jdbc-brief.png)
+  
+  #### 
 
 #### Sharding-Proxy
 
@@ -311,7 +327,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   - 向应用程序完全透明，可直接当做MySQL/PostgreSQL使用
   - 适用于任何兼容MySQL/PostgreSQL协议的的客户端
 
-  ![Sharding-Proxy Architecture](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://shardingsphere.apache.org/document/legacy/4.x/document/img/sharding-proxy-brief_v2.png)
 
 #### Sharding-Sidecar（TODO）
 
@@ -319,7 +335,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
   Database Mesh的关注重点在于如何将分布式的数据访问应用与数据库有机串联起来，它更加关注的是交互，是将杂乱无章的应用与数据库之间的交互有效的梳理。使用Database Mesh，访问数据库的应用和数据库终将形成一个巨大的网格体系，应用和数据库只需在网格体系中对号入座即可，它们都是被啮合层所治理的对象
 
-  ![img](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://shardingsphere.apache.org/document/legacy/4.x/document/img/sharding-sidecar-brief_v2.png)
 
 ### 使用Sharding-Proxy
 
@@ -327,25 +343,29 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
   [配置手册](https://shardingsphere.apache.org/document/legacy/4.x/document/cn/manual/sharding-proxy/configuration/)
 
-- ![image-20210320114600273](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+- ![image-20210320114600273](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3fc2322986754fc8be404a6f5c835715~tplv-k3u1fbpfcp-zoom-1.image)
 
   [下载mysql驱动](https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.47/mysql-connector-java-5.1.47.jar)
 
   将下载好的jar包，放入到 `sharding-proxy`的`lib`文件夹中
 
-  ![image-20210320115435678](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210320115435678](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85a83637bbe0467db1b1963388f5dbd3~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  
 
 #### 配置认证信息
 
 - `conf/server.yaml`，打开注释
 
-  ![image-20210320120627619](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210320120627619](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d676e23c0cc420dbc616487f49b07bf~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  
 
 #### 配置分库分表、读写分离
 
 - `config-master-slave-sharding.yaml`
 
-  ![image-20210320155848759](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210320155848759](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/165f61eac47b4fceb8ab862efb43bb1f~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 第二步：准备数据
 
@@ -357,30 +377,33 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
     
     docker restart mysql-master33060
     docker restart mysql-slave33070
-    复制代码
     ```
-
-    ![image-20210320134006587](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
-
-    ![image-20210320133947196](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
-
+  
+- ![image-20210320134006587](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ae4be196c3d848019f9d58aa335403b7~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ![image-20210320133947196](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5704dad7abd54e268864437be6f8cf68~tplv-k3u1fbpfcp-zoom-1.image)
+  
 - 第三步：在`master33060`冲创建 `demo_ds_0` 和 `demo_ds_1`两个库，这是 `slave33070`,会同步主节点的数据，创建这两个库
 
-  ![image-20210320134257453](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210320134257453](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2eedd9d8b514fc8892730f448d8854c~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 启动测试
 
 - windows环境下，`start.bat`
 
-  ![image-20210320123846160](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210320123846160](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/335ef5ed07304013a76454df469d530d~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210320134631594](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210320134631594](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d30d3de946e24e4c8af13ff8d7cd105c~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 启动成功，可以使用连接工具连上`sharding-proxy`,默认端口3307，账号密码 root，root
 
-  ![image-20210320134813420](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210320134813420](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8257a0e7e9d544c0b7e9c8889ad3ce1f~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210320134837195](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210320134837195](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f15d90acb9df4159b797e998276cfb07~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 创建表测试
 
@@ -405,12 +428,13 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   `status` VARCHAR(50) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`order_item_id`)
   )ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-  复制代码
   ```
-
+  
 - 这时观察 `demo_ds_0` 和 `demo_ds_1`两个库
 
-  ![image-20210320141132402](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210320141132402](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/08ea9849635e46e6a022cefef1a2f39f~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 插入记录测试分库分表
 
@@ -418,19 +442,17 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   INSERT into t_order (user_id,status) VALUES(1,1);
   INSERT into t_order (user_id,status) VALUES(2,2);
   INSERT into t_order (user_id,status) VALUES(3,3);
-  
-  复制代码
   ```
-
+  
   - 观察`sharding-proxy` 中的 `t_order`
 
-    ![image-20210320141550459](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210320141550459](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9dd49f4d01f647069eb5c3d01eacca05~tplv-k3u1fbpfcp-zoom-1.image)
 
   - 理论结果：
 
     - 根据用户id，分库 用户id 1,3的记录应该存在`demo_ds_1` ；用户id为2的记录存在`demo_ds_0`；
-    - 根据order_id,分表 order_id 单数的记录应该存在 `t_order_1`； order id为双数的记录存在 `t_order_0`
-
+  - 根据order_id,分表 order_id 单数的记录应该存在 `t_order_1`； order id为双数的记录存在 `t_order_0`
+  
     再次观察 `master33060`
 
     ![image-20210320142145773](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e137b285ac73401ca91acef9b11eecbc~tplv-k3u1fbpfcp-zoom-1.image)
@@ -448,7 +470,3 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   ![image-20210320155132943](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3eee57ecf1c74ee8a1626d1efc342d0a~tplv-k3u1fbpfcp-zoom-1.image)
 
   ![image-20210320155235648](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4a4524cb8dc45a481a10eaecb2cfa3a~tplv-k3u1fbpfcp-zoom-1.image)
-
-
-作者：几个你_
-链接：https://juejin.cn/post/6944142563532079134

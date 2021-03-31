@@ -1,4 +1,10 @@
-高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
+- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
+
+- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
+
+- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
+
+- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
 
 
 
@@ -33,13 +39,13 @@
 
 容器是打包和运行应用程序的好方式。在生产环境中，你需要管理运行应用程序的容器，并确保不会停机。 例如，如果一个容器发生故障，则需要启动另一个容器。如果系统处理此行为，会不会更容易？
 
-这就是 Kubernetes 来解决这些问题的方法！ Kubernetes 为你提供了一个可弹性运行分布式系统的框架 Kubernetes 会满足你的扩展要求、故障转移、部署模式等。 例如，Kubernetes 可以轻松管理系统的 Canary 部署
+这就是 Kubernetes 来解决这些问题的方法！ Kubernetes 为你提供了一个<font color='red'>可弹性运行分布式系统的框架 Kubernetes 会满足你的扩展要求、故障转移、部署模式等</font>。 例如，Kubernetes 可以轻松管理系统的 Canary 部署
 
 Kubernetes 为你提供：
 
 - **服务发现和负载均衡**
 
-  Kubernetes 可以使用 DNS 名称或自己的 IP 地址公开容器，如果进入容器的流量很大， Kubernetes 可以负载均衡并分配网络流量，从而使部署稳定
+  Kubernetes 可以使用 DNS 名称或自己的 IP 地址公开容器，如果进入容器的流量很大， Kubernetes 可以负载均衡并分配网络流量，从而使部署稳定。
 
 - **存储编排**
 
@@ -47,7 +53,7 @@ Kubernetes 为你提供：
 
 - **自动部署和回滚**
 
-  你可以使用 Kubernetes 描述已部署容器的所需状态，它可以以受控的速率将实际状态 更改为期望状态。例如，你可以自动化 Kubernetes 来为你的部署创建新容器， 删除现有容器并将它们的所有资源用于新容器
+  你可以使用 Kubernetes 描述已部署容器的所需状态，它可以以受控的速率将实际状态 更改为期望状态。例如，你可以自动化 Kubernetes 来为你的部署创建新容器， 删除现有容器并将它们的所有资源用于新容器。
 
 - **自动完成装箱计算**
 
@@ -141,7 +147,7 @@ Kubernetes：
 
 - 架构图
 
-  ![image-20210313131534399](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f392b037341476ea723034ffc16ba9f~tplv-k3u1fbpfcp-zoom-1.image)
 
   - ```
     kubelet
@@ -171,7 +177,7 @@ Kubernetes：
 
 - 整体架构图
 
-  ![image-20210313133258498](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b05ce3a0f1414a52a8c79f98249f1bea~tplv-k3u1fbpfcp-zoom-1.image)
 
   - `Container`：容器，可以是docker启动的一个容器
 
@@ -204,7 +210,7 @@ Kubernetes：
 
     - 通过控制器以指定的策略控制版本（滚动升级、回滚等）
 
-      ![image-20210313134958888](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+      ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd5665ecd59441bd8a487dfcfc3eda5f~tplv-k3u1fbpfcp-zoom-1.image)
 
   - `Service`
 
@@ -214,11 +220,11 @@ Kubernetes：
 
     - 支持多种方式（`ClusterIP、NodePort、LoadBalance`）
 
-      ![image-20210313135317842](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+      ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/869e4703f37e4690b99ebb3ced969c03~tplv-k3u1fbpfcp-zoom-1.image)
 
   - `Label`：标签，用于对象资源的查询、筛选
 
-    ![image-20210313135411540](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ad7cd3cea0b44c593c432bcfbd83208~tplv-k3u1fbpfcp-zoom-1.image)
 
   - `Namespace`：命名空间，逻辑隔离
 
@@ -233,7 +239,7 @@ Kubernetes：
 
   可以通过 `kubectl`、`ui`、`curl`最终发送 `http+json/yaml`方式的请求给API server,然后控制k8s集群；**k8s里的所有资源对象都可以采用 `yaml` 或 `JSON`格式的文件定义或者描述**
 
-  ![image-20210313140342436](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a297705164574198ba8b97d00f8780ee~tplv-k3u1fbpfcp-zoom-1.image)
 
 ### 流程叙述
 
@@ -249,7 +255,9 @@ Kubernetes：
 
 > k8s里的所有资源对象都可以采用 yaml 或 JSON 格式的文件定义或描述
 
-![image-20210313142546490](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d83282df6e744f3b592fac2a90d2caa~tplv-k3u1fbpfcp-zoom-1.image)
+
+
 
 ## k8s集群安装
 
@@ -263,14 +271,14 @@ Kubernetes：
 
     ```
     $ kubeadm init
-    复制代码
+    
     ```
 
   - 2、将一个Node节点加入到当前集群中
 
     ```
     $ kubeadm join <Master节点的IP和端口>
-    复制代码
+    
     ```
 
 ### 前置要求
@@ -293,7 +301,10 @@ Kubernetes：
 
 - 5、部署 Dashboard Web 页面，可视化查看Kubernetes资源
 
-  ![image-20210313144552133](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5b7bd20732a74ecd9d0fac4af17cc1e3~tplv-k3u1fbpfcp-zoom-1.image)
+
+
 
 ### 环境准备
 
@@ -307,7 +318,7 @@ Kubernetes：
   192.168.83.133
   192.168.83.134
   192.168.83.135
-  复制代码
+  
   ```
 
 #### 设置linux网络环境（三个节点都执行）
@@ -317,7 +328,7 @@ Kubernetes：
   ```
   systemctl stop firewalld
   systemctl disable firewalld
-  复制代码
+  
   ```
 
 - 关闭 selinux
@@ -326,7 +337,7 @@ Kubernetes：
   #设置安全策略暂不开启
   sed -i 's/enforcing/diabled/' /etc/selinux/config
   setenforce 0
-  复制代码
+  
   ```
 
 - 关闭swap（内存交换）
@@ -338,7 +349,7 @@ Kubernetes：
   #永久
   sed -ri 's/.*swap.*/#&/' /etc/fstab
   验证是否生效： free -g ，swap必须为0
-  复制代码
+  
   ```
 
 - 添加主机名与ip对应关系
@@ -353,12 +364,18 @@ Kubernetes：
   192.168.83.133  k8s-node1
   192.168.83.134  k8s-node2
   192.168.83.135  k8s-node3
-  复制代码
+  
   ```
 
-  确保在每个虚拟机中，ping各自的节点名称都能ping通![image-20210313163302639](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  确保在每个虚拟机中，ping各自的节点名称都能ping通
 
-  ![image-20210313163413372](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8f47368f3dce41ac96615fc834aa5231~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
+
+  
+
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf0f245986404ef5a6ccf82d9af2ea1c~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 将桥接的ipv4流量传递到iptables的链
 
@@ -369,10 +386,13 @@ Kubernetes：
   EOF
   
   sysctl --system
-  复制代码
+  
   ```
 
-  ![image-20210313164237942](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/049db541a2654c49b47f40fad550a406~tplv-k3u1fbpfcp-zoom-1.image)
+
+
 
 ### 所有节点安装
 
@@ -392,9 +412,8 @@ Kubernetes：
   repo_gpgcheck=0
   gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
   EOF
-  复制代码
   ```
-
+  
 - 指定版本安装
 
   ```
@@ -405,7 +424,6 @@ Kubernetes：
   #安装完成执行
   systemctl enable kubelet
   systemctl start kubelet
-  复制代码
   ```
 
 ### 部署 k8s-master
@@ -414,11 +432,15 @@ Kubernetes：
 
 - 将k8s资源文件拷贝进k8s-node1
 
-  ![image-20210313174157344](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2b0a702f77644e90809588e85658d98a~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210313174132546](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  
 
-  ![image-20210313174304769](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d8359731f97c471f984e926891603674~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
+
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0493945c619b409a9477124943eea023~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 初始化master节点
 
@@ -429,22 +451,30 @@ Kubernetes：
   --kubernetes-version v1.17.3 \
   --service-cidr=10.96.0.0/16 \
   --pod-network-cidr=10.244.0.0/16
-  复制代码
   ```
+  
 
-  执行结果![image-20210313180750899](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+执行结果
 
-  继续按照控制台提示执行提示命令
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b48b3982955d4e508484010810dc43a0~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210313180913049](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
 
-  ![image-20210313180924394](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+
+继续按照控制台提示执行提示命令
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef2ff9ded3974182a966bb84c2366c39~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
+
+  
+
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ca0267127f84603ac7bc9a36fc7d0b5~tplv-k3u1fbpfcp-zoom-1.image)
 
   ```
   #启动完成，这句话拷贝出来备用（*），两小时内有效
   kubeadm join 192.168.83.133:6443 --token f9s477.9qh5bg4gd7xy9f67 \
       --discovery-token-ca-cert-hash sha256:8d6007a15b9dfa0940d2ca8fbf2929a108c391541ae59f9c75d66352bdd0aba6
-  复制代码
+  
   ```
 
 ### 安装Pod网络插件
@@ -453,17 +483,20 @@ Kubernetes：
 
   ```
   kubectl apply -f kube-flannel.yml
-  复制代码
+  
   ```
 
-  ![image-20210313181633551](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cab7800df4594c298e8d266b0757c6ac~tplv-k3u1fbpfcp-zoom-1.image)
 
   ```
   kubectl get pods --all-namespaces
-  复制代码
+  
   ```
 
-  ![image-20210313181749452](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc13e435f2c34f2cba3ca6fbdd5521c6~tplv-k3u1fbpfcp-zoom-1.image)
+
+
 
 ### 加入k8s集群
 
@@ -471,10 +504,10 @@ Kubernetes：
 
   ```
   kubectl get nodes
-  复制代码
+  
   ```
 
-  ![image-20210313182140812](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210313182140812](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0476e705bf5e4cf293d5ebb3d80b1c5c~tplv-k3u1fbpfcp-zoom-1.image)
 
 - node2和node3节点加入集群
 
@@ -482,27 +515,31 @@ Kubernetes：
   #master启动时，日志打印出的内容
   kubeadm join 192.168.83.133:6443 --token f9s477.9qh5bg4gd7xy9f67 \
       --discovery-token-ca-cert-hash sha256:8d6007a15b9dfa0940d2ca8fbf2929a108c391541ae59f9c75d66352bdd0aba6
-  复制代码
+  
   ```
 
-  ![image-20210313182434819](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210313182434819](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d65cf77db824142bdad23eadf02f246~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210313182520080](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210313182520080](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5518ab03214e4f149884c0bd1f2eb24d~tplv-k3u1fbpfcp-zoom-1.image)
 
-![image-20210313182544620](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210313182544620](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1794ec319b64555af08fea4bd81c649~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
 
 - 如果存在NotReady状态，网络问题，可以执行以下命令，监控pod进度
 
   ```
   kubectl get pod -n kube-system -o wide
-  复制代码
+  
   ```
 
-  ![image-20210313183028711](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210313183028711](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/731c1b19a1a6459892d4dbdf8a4256f6~tplv-k3u1fbpfcp-zoom-1.image)
 
   等待3-10分钟，完全都是running以后，再次查看
 
-  ![image-20210313182811099](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210313182811099](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c684064a723d46f19ae820e611641ae9~tplv-k3u1fbpfcp-zoom-1.image)
+
+  ## 
 
 ## 入门操作Kubernetes集群
 
@@ -516,28 +553,34 @@ kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8
 
 #获取到tomcat信息
 kubectl get pods -o wide
-复制代码
+
 ```
 
 - 查看节点 和 pod 信息
 
-  ![image-20210314105950139](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314105950139](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f1ab5399a3514c0caf4f45652af7d0f9~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210314110018197](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210314110018197](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cabe87659fa54d10a693381832f5dfdc~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 模拟tomcat容器宕机（手动stop 容器）
 
 - 观察是否会重新拉起tomcat容器
 
-  ![image-20210314110507427](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314110507427](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/826bb8d9f9b04c70acfcc90c820ff639~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 模拟node3 节点宕机（关闭虚拟机）
 
 - 检测过程可能会比较慢，大约5分钟左右，耐心等待
 
-  ![image-20210314111538865](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314111538865](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dd6d7913ec0d425db262790fcce11a8c~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210314111611425](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210314111611425](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e5a294eba734ced8ade71ec4143cd7d~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  > 
 
 > 简单的容灾恢复测试
 
@@ -547,19 +590,21 @@ kubectl get pods -o wide
 
   ```
   kubectl expose deployment tomcat6 --port=80 --target-port=8080 --type=NodePort
-  复制代码
+  
   ```
 
 - 获取service
 
   ```
   kubectl get svc
-  复制代码
+  
   ```
 
-  ![image-20210314113547955](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314113547955](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ccd00d629b64700b2c5c8028197d9fa~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210314113606731](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210314113606731](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/899ecfa3da0243e4b6fc3b0092bdd3ea~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 动态扩容测试
 
@@ -567,32 +612,34 @@ kubectl get pods -o wide
 
   ```
   kubectl get deployment
-  复制代码
+  
   ```
 
-  ![image-20210314114606206](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314114606206](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ce92b72d56549fd9e0568a55236f1c8~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 扩容
 
   ```
   kubectl scale --replicas=3 deployment tomcat6
-  复制代码
+  
   ```
 
   扩容了多份，所以无论访问那个node的指定端口，都可以访问到tomcat6
 
-  ![image-20210314114139240](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314114139240](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b350f09d98b04587bda9a2107ab96cfb~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210314114210487](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314114210487](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c7ec316dd8a452eb68005036548e54d~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 缩容（改变副本数量）
 
   ```
   kubectl scale --replicas=1 deployment tomcat6
-  复制代码
+  
   ```
 
-  ![image-20210314114510021](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314114510021](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5129b5fef7a4402a7b64d17a0794ae3~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 删除
 
@@ -600,26 +647,28 @@ kubectl get pods -o wide
 
   ```
   kubectl get all
-  复制代码
+  
   ```
 
-  ![image-20210314114841781](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314114841781](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f474bdf901b84f4e92c1e2dba633e43c~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 删除部署
 
   ```
   kubectl delete deployment.apps/tomcat6
-  复制代码
+  
   ```
 
 - 删除service
 
   ```
   kubectl delete service/tomcat6
-  复制代码
+  
   ```
 
-  ![image-20210314115046881](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314115046881](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3d3ed146b443ecb29ce1d1a77042de~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ### 
 
 ### k8s细节
 
@@ -635,7 +684,7 @@ kubectl get pods -o wide
 
 - [ 资源类型](https://kubernetes.io/zh/docs/reference/kubectl/overview/#资源类型)
 
-  ![image-20210314120041363](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314120041363](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45bf821bc6df411e93647bcabe44b958~tplv-k3u1fbpfcp-zoom-1.image)
 
 ##### 格式化输出
 
@@ -643,7 +692,9 @@ kubectl get pods -o wide
 
   [格式化输出](https://kubernetes.io/zh/docs/reference/kubectl/overview/#格式化输出)
 
-  ![image-20210314120259917](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314120259917](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70a82731ca704a609c8abe3f9d16f29a~tplv-k3u1fbpfcp-zoom-1.image)
+
+  ##### 
 
 ##### 常用操作
 
@@ -665,22 +716,24 @@ kubectl get pods -o wide
 
 - 图解
 
-  ![image-20210314120907601](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314120907601](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c71abb982f6a4cffac6be2dd737ff21c~tplv-k3u1fbpfcp-zoom-1.image)
+
+  ##### 
 
 - 查看上面的tomcat6创建命令对应的yaml内容
 
   ```
   kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8 --dry-run -o yaml
-  复制代码
   ```
+  
 
-  ![image-20210314121710836](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+![image-20210314121710836](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7cd20b7632c04defb6868d3dd38d2b81~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 生成yaml文件
 
   ```
   kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8 --dry-run -o yaml > tomcat6.yaml
-  复制代码
+  
   ```
 
   修改文件中的，副本1 改为3 `vim tomact6.yaml`
@@ -689,19 +742,21 @@ kubectl get pods -o wide
 
   ```
   kubectl apply -f tomcat6.yaml
-  复制代码
+  
   ```
 
-  ![image-20210314122341809](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314122341809](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1adae322dee4ec88b7e288871cfca4e~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 端口暴露也可以使用yaml文件代替冗长命令
 
   ```shell
   kubectl expose deployment tomcat6 --port=80 --target-port=8080 --type=NodePort --dry-run -o yaml
-  复制代码
+  
   ```
 
-  ![image-20210314122931059](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314122931059](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00211c386d41403a8be3944d68ff74b8~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 入门操作
 
@@ -734,7 +789,7 @@ kubectl get pods -o wide
 
 - 二者关系
 
-  ![image-20210314131854578](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210314131854578](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f3def78789da48189263fed0d065fb88~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 简单来说
 
@@ -751,7 +806,9 @@ kubectl get pods -o wide
 
 - 关系图解
 
-  ![image-20210314135750519](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210314135750519](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30e30cc75db6427fa1c954ce01cd2e06~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### Ingress
 
@@ -796,17 +853,17 @@ kubectl get pods -o wide
     selector:
       app: tomcat6
     type: NodePort
-  复制代码
+  
   ```
 
   - 运行yaml文件
 
     ```
     kubectl apply -f tomcat6-deployment.yaml
-    复制代码
+    
     ```
 
-    ![image-20210314141341694](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210314141341694](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b803b0f97264b00a350787628c6d67c~tplv-k3u1fbpfcp-zoom-1.image)
 
   - 任意三个节点地址的30658端口，都可以访问到tomcat
 
@@ -818,7 +875,7 @@ kubectl get pods -o wide
 
     ```
     kubectl apply -f  ingress-controller.yaml
-    复制代码
+    
     ```
 
     ![image-20210314142549125](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9a06e443a814809b05d51946a0600ff~tplv-k3u1fbpfcp-zoom-1.image)
@@ -841,7 +898,7 @@ kubectl get pods -o wide
             - backend:
                serviceName: tomcat6
                servicePort: 80
-    复制代码
+    
     ```
 
     ```
@@ -849,7 +906,7 @@ kubectl get pods -o wide
     kubectl apply -f ingress-tomcat6.yaml
     #查看信息
     kubectl get all
-    复制代码
+    
     ```
 
     ![image-20210314144047165](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/05195bdd31704e07a858dbfb3a6afd19~tplv-k3u1fbpfcp-zoom-1.image)
@@ -859,8 +916,3 @@ kubectl get pods -o wide
     ![image-20210314144438834](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5c103dc797842a3b92566fe26ec8ae5~tplv-k3u1fbpfcp-zoom-1.image)
 
     ![image-20210314145103220](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9010f99d94d4b9d999f96fd79ac0258~tplv-k3u1fbpfcp-zoom-1.image)
-
-
-作者：几个你_
-链接：https://juejin.cn/post/6940887645551591455
-

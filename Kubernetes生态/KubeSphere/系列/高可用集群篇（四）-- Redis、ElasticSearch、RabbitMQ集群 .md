@@ -1,4 +1,12 @@
-高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
+- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
+
+- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
+
+- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
+
+- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
+
+
 
 ## Redis集群搭建
 
@@ -34,7 +42,9 @@
   - **提醒**（Notification）：当被监控的某个Redis出现问题时，哨兵可以通过API向管理员或者其他应用程序发送通知
   - **自动故障迁移**（Automatic failover）：当主数据库出现故障时自动将从数据库转换为主数据库
 
-  ![image-20210321120005360](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210321120005360](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4e039d9741c4a73b49d7601cc7733b4~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ##### 
 
 ##### 哨兵的原理
 
@@ -42,15 +52,15 @@
 
   - 每隔10秒每隔哨兵节点会向主节点和从节点发送 `info replication`命令来获取最新的拓扑结构
 
-    ![image-20210321120241404](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210321120241404](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71564ead8a224126b8c7bbd3d1a45cca~tplv-k3u1fbpfcp-zoom-1.image)
 
   - 每隔2秒每隔哨兵节点回向Redis节点的`_sentinel_:hello`频道发送自己对主节点是否故障的判断以及自身的节点信息，并且其他的哨兵节点也会订阅这个频道来了解其他哨兵节点的信息以及对主节点的判断
 
-    ![image-20210321120358665](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210321120358665](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/21595a74fc274e38b81a1f5865c9858d~tplv-k3u1fbpfcp-zoom-1.image)
 
   - 每隔1秒每个哨兵节点会向主节点、从节点、其他的哨兵节点发送一个 `ping`命令来做心跳检测
 
-    ![image-20210321120648877](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210321120648877](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e60c1d1ad41745db99d1c218c74f54c8~tplv-k3u1fbpfcp-zoom-1.image)
 
     如果在定时Job3检测不到节点的心跳，会判断为主观下线；如果该节点还是主节点那么还会通知其他的哨兵对该主节点进行心跳检测，这时主观下线的票数就超过了数时，那么这个主节点确实就可能是故障不可达了，这时就由原来的主观下线变为客观下线
 
@@ -68,15 +78,15 @@
 
   Redis Cluster把所有的数据划分为**16384个不同的槽位**，可以根据机器的性能把不同的槽位分配给不同的Redis实例，对于Redis实例来说，他们只会存储部分的Redis数据，当然，槽的数据是可以迁移的，不听的实例之间可以通过一定的协议，进行数据迁移
 
-  ![image-20210321133537139](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210321133537139](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11831b67856c4fee9601aa51040b6a76~tplv-k3u1fbpfcp-zoom-1.image)
 
 #### 槽
 
 - Redis集群的功能限制；Redis集群相对于单机在功能上存在一些限制，需要开发人员提前了解，在使用时做好规避；**JAVA CRC16校验算法**
 
-  ![image-20210321134106832](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321134106832](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/601eafdca4604350bbd4d1b5936dd771~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210321134132985](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321134132985](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/94812211fba74d828cfdb9837ae7008d~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 可以批量操作 支持有限
 
@@ -100,13 +110,15 @@
 
 - 命令大多会重定向，耗时多
 
-  ![image-20210321134605852](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210321134605852](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f1aaf69b6673434c8ff7132ea53bd45e~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  
 
 #### 一致性hash
 
 - 一致性hash可以很好地解决稳定性的问题，可以将所有的存储节点排列在首尾相接的Hash环上，每个key在计算Hash后会顺时针找到临接的存储节点存放；而当有节点加入或退出时，仅仅影响该节点在Hash环上顺时针相邻的后续节点
 
-  ![image-20210321135249822](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321135249822](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2494977e7cf74e45bfb9261c3b7bb092~tplv-k3u1fbpfcp-zoom-1.image)
 
 - Hash倾斜
 
@@ -118,7 +130,9 @@
 
 - 三主三从方式，从为了同步备份，主进行slot数据分片
 
-  ![image-20210321143120398](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321143120398](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dedd84e4c8ed498b8bad060a6f49356e~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
 
   - 创建目录与配置，并启动容器
 
@@ -142,21 +156,23 @@
     -v /var/mall/redis/node-${port}/conf/redis.conf:/etc/redis/redis.conf \
     -d redis redis-server /etc/redis/redis.conf; \
     done
-    复制代码
+    
     ```
 
-    ![image-20210321142255590](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210321142255590](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/070c992ee33f4f9993d58a3c11880d3d~tplv-k3u1fbpfcp-zoom-1.image)
 
-    ![image-20210321142412697](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210321142412697](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/05b55288f5944576bf6c9fef337ae361~tplv-k3u1fbpfcp-zoom-1.image)
 
-    ![image-20210321142345881](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210321142345881](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/94a92fe8cc684529bf16f93cbe24ab71~tplv-k3u1fbpfcp-zoom-1.image)
 
+    
+    
     ```shell
     #停止这6个redis容器
     docker stop $(docker ps -a |grep redis-700 | awk '{print $1}')
     #删除这6个redis容器
     docker rm $(docker ps -a | grep redis-700 | awk '{print $1}')
-    复制代码
+    
     ```
 
 #### 使用redis建立集群
@@ -168,14 +184,16 @@
   docker exec -it redis-7001 /bin/bash
   #建立集群，如果不指定master，会自己随机指定
   redis-cli --cluster create 192.168.83.133:7001 192.168.83.133:7002 192.168.83.133:7003 192.168.83.133:7004 192.168.83.133:7005 192.168.83.133:7006 --cluster-replicas 1
-  复制代码
+  
   ```
 
-  ![image-20210321143726656](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321143726656](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3e65a1203b364418ae14a5674b7ec8a3~tplv-k3u1fbpfcp-zoom-1.image)
 
   输入`yes`，接受配置，集群搭建完成
 
-  ![image-20210321143940702](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210321143940702](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1af839718dc0441baeaec933d8f03947~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 测试redis集群
 
@@ -188,28 +206,28 @@
   set hello 1
   set a aaa
   set bb aa
-  复制代码
+  
   ```
 
-  ![image-20210321144535451](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321144535451](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/97231bd7a48741b7baf5fc47ad5a46e4~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 查看集群状态
 
   ```
   cluster info
-  复制代码
+  
   ```
 
-  ![image-20210321145716188](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321145716188](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f1dfbdd5c2346a9918c802e60903b24~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 查看节点信息
 
   ```
   cluster nodes
-  复制代码
+  
   ```
 
-  ![image-20210321145818299](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321145818299](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c17e326d957048f9aa05413658fe7dd1~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 模拟一个主节点宕机
 
@@ -224,12 +242,12 @@
   get hello
   #查看节点信息
   cluster nodes
-  复制代码
+  
   ```
 
-  ![image-20210321150203048](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321150203048](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ea5a75fe833a4241bdb6e1df7b898ada~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ![image-20210321150530220](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321150530220](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/630395eb466945d3a94b6df6f88e20a4~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 这时，宕机的7001再次启动，观察节点的变化（**故障切换**）
 
@@ -238,10 +256,12 @@
   docker restart redis-7001
   #查看节点信息
   cluster nodes
-  复制代码
+  
   ```
 
-  ![image-20210321151029146](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210321151029146](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/977e1f86dca44d49aa469027c3aeed9e~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ## 
 
 ## ElasticSearch集群搭建
 
@@ -261,7 +281,7 @@
 
   ```
   GET /_cluster/health
-  复制代码
+  
   ```
 
   `status`：指示这当前集群在总体上是否工作正常，它的三种颜色含义如下：
@@ -289,12 +309,12 @@
   		"number_of_replicas": 1
   	}
   }
-  复制代码
+  
   ```
 
 - 拥有一个索引的单节点集群
 
-  ![image-20210321154512225](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321154512225](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fcdde12f07df4693a4d8335e62b592e6~tplv-k3u1fbpfcp-zoom-1.image)
 
   此时集群的健康状况为 `yellow` 则表示全部 **主分片都正常运行**（集群可以正常服务所有请求），但是**副本分片没有全部处在正常状态**；实际上，所有三个副本分片都是 `unassigned` --- 它们都没有被分配带任何节点；
 
@@ -308,7 +328,7 @@
 
 - 拥有两个节点的集群 -- 所有主分片和副本分片都已被分配
 
-  ![image-20210321155401965](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321155401965](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd89691db8e441e7b433d2794753a0a1~tplv-k3u1fbpfcp-zoom-1.image)
 
   此时，cluster-health现在展示的状态为green，这表示所有6个分片（包括3个主分片和3个副本分片）都在正常运行；我们的集群现在不仅仅是正常运行的，并且还始终处于**可用**状态
 
@@ -316,7 +336,7 @@
 
 - 用于三个节点的集群 -- 为了分散负载而对分片进行重新分配
 
-  ![image-20210321155829355](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321155829355](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3108e6c4f964351af12a4a730d56b26~tplv-k3u1fbpfcp-zoom-1.image)
 
   Node1 和 Node2 上各有一个分片被迁移到新的 Node3 节点，现在每个节点上都拥有2个分片，而不是之前的3个；这表示每个节点的硬件资源（CPU、RAM、I/O）将被更少的分片所共享，每个分片的性能将会得到提升
 
@@ -327,18 +347,20 @@
   {
   	"number_of_replicas": 2
   }
-  复制代码
+  
   ```
 
   blogs 索引现在拥有9个分片：3个主分片和6个副本分片；这意味着我们可以将集群扩容到9个节点，每个节点上一个分片；相比原来的3个节点时，集群的搜索性能可以提升3倍
 
-  ![image-20210321160529979](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210321160529979](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/faa0a92cd5004a2b8bd075ea8af22646~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 应对故障
 
 - 关闭一个节点后的集群
 
-  ![image-20210321160617533](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210321160617533](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7888a63271bb42bf92e608a10fc0484d~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 我们关闭的节点是一个主节点；而集群必须拥有一个主节点来保证正常工作，所以发生的第一件事情就是选举一个新的主节点：Node2
 
@@ -424,16 +446,18 @@
   node.master=falsse
   node.data=true
   
-  复制代码
+  
   ```
 
-  ![image-20210322091009844](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210322091009844](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7046d6e6a0434ad4a62a2b1b33e7198c~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ### 
 
 ### es集群搭建
 
 - es集群：三个主节点，三个数据节点
 
-  ![image-20210322092736711](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210322092736711](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c70a39feaa1f43ffa805f8e8b7415d5b~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 所有操作之前先运行
 
@@ -444,7 +468,7 @@
   #永久修改
   echo vm.max_map_count=262144>>/etc/sysctl.conf
   sysctl -p
-  复制代码
+  
   ```
 
 #### 准备docker网络
@@ -462,10 +486,10 @@
   docker network create --driver bridge --subnet=172.18.12.0/16 --gateway=172.18.1.1 mynet
   #查看网络信息
   docker network inspect mynet
-  复制代码
+  
   ```
 
-  ![image-20210322101740636](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210322101740636](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e415d9c24c214292942232c320c02934~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 以后使用 `--network=mynet --ip 172.18.12.x`，指定ip
 
@@ -507,7 +531,7 @@
   -v /var/mall/elasticsearch/master-${port}/plugins:/usr/share/elasticsearch/plugins \
   elasticsearch:7.6.1;\
   done
-  复制代码
+  
   ```
 
   ```
@@ -515,17 +539,23 @@
   docker stop $(docker ps -a |grep es-node-*|awk '{print $1}')
   #删除全部es容器
   docker rm -f $(docker ps -a |grep es-node-*|awk '{print $1}')
-  复制代码
+  
   ```
 
-  ![image-20210322143827246](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210322143827246](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/61f68e1f383d49cbad4f9011d06d0fba~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  #### 
 
 #### 创建三个Data节点
 
 - 创建脚本与Master不同之处
 
-  ![image-20210322144802351](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210322144802351](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0351aefb7f3d42cfa59c3ea0d6e1ff3b~tplv-k3u1fbpfcp-zoom-1.image)
 
+  ```shell
+  
+  ```
+  
   ```shell
   for port in $(seq 4 6); \
   do \
@@ -556,22 +586,22 @@
   -v /var/mall/elasticsearch/node-${port}/config/jvm.options:/usr/share/elasticsearch/config/jvm.options \
   -v /var/mall/elasticsearch/node-${port}/data:/usr/share/elasticsearch/data \
   -v /var/mall/elasticsearch/node-${port}/plugins:/usr/share/elasticsearch/plugins \
-  elasticsearch:7.6.1;\
+elasticsearch:7.6.1;\
   done
-  复制代码
+  
   ```
-
+  
   ```
   #查看es容器日志信息
   #主节点
   docker logs es-node-1
-  #数据节点
+#数据节点
   docker logs es-node-4
-  复制代码
+
   ```
-
+  
   ![image-20210322160539096](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4fe16f0ead6040308bdf3f2ab778996f~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
   ![image-20210322161711340](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0de609b90c749af95dd9cd02460fbfd~tplv-k3u1fbpfcp-zoom-1.image)
 
 #### 检查es集群的工作状况
@@ -590,9 +620,11 @@
 
   - `/_cat/nodes`：查看各个节点信息
 
-    ![image-20210322162615183](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210322162615183](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38ab120d3c4a4f8eab3c40573d0029e9~tplv-k3u1fbpfcp-zoom-1.image)
 
-    ![image-20210322162628675](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+    ![image-20210322162628675](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a34e04a0873c4291bda615c4556b25bf~tplv-k3u1fbpfcp-zoom-1.image)
+
+    
 
     - 这时可以看到 主节点是 `es-master-3`，尝试停止 `es-master-3`容器，观察结果：
 
@@ -639,7 +671,7 @@
   mkdir -p /var/mall/rabbitmq/rabbitmq01
   mkdir -p /var/mall/rabbitmq/rabbitmq02
   mkdir -p /var/mall/rabbitmq/rabbitmq03
-  复制代码
+  
   ```
 
 - 启动mq容器
@@ -656,10 +688,12 @@
   
   # --hostname 设置容器的主机名
   RABBITMQ_ERLANG_COOKIE 节点认证作用，部署集群时，需要同步该值
-  复制代码
+  
   ```
 
-  ![image-20210323083243934](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  - ![image-20210323083243934](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf0e05a883b44169b9d0ffcc52a99aab~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ### 
 
 ### 节点加入集群
 
@@ -673,10 +707,10 @@
   rabbitmqctl reset
   rabbitmqctl start_app
   exit
-  复制代码
+  
   ```
 
-  ![image-20210323084521683](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210323084521683](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7d1dd2f6e934c7da0d3947c66ad2b85~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 进入第二个节点 rabbitmq02
 
@@ -689,10 +723,10 @@
   rabbitmqctl join_cluster --ram rabbit@rabbitmq01
   rabbitmqctl start_app
   exit
-  复制代码
+  
   ```
 
-  ![image-20210323084847937](data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="600"></svg>)
+  ![image-20210323084847937](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8d0703a9194405499d02cc97d93eba0~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 进入第二个节点 rabbitmq03
 
@@ -705,7 +739,7 @@
   rabbitmqctl join_cluster --ram rabbit@rabbitmq01
   rabbitmqctl start_app
   exit
-  复制代码
+  
   ```
 
   ![image-20210323085104178](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2802069e3a7f43478e3d4f1e4b21fe62~tplv-k3u1fbpfcp-zoom-1.image)
@@ -723,14 +757,14 @@
   #可以使用 rabbitmqctl list_policies -p /; 查看vhost/下面所有policy
   #设置策略（所有队列都是高可用模式并且自动同步）
   rabbitmqctl set_policy -p / ha "^" '{"ha-mode":"all","ha-sync-mode":"automatic"}'
-  复制代码
+  
   ```
 
   ```
   #在cluster中任意节点启用策略，策略会自动同步到集群节点
   rabbitmqctl set_policy -p / ha-all "^" '{"ha-mode":"all"}'
   #策略模式all即复制到所有节点，包含新增节点，策略正则表达式为"^",表示匹配所有
-  复制代码
+  
   ```
 
   ![image-20210323090646337](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07190304f8f444bd880a9fd11b036fce~tplv-k3u1fbpfcp-zoom-1.image)
@@ -754,7 +788,3 @@
   ![image-20210323091125956](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b63b443f404945eb98c16a75546d573d~tplv-k3u1fbpfcp-zoom-1.image)
 
   ![image-20210323091208086](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8f70403e3aee4dd9b2fad427096c9ff4~tplv-k3u1fbpfcp-zoom-1.image)
-
-
-作者：几个你_
-链接：https://juejin.cn/post/6945360597668069384
