@@ -1,4 +1,7 @@
 - [Kubernetes备份恢复之velero实战](https://www.imooc.com/article/310069)
+- [k8s备份工具之velero](https://www.cnblogs.com/zphqq/p/13155394.html)
+
+- [使用velero去备份k8s集群](https://www.e-learn.cn/topic/3888604)
 
 # 一 背景
 

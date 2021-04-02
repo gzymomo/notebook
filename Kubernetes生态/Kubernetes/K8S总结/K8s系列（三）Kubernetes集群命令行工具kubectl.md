@@ -1,5 +1,3 @@
-- 
-
 
 
 # 一、Kubernetes集群命令行工具kubectl
