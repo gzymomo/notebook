@@ -1,3 +1,7 @@
+- [InfluxDB+Grafana+Jmeter性能监控平台搭建](https://www.cnblogs.com/hong-fithing/p/14488406.html)
+
+
+
 # InfluxDB+Grafana+Jmeter性能监控平台搭建
 
 在做性能测试的时候，重点关注点是各项性能指标，用Jmeter工具，查看指标数据，就是借助于聚合报告，但查看时也并不方便。那如何能更直观的查看各项数据呢？可以通过`InfluxDB+Grafana+Jmeter`来实现数据的可视化。

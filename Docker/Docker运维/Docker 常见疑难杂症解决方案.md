@@ -661,3 +661,25 @@ http {
 }
 ```
 
+## 18. **Docker 不稳定**
+
+通过实践，我发现 Docker 还是挺容易挂的，尤其是长时间跑高之后。为了保证 Docker 服务的持续运行，除了要让 Docker 开机自启动之外，还需要对 Docker 服务进行监控，一旦发现服务挂了就马上重启服务。
+
+可以通过一条简单的 crontab 定时任务解决：
+
+```text
+# 适用于 CentOS 7，如果 Docker 正在服务，不会产生负面影响
+* * * * * systemctl start docker
+```
+
+## 19.定期清理
+
+时间长了，宿主机会有很多不需要的镜像、停止的容器等，如果有需要，同样可以通过定时任务进行清理。
+
+```text
+# 每天凌晨 2 点清理容器和镜像
+0 2 * * * docker container prune --force && docker image prune --force
+# 更凶残地方式
+0 2 * * * docker system prune --force
+```
+
