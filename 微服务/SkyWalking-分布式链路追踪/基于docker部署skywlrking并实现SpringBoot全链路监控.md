@@ -170,7 +170,7 @@ cp -r ./agent/*  /opt/skywalkingAgent
 
 优先级：探针 > JVM配置 > 系统环境变量 > agent.config
 
-一般都使用探针方式，其他方式就不介绍了，配置方式如下：s
+一般都使用探针方式，其他方式就不介绍了，配置方式如下：
 
 - 格式1(推荐)：-javaagent:/path/to/skywalking-agent.jar={config1}={value1},{config2}={value2}
 
