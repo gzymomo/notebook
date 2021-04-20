@@ -1,4 +1,5 @@
 - [promethus监控Redis](https://www.cnblogs.com/xiao987334176/p/12101496.html)
+- [Prometheus 监控 Redis 集群的正确姿势](https://www.cnblogs.com/fsckzy/p/12053604.html)
 
 
 
@@ -155,7 +156,7 @@ redis_memory_used_bytes{instance=~"$instance"}  / 8193428
 
 本文参考链接：
 
-http://www.eryajf.net/2497.html
+- http://www.eryajf.net/2497.html
 
-https://www.cnblogs.com/fsckzy/p/12053604.html
+- https://www.cnblogs.com/fsckzy/p/12053604.html
 

@@ -1,4 +1,5 @@
 - [promethus监控nginx](https://www.cnblogs.com/xiao987334176/p/11180652.html)
+- [Prometheus 监控 Nginx](https://www.cnblogs.com/fsckzy/p/12880460.html)
 
 
 
