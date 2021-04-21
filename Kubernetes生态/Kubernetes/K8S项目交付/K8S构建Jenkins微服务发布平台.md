@@ -1,12 +1,10 @@
 - [基于Kubernetes构建Jenkins微服务发布平台](https://www.cnblogs.com/yuezhimi/p/13091889.html)
-
 - [kubernetes-jenkins CI/CD平台（十八）](https://www.cnblogs.com/yuezhimi/p/11083362.html)
+- [Kubernetes+Helm+Jenkins 自动化发布项目](https://mp.weixin.qq.com/s?__biz=MzAwNTM5Njk3Mw==&mid=2247500119&idx=1&sn=c7234b0e7715aeb122a018b514ac6c5e&chksm=9b1fc1d5ac6848c3086a896b5ed536a14f1c9fb0c79c7c4773c5a1e9fdcd3b076c54b2afdf13&mpshare=1&scene=24&srcid=0421hIDd1CAsuqVkKdGqU2c5&sharer_sharetime=1618962188418&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
 
 
 
-
-
-# 发布流程设计
+# 一、发布流程设计
 
 软件环境：Jenkins + Kubernetes + Gitlab + Harbor+helm
 
@@ -14,7 +12,7 @@
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611112650105-784913644.png)
 
-## 准备基础前提环境
+## 1.1 准备基础前提环境
 
 1. K8s（Ingress Controller，CoreDNS，PV自动供给）
 2. Helm v3
@@ -23,7 +21,9 @@
 5. MySQL（微服务数据库）
 6. Eureka（注册中心）
 
-# 在Kubernetes中部署Jenkins
+
+
+# 二、在Kubernetes中部署Jenkins
 
 参考：https://github.com/jenkinsci/kubernetes-plugin/tree/fc40c869edfd9e3904a9a56b0f80c5a25e988fa1/src/main/kubernetes
 
@@ -41,7 +41,7 @@ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611120306974-541048066.png)
 
-## Jenkins Pipeline 及参数化构建
+## 2.1 Jenkins Pipeline 及参数化构建
 
 参考：https://jenkins.io/doc/book/pipeline/syntax/
 
@@ -55,7 +55,7 @@ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611120603561-1796434446.png)
 
-## Jenkins在Kubernetes中动态创建代理
+## 2.2 Jenkins在Kubernetes中动态创建代理
 
 Jenkins Master/Slave架构
 
@@ -70,7 +70,7 @@ Kubernetes插件：Jenkins在Kubernetes集群中运行动态代理
 
 ![img](https://img2020.cnblogs.com/blog/1156961/202006/1156961-20200611121642928-779182373.png)
 
-## 自定义构建Jenkins Slave镜像
+## 2.3 自定义构建Jenkins Slave镜像
 
 参考：https://github.com/jenkinsci/docker-jnlp-slave
 
@@ -99,7 +99,7 @@ docker build . -t 192.168.0.241/library/jenkins-slave:jdk-1.8
 docker push 192.168.0.241/library/jenkins-slave:jdk-1.8
 ```
 
-###  基于Kubernetes构建Jenkins CI系统
+##  2.4 基于Kubernetes构建Jenkins CI系统
 
 添加凭据
 
