@@ -78,7 +78,7 @@ Windows 快捷键：ctrl + 鼠标右键
 
 ![](https://segmentfault.com/img/bVbGMZT)
 
-## 2.8 **SonarLint**
+## 2.8 SonarLint
 
 SonarLint 是一个免费的IDE扩展，允许您在编写代码时修复错误和漏洞！与拼写检查器一样，SonarLint会动态地突出显示代码问题，并提供明确的修复指导，以便在代码提交之前修复这些问题。在流行的IDEs（Eclipse, IntelliJ, Visual Studio, VS Code）和流行的编程语言，SonarLint 帮助所有开发人员编写更好、更安全的代码！
 
