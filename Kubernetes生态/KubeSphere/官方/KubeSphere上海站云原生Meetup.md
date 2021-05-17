@@ -1,4 +1,8 @@
-# KubeSphere云原生上海站分享会
+整理自：[云原生 Meetup | KubeSphere & Friends 2021-上海站](https://mudu.tv/live/watch/general?id=me1ezxbl&time=1621058977484
+
+
+
+# KubeSphere带你远航
 
 周小四：KubeSphere容器平台研发负责人
 
@@ -278,6 +282,94 @@ Pod跨节点重建高效：2000PV的挂载/卸载16s
 
 ### Ingress Nginx Controller服务踩坑实践
 
+![image-20210517083526798](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083526798.png)
 
+![image-20210517083540287](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083540287.png)
+
+![image-20210517083600901](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083600901.png)
 
 ### Calico关闭natOutgoing
+
+![image-20210517083626590](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083626590.png)
+
+
+
+# MySQL on K8S 开源开放的高可用容器编排方案
+
+高日耀：资深MySQL内核研发
+
+## 为什么要做MySQL容器化？
+
+![image-20210517083809141](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083809141.png)
+
+## MySQL容器化需要考虑的问题
+
+![image-20210517083833487](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083833487.png)
+
+![image-20210517083843442](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517083843442.png)
+
+## 什么是RadonDB?
+
+RadonDB现已升级为青云数据库产品的品牌。
+
+涵盖MySQL、PostgreSQL、ClickHouse等主流数据库。
+
+## RadonDB MySQL容器化
+
+在KubeSphere和Kubernetes上安装部署和管理
+
+自动执行尉RadonDB MySQL集群有关的任务。
+
+## 什么是RadonDB MySQL？
+
+基于MySQL的开源、高可用、云原生集群解决方案。
+
+支持一主多从高可用架构。
+
+![image-20210517084100095](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084100095.png)
+
+
+
+![image-20210517084115777](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084115777.png)
+
+## 部署效果
+
+![image-20210517084130578](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084130578.png)
+
+# 基于云原生架构下的DevOps实践
+
+蒋立杰：江苏苏宁银行云计算负责人
+
+## 传统DevOps如何技术演进为云原生DevOps
+
+![image-20210517084318645](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084318645.png)
+
+
+
+## 苏宁银行云平台总体架构
+
+![image-20210517084350294](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084350294.png)
+
+## 苏宁银行DevOps总体架构
+
+![image-20210517084406868](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084406868.png)
+
+## 苏宁银行DevOps系统选型分析
+
+![image-20210517084501059](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084501059.png)
+
+![image-20210517084515130](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084515130.png)
+
+## 苏宁银行Tekton+ArgoCD实践-场景
+
+![image-20210517084543945](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084543945.png)
+
+![image-20210517084556867](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084556867.png)
+
+## 基于Argocd-Rollouts进行blue/green canary发布
+
+![image-20210517084627764](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084627764.png)
+
+## 新旧灰度对比
+
+![image-20210517084646974](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210517084646974.png)
