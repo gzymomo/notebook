@@ -1,6 +1,12 @@
-[前端面试题之React篇](https://www.yuque.com/cuggz/interview/pgw8v4)
+- 原文地址：[前端面试题之React篇](https://www.yuque.com/cuggz/interview/pgw8v4)
 
+- git地址：https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld
 
+- [点击前往GIT](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld)
+
+![image-20210528231208535](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210528231208535.png)
+
+![Vue面试题.png](https://cdn.nlark.com/yuque/0/2021/png/1500604/1621612367141-93b24efc-8b06-4c10-8259-586cd8c6c5d5.png?x-oss-process=image%2Fresize%2Cw_1038)
 
 ![React面试题.png](https://cdn.nlark.com/yuque/0/2021/png/1500604/1618317949340-04bf1cbc-f74c-4f76-8dbf-fe7de4714d30.png?x-oss-process=image%2Fresize%2Cw_1038)
 

@@ -1,4 +1,10 @@
-[LeetCode面试常考题目](https://www.yuque.com/cuggz/interview/uxemin)
+- 原文地址：[LeetCode面试常考题目](https://www.yuque.com/cuggz/interview/uxemin)
+
+- git地址：https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld
+
+- [点击前往GIT](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld)
+
+![image-20210528231208535](https://gitee.com/AiShiYuShiJiePingXing/img/raw/master/img/image-20210528231208535.png)
 
 
 
