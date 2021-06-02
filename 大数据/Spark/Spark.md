@@ -29,9 +29,116 @@ Spark 的主要特点还包括:
 \- (2)提供了一套支持 DAG 图的分布式并行计算的编程框架,减少多次计算之间中间结果写到 Hdfs 的开销;
 \- (3)使用多线程池模型减少 Task 启动开稍, shuffle 过程中避免不必要的 sort 操作并减少磁盘 IO 操作。(Hadoop 的 Map 和 reduce 之间的 shuffle 需要 sort)
 
+
+
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/b0c3cc93febd6ebc973f52deb70a8c5b.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+**注意:**
+
+​    尽管Spark相对于Hadoop而言具有较大优势，但Spark并不能完全替代Hadoop，Spark主要用于替代Hadoop中的MapReduce计算模型。存储依然可以使用HDFS，但是中间结果可以存放在内存中；调度可以使用Spark内置的，也可以使用更成熟的调度系统YARN等。
+
+​    实际上，Spark已经很好地融入了Hadoop生态圈，并成为其中的重要一员，它可以借助于YARN实现资源调度管理，借助于HDFS实现分布式存储。
+
+​    此外，Hadoop可以使用廉价的、异构的机器来做分布式存储与计算，但是，Spark对硬件的要求稍高一些，对内存与CPU有一定的要求。
+
+#### Spark使用情况
+
+​    Spark得到了众多大数据公司的支持，这些公司包括Hortonworks、IBM、Intel、Cloudera、MapR、Pivotal、百度、阿里、腾讯、京东、携程、优酷土豆。
+
+​    当前百度的Spark已应用于凤巢、大搜索、直达号、百度大数据等业务；
+
+​    阿里利用GraphX构建了大规模的图计算和图挖掘系统，实现了很多生产系统的推荐算法；
+
+​    腾讯Spark集群达到8000台的规模，是当前已知的世界上最大的Spark集群。
+
+
+
+## 1.2 Spark发展史
+
+大数据、人工智能( Artificial Intelligence )像当年的石油、电力一样， 正以前所未有的广度和深度影响所有的行业， 现在及未来公司的核心壁垒是数据， 核心竞争力来自基于大数据的人工智能的竞争。
+
+​    Spark是当今大数据领域最活跃、最热门、最高效的大数据通用计算平台，
+
+​    2009年诞生于美国加州大学伯克利分校AMP 实验室， 
+
+​    2010年通过BSD许可协议开源发布，
+
+​    2013年捐赠给Apache软件基金会并切换开源协议到切换许可协议至 Apache2.0，
+
+​    2014年2月，Spark 成为 Apache 的顶级项目 
+
+​    2014年11月, Spark的母公司Databricks团队使用Spark刷新数据排序世界记录
+
+​    **Spark 成功构建起了一体化、多元化的大数据处理体系。在任何规模的数据计算中， Spark 在性能和扩展性上都更具优势**。
+
+​    Hadoop 之父Doug Cutting 指出：Use of MapReduce engine for Big Data projects will  decline, replaced by Apache Spark (大数据项目的MapReduce 引擎的使用将下降，由Apache  Spark 取代)
+
+​    Hadoop 商业发行版本的市场领导者Cloudera 、HortonWorks 、MapR 纷纷转投Spark,并把Spark 作为大数据解决方案的首选和核心计算引擎。
+
+​    2014 年的如此Benchmark 测试中， Spark 秒杀Hadoop ，在使用十分之一计算资源的情况下，相同数据的排序上， Spark 比Map Reduce 快3 倍！ 在没有官方PB 排序对比的情况下，首次将S park 推到了IPB 数据(十万亿条记录) 的排序，在使用190  个节点的情况下，工作负载在4 小时内完成， 同样远超雅虎之前使用3800 台主机耗时16 个小时的记录。
+
+​    2015年6月， Spark 最大的集群来自腾讯–8000 个节点， 单个Job 最大分别是阿里巴巴和Databricks–1PB  ，震撼人心！同时，Spark的Contributor 比2014 年涨了3 倍，达到730 人：总代码行数也比2014 年涨了2 倍多，达到40 万行。
+
+​    IBM 于2015 年6 月承诺大力推进Apache Spark 项目，  并称该项目为：以数据为主导的，未来十年最重要的新的开源项目。这－承诺的核心是将Spark 嵌入IBM 业内领先的分析和商务平台，并将Spark  作为一项服务，在IBMB平台上提供给客户。IBM 还将投入超过3500 名研究和开发人员在全球10余个实验室开展与Spark  相关的项目，并将为Spark 开源生态系统无偿提供突破性的机器学习技术–IBM SystemML。同时，IBM 还将培养超过100  万名Spark 数据科学家和数据工程师。
+
+​    2016 年，在有“计算界奥运会”之称的国际著名Sort  Benchmark全球数据排序大赛中，由南京大学计算机科学与技术系PASA 大数据实验室、阿里巴巴和Databricks  公司组成的参赛因队NADSort，以144美元的成本完成lOOTB 标准数据集的排序处理，创下了每TB  数据排序1.44美元成本的最新世界纪录，比2014 年夺得冠军的加州大学圣地亚哥分校TritonSort团队每TB  数据4.51美元的成本降低了近70%，而这次比赛依旧使用Apache Spark 大数据计算平台，在大规模并行排序算法以及Spark  系统底层进行了大量的优化，以尽可能提高排序计算性能并降低存储资源开销，确保最终赢得比赛。
+
+​    在FullStack 理想的指引下，Spark 中的Spark SQL 、SparkStreaming 、MLLib 、GraphX 、R  五大子框架和库之间可以无缝地共享数据和操作， 这不仅打造了Spark 在当今大数据计算领域其他计算框架都无可匹敌的优势， 而且使得Spark  正在加速成为大数据处理中心首选通用计算平台。
+
+## 1.3 Spark为什么流行
+
+### 1：优秀的数据模型和计算抽象
+
+​    Spark 产生之前，已经有MapReduce这类非常成熟的计算系统存在了，并提供了高层次的API(map/reduce)，把计算运行在集群中并提供容错能力，从而实现分布式计算。
+
+​    虽然MapReduce提供了对数据访问和计算的抽象，但是对于数据的复用就是简单的将中间数据写到一个稳定的文件系统中(例如HDFS)，所以会产生数据的复制备份，磁盘的I/O以及数据的序列化，所以在遇到需要在多个计算之间复用中间结果的操作时效率就会非常的低。而这类操作是非常常见的，例如迭代式计算，交互式数据挖掘，图计算等。
+
+​    认识到这个问题后，学术界的 AMPLab 提出了一个新的模型，叫做 RDD。RDD  是一个可以容错且并行的数据结构(其实可以理解成分布式的集合，操作起来和操作本地集合一样简单)，它可以让用户显式的将中间结果数据集保存在内存中，并且通过控制数据集的分区来达到数据存放处理最优化.同时 RDD也提供了丰富的 API (map、reduce、foreach、redeceByKey…)来操作数据集。后来 RDD被 AMPLab  在一个叫做 Spark 的框架中提供并开源.
+
+​    简而言之，Spark 借鉴了 MapReduce 思想发展而来，保留了其分布式并行计算的优点并改进了其明显的缺陷。让中间数据存储在内存中提高了运行速度、并提供丰富的操作数据的API提高了开发速度。
+
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/3d0d4a865a6fcc4e39c77701516a4521.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/3892922eee6abe3aada52527e3b31f66.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+### 2：完善的生态圈
+
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/60e0eef902ccf19418ece685e75fd254.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+     目前，Spark已经发展成为一个包含多个子项目的集合，其中包含SparkSQL、Spark Streaming、GraphX、MLlib等子项目。
+
+​    Spark Core：实现了 Spark 的基本功能，包含RDD、任务调度、内存管理、错误恢复、与存储系统交互等模块。
+
+​    Spark SQL：Spark 用来操作结构化数据的程序包。通过 Spark SQL，我们可以使用 SQL操作数据。
+
+​    Spark Streaming：Spark 提供的对实时数据进行流式计算的组件。提供了用来操作数据流的 API。
+
+​    Spark MLlib：提供常见的机器学习(ML)功能的程序库。包括分类、回归、聚类、协同过滤等，还提供了模型评估、数据导入等额外的支持功能。
+
+​    GraphX(图计算)：Spark中用于图计算的API，性能良好，拥有丰富的功能和运算符，能在海量数据上自如地运行复杂的图算法。
+
+​    集群管理器：Spark 设计为可以高效地在一个计算节点到数千个计算节点之间伸缩计算。
+
+
+
 ------
 
 # 2 Spark 系统架构
+
+## 2.1 Spark官方介绍
+
+- Spark是什么？
+
+​    Apache Spark是用于大规模数据处理的统一分析引擎
+
+​    Spark基于内存计算，提高了在大数据环境下数据处理的实时性，同时保证了高容错性和高可伸缩性，允许用户将Spark部署在大量硬件之上，形成集群。
+
+- 官网
+  http://spark.apache.org
+  [http://spark.apachecn.org ](http://spark.apachecn.org)
+
+对于官网首页的说明
+
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/0da065f9aaccd061c26ec13df484a500.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
 
 首先明确相关术语[^demo_shuyu]:
 \- **应用程序(Application)**: 基于Spark的用户程序，包含了一个Driver Program 和集群中多个的Executor；
@@ -47,7 +154,7 @@ Spark 支持不同的运行模式,包括Local, Standalone,Mesoses,Yarn 模式.�
 
 ![img](https://pic4.zhimg.com/80/v2-89b33390425ffb8a58238df59d945c3f_720w.jpg)
 
-## 2.1 spark 运行原理
+## 2.2 spark 运行原理
 
 一开始看不懂的话可以看完第三和第四章再回来看.
 **底层详细细节介绍:**
@@ -79,7 +186,57 @@ val rdd = sc.textFile("path/...")
 \- sparkR: 启动了 Spark 的 R 解释器.
 `(以上解释器位于spark 的 bin 目录下)`
 
-------
+## 2.3 Spark特点
+
+- 快
+
+​    与Hadoop的MapReduce相比，Spark基于内存的运算要快100倍以上，基于硬盘的运算也要快10倍以上。Spark实现了高效的DAG执行引擎，可以通过基于内存来高效处理数据流。
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/dc280ed4e684edfba31c8c25ac617dba.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+- 易用
+
+​    Spark支持Java、Python、R和Scala的API，还支持超过80种高级算法，使用户可以快速构建不同的应用。而且Spark支持交互式的Python和Scala的shell，可以非常方便地在这些shell中使用Spark集群来验证解决问题的方法。
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/137a4ce653594d03eed1c08c854200a9.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+- 通用
+
+​    Spark提供了统一的解决方案。Spark可以用于批处理、交互式查询(Spark SQL)、实时流处理(Spark Streaming)、机器学习(Spark  MLlib)和图计算(GraphX)。这些不同类型的处理都可以在同一个应用中无缝使用。Spark统一的解决方案非常具有吸引力，毕竟任何公司都想用统一的平台去处理遇到的问题，减少开发和维护的人力成本和部署平台的物力成本。
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/34f51226cbd3a57a42c0150f82d5c896.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+- 兼容性
+
+​    Spark可以非常方便地与其他的开源产品进行融合。比如，Spark可以使用Hadoop的YARN和Apache  Mesos作为它的资源管理和调度器，并且可以处理所有Hadoop支持的数据，包括HDFS、HBase和Cassandra等。这对于已经部署Hadoop集群的用户特别重要，因为不需要做任何数据迁移就可以使用Spark的强大处理能力。Spark也可以不依赖于第三方的资源管理和调度器，它实现了Standalone作为其内置的资源管理和调度框架，这样进一步降低了Spark的使用门槛，使得所有人都可以非常容易地部署和使用Spark。此外，Spark还提供了在EC2上部署Standalone的Spark集群的工具。
+![在这里插入图片描述](https://s4.51cto.com/images/blog/202106/01/f997c9177077f5786c9a8c7311f91562.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
+
+## 2.4 Spark运行模式
+
+### 1. local本地模式(单机)–开发测试使用
+
+​    分为local单线程和local-cluster多线程
+
+### 2.standalone独立集群模式–开发测试使用
+
+​    典型的Mater/slave模式
+
+### 3.standalone-HA高可用模式–生产环境使用
+
+​    基于standalone模式，使用zk搭建高可用，避免Master是有单点故障的。
+
+### 4.on yarn集群模式–生产环境使用
+
+​    运行在 yarn 集群之上，由 yarn 负责资源管理，Spark 负责任务调度和计算。
+
+​    好处：计算资源按需伸缩，集群利用率高，共享底层存储，避免数据跨集群迁移。
+
+### 5.on mesos集群模式–国内使用较少
+
+​    运行在 mesos 资源管理器框架之上，由 mesos 负责资源管理，Spark 负责任务调度和计算。
+
+### 6.on cloud集群模式–中小公司未来会更多的使用云服务
+
+​    比如 AWS 的 EC2，使用这个模式能很方便的访问 Amazon的 S3。
+
+
 
 # 3 RDD 初识
 
@@ -227,8 +384,7 @@ rdd3.count()
 - 避免使用 shuffle 运算.需要的时候尽量选取较优方案.
 
 - 合理配置 Executor/Task/core 的参数,合理分配持久化/ shuffle的内存占比,
-   
-
+  
 - - **driver-memory**: 1G
   - **executor-memory**: 4~8G(根据实际需求来)
   - **num-executors**: 50~100
