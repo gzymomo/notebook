@@ -1,7 +1,8 @@
-- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
-- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
-- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
-- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
+- [高可用集群篇（一）-- k8s集群部署](https://juejin.cn/post/6940887645551591455)
+- [高可用集群篇（二）-- KubeSphere安装与使用](https://juejin.cn/post/6942282048107347976)
+- [高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表](https://juejin.cn/post/6944142563532079134)
+- [高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群](https://juejin.cn/post/6945360597668069384)
+- [高可用集群篇（五）-- k8s部署微服务](https://juejin.cn/post/6946396542097948702)
 
 
 
@@ -15,21 +16,23 @@
 
   [kuboard](https://kubesphere.io/)
 
-## 简介
+## 一、简介
 
 - KubeSphere 是一款面向云原生设计的开源项目，在目前主流容器调度平台 Kubernetes之上构建的分布式多租户容器管理平台提供简单易用的操作界面以及向导式操作方式，在降低用户使用容器调度平台学习成本的同时，极大降低开发、测试、运维的日常工作的复杂度
 
-## Kubesphere安装
+
+
+## 二、Kubesphere安装
 
 - 注意版本对应 [v2.1](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/prerequisites/)
 
-### 前提条件
+## 2.1 前提条件
 
 - ![image-20210315150213921](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d7b022810be48ecbc42f1f49746b3c4~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 安装前提环境
+### 2.1.1 安装前提环境
 
-#### 安装helm（master节点执行）
+#### 2.1.1.1 安装helm（master节点执行）
 
 - Helm是kubernetes的包管理器，包管理器类似于我们在Ubuntu中使用的apt、Centos中使用的yum或者Python中的pip一样，能快速查找、下载和安装软件包。**Helm由客户端组件helm和服务端组件Tiller组成**，能够将一组k8s资源打包统一管理，是查找、共享和使用为kubernetes构建的软件的最佳方式
 
@@ -119,7 +122,7 @@
 
 ![image-20210316104346092](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38cf0ad9a5264fa08d8444d9310f5e88~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 安装设置默认的存储类型
+#### 2.1.1.2 安装设置默认的存储类型
 
 - 集群已有存储类型（StorageClass），执行 `kubectl get sc`看下当前是否设置了默认的 `storageclass`
 

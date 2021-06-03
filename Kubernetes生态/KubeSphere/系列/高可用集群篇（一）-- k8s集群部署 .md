@@ -1,26 +1,24 @@
-- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
-
-- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
-
-- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
-
-- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
+- [高可用集群篇（一）-- k8s集群部署](https://juejin.cn/post/6940887645551591455)
+- [高可用集群篇（二）-- KubeSphere安装与使用](https://juejin.cn/post/6942282048107347976)
+- [高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表](https://juejin.cn/post/6944142563532079134)
+- [高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群](https://juejin.cn/post/6945360597668069384)
+- [高可用集群篇（五）-- k8s部署微服务](https://juejin.cn/post/6946396542097948702)
 
 
 
-## k8s快速入门
+# 一、K8s快速入门
 
 - [集群搭建所需的部分yaml文件以及安装包](https://github.com/free3growth/touch-air-mall/tree/main/doc)
 - [gitee地址](https://gitee.com/OK12138/touch-air-mall)
 
-### 简介
+## 1.1 简介
 
 - `Kubernetes`简称k8s；用于自动化部署，扩展和管理容器后应用程序的开源系统
 - [中文官网](https://kubernetes.io/zh/)
 - [中文社区](https://www.kubernetes.org.cn/)
 - [官方文档](https://kubernetes.io/zh/docs/home/)
 
-#### Kubernetes是什么
+### 1.1.1 Kubernetes是什么
 
 - Kubernetes 是一个可移植的、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化； Kubernetes 拥有一个庞大且快速增长的生态系统。Kubernetes 的服务、支持和工具广泛可用
 - 容器因具有许多优势而变得流行起来。下面列出的是容器的一些好处：
@@ -35,7 +33,7 @@
   - 资源隔离：可预测的应用程序性能
   - 资源利用：高效率和高密度
 
-#### 为什么要使用Kubernetes
+### 1.1.2 为什么要使用Kubernetes
 
 容器是打包和运行应用程序的好方式。在生产环境中，你需要管理运行应用程序的容器，并确保不会停机。 例如，如果一个容器发生故障，则需要启动另一个容器。如果系统处理此行为，会不会更容易？
 
@@ -67,7 +65,7 @@ Kubernetes 为你提供：
 
   Kubernetes 允许你存储和管理敏感信息，例如密码、OAuth 令牌和 ssh 密钥。 你可以在不重建容器镜像的情况下部署和更新密钥和应用程序配置，也无需在堆栈配置中暴露密钥
 
-#### Kubernetes不是什么
+### 1.1.3 Kubernetes不是什么
 
 Kubernetes 不是传统的、包罗万象的 PaaS（平台即服务）系统。 由于 Kubernetes 在容器级别而不是在硬件级别运行，它提供了 PaaS 产品共有的一些普遍适用的功能， 例如部署、扩展、负载均衡、日志记录和监视。 但是，Kubernetes 不是单体系统，默认解决方案都是可选和可插拔的。 Kubernetes 提供了构建开发人员平台的基础，但是在重要的地方保留了用户的选择和灵活性
 
@@ -81,7 +79,7 @@ Kubernetes：
 - 不提供也不采用任何全面的机器配置、维护、管理或自我修复系统。
 - 此外，Kubernetes 不仅仅是一个编排系统，实际上它消除了编排的需要。 编排的技术定义是执行已定义的工作流程：首先执行 A，然后执行 B，再执行 C。 相比之下，Kubernetes 包含一组独立的、可组合的控制过程， 这些过程连续地将当前状态驱动到所提供的所需状态。 如何从 A 到 C 的方式无关紧要，也不需要集中控制，这使得系统更易于使用 且功能更强大、系统更健壮、更为弹性和可扩展
 
-#### Kubernetes工作示例
+### 1.1.4 Kubernetes工作示例
 
 - 自动部署
 
@@ -95,15 +93,15 @@ Kubernetes：
 
   ![image-20210313120339866](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/086c6a6742bb4f0b9f870011290d6cb2~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 架构原理&核心概念
+## 1.2 架构原理&核心概念
 
-#### 整体主从方式
+### 1.2.1 整体主从方式
 
 - ![image-20210313125941792](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a7b843c951e40b39d41f93d9108c661~tplv-k3u1fbpfcp-zoom-1.image)
 
   ![image-20210313130046227](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26cfa9e14e1a4fa08e9385b804e56179~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### Master节点架构
+### 1.2.2 Master节点架构
 
 - 架构图
 
@@ -141,7 +139,7 @@ Kubernetes：
       - 端点控制器（Endpoints Controller）：填充端点（Endpoints）对象（即加入Service 与 Pod）
       - 服务账户和令牌控制器（Service Account & Token Controllers）：为新的命名空间创建默认账户和API访问令牌
 
-#### Node节点架构
+### 1.2.3 Node节点架构
 
 - 节点组件在每个节点上运行，维护运行的Pod并提供Kubernetes运行环境
 
@@ -173,7 +171,7 @@ Kubernetes：
 
     - 是一个守护进程，它有助于提供集群层面日志
 
-### 完整概念
+## 1.3 完整概念
 
 - 整体架构图
 
@@ -241,7 +239,7 @@ Kubernetes：
 
   ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a297705164574198ba8b97d00f8780ee~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 流程叙述
+## 1.4 流程叙述
 
 - 1、通过`Kubectl`提交一个创建`RC（Replication Controller）`的请求，该请求通过`APIServer`被写入`etcd`中
 - 2、此时 `Controller Manager` 通过 API Server的监听资源变化的接口监听到此RC事件
@@ -259,9 +257,9 @@ Kubernetes：
 
 
 
-## k8s集群安装
+# 二、k8s集群安装
 
-### Kubeadm
+## 2.1 Kubeadm
 
 - `kubeadm`是官方社区推出的一个用于快速部署`kubernetes`集群的工具；这个工具能通过两条指令完成一个`kubernetes`集群的部署
 
@@ -281,7 +279,7 @@ Kubernetes：
     
     ```
 
-### 前置要求
+### 2.1.1 前置要求
 
 - 一台或多台机器，操作系统 CentOS7.x-86_x64
 - 硬件配置：2GB或更多RAM，**2个CPU**或更多CPU，硬盘30GB或更多
@@ -289,7 +287,7 @@ Kubernetes：
 - 可以访问外网，需要拉取镜像
 - 禁止swap分区
 
-### 部署步骤
+### 2.1.2部署步骤
 
 - 1、在所有节点上安装 Docker 和 kubeadm
 
@@ -306,9 +304,9 @@ Kubernetes：
 
 
 
-### 环境准备
+### 2.1.3 环境准备
 
-#### 准备工作
+#### 2.1.3.1 准备工作
 
 - VMware 克隆两个虚拟机，准备三个虚拟机
 
@@ -321,7 +319,7 @@ Kubernetes：
   
   ```
 
-#### 设置linux网络环境（三个节点都执行）
+#### 2.1.3.2 设置linux网络环境（三个节点都执行）
 
 - 关闭防火墙
 
@@ -394,7 +392,7 @@ Kubernetes：
 
 
 
-### 所有节点安装
+#### 2.1.3.3 所有节点安装
 
 - `docker、kubeadm、kubelet、kubectl`
 
@@ -426,9 +424,9 @@ Kubernetes：
   systemctl start kubelet
   ```
 
-### 部署 k8s-master
+### 2.1.4 部署 k8s-master
 
-#### master节点初始化
+#### 2.1.4.1 master节点初始化
 
 - 将k8s资源文件拷贝进k8s-node1
 
@@ -477,7 +475,7 @@ Kubernetes：
   
   ```
 
-### 安装Pod网络插件
+### 2.1.5 安装Pod网络插件
 
 - 利用k8s文件夹中的  `kube-flannel.yml`
 
@@ -498,7 +496,7 @@ Kubernetes：
 
 
 
-### 加入k8s集群
+### 2.1.6 加入k8s集群
 
 - 查看master状态
 
@@ -539,13 +537,12 @@ Kubernetes：
 
   ![image-20210313182811099](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c684064a723d46f19ae820e611641ae9~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ## 
 
-## 入门操作Kubernetes集群
+# 三、入门操作Kubernetes集群
 
-### 基本操作体验
+## 3.1 基本操作体验
 
-#### 部署一个tomcat
+### 3.1.1 部署一个tomcat
 
 ```
 #主节点 运行创建一个deployment部署
@@ -562,17 +559,15 @@ kubectl get pods -o wide
 
     ![image-20210314110018197](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cabe87659fa54d10a693381832f5dfdc~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
 
-##### 模拟tomcat容器宕机（手动stop 容器）
+#### 3.1.1.1 模拟tomcat容器宕机（手动stop 容器）
 
 - 观察是否会重新拉起tomcat容器
 
   - ![image-20210314110507427](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/826bb8d9f9b04c70acfcc90c820ff639~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
 
-##### 模拟node3 节点宕机（关闭虚拟机）
+#### 3.1.1.2 模拟node3 节点宕机（关闭虚拟机）
 
 - 检测过程可能会比较慢，大约5分钟左右，耐心等待
 
@@ -584,7 +579,7 @@ kubectl get pods -o wide
 
 > 简单的容灾恢复测试
 
-#### 暴露访问
+## 3.2 暴露访问
 
 - Pod的80映射容器的8080；service会代理Pod的80
 
@@ -604,32 +599,29 @@ kubectl get pods -o wide
 
     ![image-20210314113606731](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/899ecfa3da0243e4b6fc3b0092bdd3ea~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
 
-#### 动态扩容测试
+## 3.3 动态扩容测试
 
 - 获取部署信息
 
   ```
   kubectl get deployment
-  
   ```
-
-  ![image-20210314114606206](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ce92b72d56549fd9e0568a55236f1c8~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
+![image-20210314114606206](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ce92b72d56549fd9e0568a55236f1c8~tplv-k3u1fbpfcp-zoom-1.image)
+  
 - 扩容
 
   ```
   kubectl scale --replicas=3 deployment tomcat6
-  
   ```
-
-  扩容了多份，所以无论访问那个node的指定端口，都可以访问到tomcat6
-
-  ![image-20210314114139240](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b350f09d98b04587bda9a2107ab96cfb~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ![image-20210314114210487](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c7ec316dd8a452eb68005036548e54d~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
+扩容了多份，所以无论访问那个node的指定端口，都可以访问到tomcat6
+  
+![image-20210314114139240](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b350f09d98b04587bda9a2107ab96cfb~tplv-k3u1fbpfcp-zoom-1.image)
+  
+![image-20210314114210487](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c7ec316dd8a452eb68005036548e54d~tplv-k3u1fbpfcp-zoom-1.image)
+  
 - 缩容（改变副本数量）
 
   ```
@@ -637,56 +629,51 @@ kubectl get pods -o wide
   
   ```
 
-  - ![image-20210314114510021](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5129b5fef7a4402a7b64d17a0794ae3~tplv-k3u1fbpfcp-zoom-1.image)
+  - ![image-20210314114510021](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5129b5fef7a4402a7b64d17a0794ae3~tplv-k3u1fbpfcp-zoom-1.image) 
   
-  #### 
 
-#### 删除
+## 3.4 删除
 
 - 获取到所有的资源
 
   ```
   kubectl get all
-  
   ```
-
-  ![image-20210314114841781](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f474bdf901b84f4e92c1e2dba633e43c~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
+![image-20210314114841781](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f474bdf901b84f4e92c1e2dba633e43c~tplv-k3u1fbpfcp-zoom-1.image)
+  
 - 删除部署
 
   ```
   kubectl delete deployment.apps/tomcat6
-  
   ```
-
+  
 - 删除service
 
   ```
   kubectl delete service/tomcat6
-  
   ```
-
-  - ![image-20210314115046881](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3d3ed146b443ecb29ce1d1a77042de~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ### 
+- ![image-20210314115046881](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fd3d3ed146b443ecb29ce1d1a77042de~tplv-k3u1fbpfcp-zoom-1.image)
+  
 
-### k8s细节
+# 四、k8s细节
 
-#### kubectl
+## 4.1 kubectl
 
-##### kubectl文档
+### 4.1.1 kubectl文档
 
 - Kubectl是一个命令行接口，用于对Kubernetes集群进行命令
 
   [kubectl命令行界面](https://kubernetes.io/zh/docs/reference/kubectl/overview/)
 
-##### 资源类型
+### 4.1.2 资源类型
 
 - [ 资源类型](https://kubernetes.io/zh/docs/reference/kubectl/overview/#资源类型)
 
   ![image-20210314120041363](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45bf821bc6df411e93647bcabe44b958~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 格式化输出
+### 4.1.3 格式化输出
 
 - 所有 `kubectl` 命令的默认输出格式都是人类可读的纯文本格式。要以特定格式向终端窗口输出详细信息，可以将 `-o` 或 `--output` 参数添加到受支持的 `kubectl` 命令中
 
@@ -694,9 +681,8 @@ kubectl get pods -o wide
 
   ![image-20210314120259917](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70a82731ca704a609c8abe3f9d16f29a~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ##### 
 
-##### 常用操作
+### 4.1.4 常用操作
 
 - 常用操作文档地址
   - `kubectl apply` - 以文件或标准输入为准应用或更新资源
@@ -706,19 +692,17 @@ kubectl get pods -o wide
   - `kubectl exec` - 对 pod 中的容器执行命令
   - `kubectl logs` - 打印 Pod 中容器的日志
 
-##### 命令参考
+### 4.1.5 命令参考
 
 - [kubectl命令参考](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)
 
-#### yaml语法
+# 五、yaml语法
 
-##### yml模板
+## 5.1 yml模板
 
 - 图解
 
   ![image-20210314120907601](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c71abb982f6a4cffac6be2dd737ff21c~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ##### 
 
 - 查看上面的tomcat6创建命令对应的yaml内容
 
@@ -733,34 +717,30 @@ kubectl get pods -o wide
 
   ```
   kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8 --dry-run -o yaml > tomcat6.yaml
+  ```
   
-  ```
-
-  修改文件中的，副本1 改为3 `vim tomact6.yaml`
-
-  运行yaml文件
-
-  ```
+修改文件中的，副本1 改为3 `vim tomact6.yaml`
+  
+运行yaml文件
+  
+```
   kubectl apply -f tomcat6.yaml
-  
   ```
-
+  
   ![image-20210314122341809](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1adae322dee4ec88b7e288871cfca4e~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 端口暴露也可以使用yaml文件代替冗长命令
 
   ```shell
   kubectl expose deployment tomcat6 --port=80 --target-port=8080 --type=NodePort --dry-run -o yaml
-  
   ```
-
-  - ![image-20210314122931059](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00211c386d41403a8be3944d68ff74b8~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
+- ![image-20210314122931059](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00211c386d41403a8be3944d68ff74b8~tplv-k3u1fbpfcp-zoom-1.image)
+  
 
-#### 入门操作
+# 六、入门操作
 
-##### Pod
+## 6.1 Pod
 
 - `Pod` 是 Kubernetes 应用程序的基本执行单元，即它是 Kubernetes 对象模型中创建或部署的最小和最简单的单元。Pod 表示在 [集群](https://v1-17.docs.kubernetes.io/zh/docs/reference/glossary/?all=true#term-cluster) 上运行的进程。
 
@@ -777,7 +757,7 @@ kubectl get pods -o wide
 
   每个 Pod 表示运行给定应用程序的单个实例。如果希望横向扩展应用程序（例如，运行多个实例），则应该使用多个 Pod，每个应用实例使用一个 Pod 。在 Kubernetes 中，这通常被称为 *副本*。通常使用一个称为控制器的抽象来创建和管理一组副本 Pod
 
-##### 控制器
+## 6.2 控制器
 
 - [控制器](https://v1-17.docs.kubernetes.io/zh/docs/concepts/workloads/controllers/)
 
@@ -785,7 +765,7 @@ kubectl get pods -o wide
 
 - 一个 `Deployment` 控制器为 [Pods](https://v1-17.docs.kubernetes.io/docs/concepts/workloads/pods/pod/)和 [ReplicaSets](https://v1-17.docs.kubernetes.io/docs/concepts/workloads/controllers/replicaset/)提供描述性的更新方式
 
-##### Deployment&Service
+## 6.3 Deployment&Service
 
 - 二者关系
 
@@ -800,7 +780,7 @@ kubectl get pods -o wide
 
   现在`Service`我们使用`NodePort`的方式暴露，这样访问每个节点的端口，都可以访问到这个Pod，如果节点宕机，就会出现问题
 
-##### labels和selectors
+## 6.4 labels和selectors
 
 - 标签与选择器（类比javascript中控件的id、class与选择器的关系）
 
@@ -808,9 +788,8 @@ kubectl get pods -o wide
 
   - ![image-20210314135750519](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30e30cc75db6427fa1c954ce01cd2e06~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
 
-##### Ingress
+## 6.5 Ingress
 
 - 基于nginx
 
@@ -853,18 +832,16 @@ kubectl get pods -o wide
     selector:
       app: tomcat6
     type: NodePort
+  ```
+  
+- 运行yaml文件
   
   ```
-
-  - 运行yaml文件
-
-    ```
     kubectl apply -f tomcat6-deployment.yaml
-    
     ```
-
-    ![image-20210314141341694](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b803b0f97264b00a350787628c6d67c~tplv-k3u1fbpfcp-zoom-1.image)
-
+    
+  ![image-20210314141341694](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b803b0f97264b00a350787628c6d67c~tplv-k3u1fbpfcp-zoom-1.image)
+  
   - 任意三个节点地址的30658端口，都可以访问到tomcat
 
 - 通过Service发现Pod进行关联，基于**域名访问**；通过Ingress Controller实现Pod**负载均衡**‘；支持TCP/UDP 4层负载均衡和HTTP 7层负载均衡
