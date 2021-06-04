@@ -7,9 +7,9 @@
 
 
 
-## 一、引入 服务调用、负载均衡
+# 一、引入 服务调用、负载均衡
 
-### 1、问题 与 解决
+## 1.1 问题 与 解决
 
 ```
 【问题：】
@@ -40,9 +40,9 @@
 
  
 
-## 二、服务调用、负载均衡 -- Ribbon
+# 二、服务调用、负载均衡 -- Ribbon
 
-### 1、什么是 Ribbon？
+## 2.1 什么是 Ribbon？
 
 ```
 【Ribbon：】
@@ -65,7 +65,7 @@
 
  
 
-### 2、Ribbon 与 Nginx 负载均衡区别
+## 2.2 Ribbon 与 Nginx 负载均衡区别
 
 
 
@@ -99,7 +99,7 @@
 
 
 
-### 3、更换 Ribbon 负载均衡规则（两种方式）
+## 2.3 更换 Ribbon 负载均衡规则（两种方式）
 
 （1）引入依赖
 
@@ -238,7 +238,7 @@ EUREKA-CLIENT-PRODUCER: # 服务提供者的服务名
 
  
 
-### 4、轮询原理（RoundRobinRule）
+## 2.4 轮询原理（RoundRobinRule）
 
 （1）相关源码
 　　主要就是 choose()、incrementAndGetModulo() 这两个方法。
@@ -326,9 +326,7 @@ private int incrementAndGetModulo(int modulo) {
 
 ### 5、手写一个轮询算法
 
-（1）说明
-
-
+### （1）说明
 
 ```
 【说明：】
@@ -340,17 +338,14 @@ private int incrementAndGetModulo(int modulo) {
     去除 @LoadBalanced 注解后，访问调用 RestTemplate 请求的接口时会报错（用于区分）。
 ```
 
- 
+### （2）相关代码
 
-（2）相关代码
 　　模块创建此处省略（需要修改 pom.xml，配置文件）。
 　　详情请见上篇博客：https://www.cnblogs.com/l-y-h/p/14193443.html#_label2_3
 
 　　面向接口编程，此处新建一个 LoadBalacner 接口，用于定义抽象方法（返回服务信息）。
 　　并定义一个 LoadBalacner 接口的实现类 LoadBalancerImpl。
 　　在 controller 中编写接口（服务发现），测试一下。
-
-
 
 ```java
 【LoadBalacner】
@@ -461,11 +456,11 @@ public class ConsumerController {
 
  ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105210859411-748086875.gif)
 
-## 三、补充知识
+# 三、补充知识
 
-### 1、CAS
+## 3.1 CAS
 
-（1）什么是 CAS？
+### （1）什么是 CAS？
 
 ```
 【CAS：】
@@ -497,11 +492,9 @@ public class ConsumerController {
     每次只能对一个共享变量进行原子操作。
 ```
 
- 
+### （2）原子性
 
-（2）原子性
-
-```
+```java
 【说明：】
     初始 i = 0，现有 10 个线程，分别执行 i++ 10000次，若不对 i++ 做任何限制，那么最终执行结果一般都是小于 100000 的。
     因为 A、B 执行 i++ 操作时，彼此会相互干扰，也即不能保证原子性。
@@ -596,11 +589,11 @@ public class Test {
 
  
 
-### 2、Atomic 类底层原理
+## 3.2 Atomic 类底层原理
 
-（1）Atomic 常用类有哪些？
+### （1）Atomic 常用类有哪些？
 
-```
+```java
 【Atomic：】
     Atomic 类存放于 java.util.concurrent.atomic 包下，用于提供对变量的原子操作（保证变量操作的原子性）。
     
@@ -627,7 +620,7 @@ public class Test {
 
  
 
-（2）底层原理
+### （2）底层原理
 
 ```
 【底层原理：】
@@ -657,7 +650,8 @@ public class Test {
 
  
 
-（3）以 AtomicInteger 为例。
+### （3）以 AtomicInteger 为例。
+
 　　compareAndSet() 直接调用 CAS 进行比较。
 　　getAndIncrement() 使用 自旋 CAS 进行比较。
 
@@ -715,9 +709,7 @@ public final int getAndAddInt(Object var1, long var2, int var4) {
 }
 ```
 
- 
-
-（4）缺点：
+### （4）缺点：
 
 ```
 【CAS 缺点：】
@@ -741,9 +733,8 @@ public final int getAndAddInt(Object var1, long var2, int var4) {
     AtomicStampedReference 或者 AtomicMarkableReference 类。
 ```
 
- 
+### （5）ABA 再现
 
-（5）ABA 再现
 　　使用 AtomicReference<Integer> 再现 ABA 问题。
 
 ```java
@@ -801,7 +792,8 @@ public class Test {
 
  
 
-（6）ABA 解决
+### （6）ABA 解决
+
 　　使用 AtomicStampedReference<Integer> 解决 ABA 问题。
 　　新增了标记位，用于判断当前值是否发生过变化。
 
@@ -844,11 +836,9 @@ public class Test2 {
 
  
 
-### 3、自旋锁（SpinLock）
+## 3.3 自旋锁（SpinLock）
 
-（1）什么是自旋锁？
-
-
+### （1）什么是自旋锁？
 
 ```java
 【自旋锁：】
@@ -875,9 +865,8 @@ public final int getAndAddInt(Object var1, long var2, int var4) {
 }
 ```
 
- 
+### （2）手写一个自旋锁
 
-（2）手写一个自旋锁
 　　通过 CAS 操作作为 循环（自旋）条件。
 
 ```java
@@ -978,9 +967,9 @@ public class SpinLockDemo {
 
  
 
-## 四、服务调用、负载均衡 -- Feign、OpenFeign
+# 四、服务调用、负载均衡 -- Feign、OpenFeign
 
-### 1、什么是 Feign、 OpenFeign ?
+## 4.1 什么是 Feign、 OpenFeign ?
 
 ```
 【Feign：】
@@ -1003,7 +992,7 @@ public class SpinLockDemo {
 
  
 
-### 2、Feign 集成了 Ribbon
+## 4.2 Feign 集成了 Ribbon
 
 ```
 前面使用 Ribbon + RestTemplate 实现 负载均衡 以及 服务调用时，
@@ -1024,9 +1013,9 @@ Feign 就是在 Ribbon 基础上做了进一步封装，只需要创建一个接
 
 
 
-### 3、使用 OpenFeign
+## 4.3 使用 OpenFeign
 
-（1）说明
+### （1）说明
 
 ```
 【说明：】
@@ -1036,13 +1025,10 @@ Feign 就是在 Ribbon 基础上做了进一步封装，只需要创建一个接
     创建流程此处省略，详细可参考上一篇博客：https://www.cnblogs.com/l-y-h/p/14193443.html#_label2_3
 ```
 
- 
+### （2）创建项目 eureka_client_consumer_9006
 
-（2）创建项目 eureka_client_consumer_9006
 　　创建 eureka_client_consumer_9006 模块，修改 父工程以及当前工程 pom.xml 文件。
 　　修改配置类。
-
-
 
 ```yaml
 【依赖：】
@@ -1071,8 +1057,6 @@ eureka:
       defaultZone: http://eureka.server.7001.com:7001/eureka,http://eureka.server.7002.com:7002/eureka,http://eureka.server.7003.com:7003/eureka
 ```
 
-
-
 ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105213447613-910109032.png)
 
  
@@ -1081,11 +1065,10 @@ eureka:
 
  
 
-（3）编写接口，绑定服务。
+### （3）编写接口，绑定服务。
+
 　　通过 @Component 注解，将该接口交给 Spring 管理（用于 @Autowired 注入）。
 　　通过 @FeignClient 注解配置 服务名，并编写方法，用于绑定需要访问的接口。
-
-
 
 ```java
 【ProducerFeignService】
@@ -1111,7 +1094,7 @@ public interface ProducerFeignService {
 
  
 
-（4）编写 controller 
+### （4）编写 controller 
 
 ```java
 【ConsumerController】
@@ -1138,13 +1121,10 @@ public class ConsumerController {
 }
 ```
 
-
-
 ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105213613973-1624262075.png)
 
- 
+### （5）启动服务，并测试。
 
-（5）启动服务，并测试。
 　　按顺序依次启动，Eureka Server 以及 Producer。
 　　在 eureka_client_consumer_9006 启动类上添加 @EnableFeignClients 注解，并启动。
 　　效果与使用 ribbon 时相同（默认 ZoneAvoidanceRule 负载均衡规则）。
@@ -1155,9 +1135,7 @@ public class ConsumerController {
 
  ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105213650161-1917059069.gif)
 
-  
-
-（6）启动失败时的错误
+### （6）启动失败时的错误
 
 ```java
 【错误：】
@@ -1181,9 +1159,8 @@ Consider defining a bean of type 'com.lyh.springcloud.eureka_client_consumer_900
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105213721098-365787690.png)
 
- 
+### （7）自定义负载均衡策略
 
-（7）自定义负载均衡策略
 　　Feign 集成了 Ribbon，所以 Ribbon 自定义负载均衡策略也适用于 Feign。
 　　此处使用配置文件的方式进行自定义负载均衡。
 　　在服务调用方的配置文件中，根据 服务提供者的 服务名，进行 ribbon 负载均衡策略更换。
@@ -1230,9 +1207,9 @@ EUREKA-CLIENT-PRODUCER:
 
  
 
-### 4、Feign 超时控制 以及 日志打印
+## 4.4 Feign 超时控制 以及 日志打印
 
-（1）超时控制
+### （1）超时控制
 
 ```
 【说明：】
@@ -1272,7 +1249,7 @@ ribbon:
 
  
 
-（2）日志打印
+### （2）日志打印
 
 ```
 【说明：】
@@ -1284,14 +1261,10 @@ ribbon:
     FULL：包含 HEADERS、请求数据、响应数据。
 ```
 
-
-
 Step1：
 　　配置 日志级别（Logger.Level）。
 注：
 　　import  feign.Logger。不要导错包了。
-
-
 
 ```java
 package com.lyh.springcloud.eureka_client_consumer_9006.config;
@@ -1313,11 +1286,7 @@ public class FeignConfig {
 }
 ```
 
-
-
 ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105214027859-2034278547.png)
-
- 
 
 Step2：
 　　配置需要打印日志的接口。
@@ -1330,8 +1299,6 @@ logging:
 ```
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202101/1688578-20210105214102870-100582270.png)
-
- 
 
 Step3：
 　　启动服务，并调用服务，可以在控制台看到日志信息。

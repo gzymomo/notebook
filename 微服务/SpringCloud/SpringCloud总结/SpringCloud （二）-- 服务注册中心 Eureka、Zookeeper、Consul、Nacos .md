@@ -7,9 +7,9 @@
 
 
 
-## 一、从零开始 搭建、优化 微服务
+# 一、从零开始 搭建、优化 微服务
 
-### 1、项目说明
+## 1.1 项目说明
 
 ```
 【基本说明：】
@@ -28,9 +28,9 @@
 
 
 
-### 2、基本项目创建
+## 1.2 基本项目创建
 
-（1）项目简介
+### （1）项目简介
 
 ```
 【项目简介：】
@@ -53,7 +53,8 @@
 
  
 
-（2）采用 maven 聚合 SpringBoot 子模块的方式创建项目
+### （2）采用 maven 聚合 SpringBoot 子模块的方式创建项目
+
 　　基本操作详见上一篇：https://www.cnblogs.com/l-y-h/p/14105682.html#_label1_2
 
 Step1：创建 maven 聚合工程（SpringCloudDemo）。
@@ -623,9 +624,9 @@ Step8：编写 consumer 基本代码。
 
 
 
-### 3、使用 RestTemplate 进行远程调用
+## 1.3 使用 RestTemplate 进行远程调用
 
-（1）什么是 RestTemplate？
+### （1）什么是 RestTemplate？
 
 ```
 【RestTemplate:】
@@ -642,7 +643,7 @@ Step8：编写 consumer 基本代码。
 
  
 
-（2）RestTemplate 常用方法
+### （2）RestTemplate 常用方法
 
 ```
 【发送 POST 请求：】
@@ -660,7 +661,8 @@ Step8：编写 consumer 基本代码。
 
  
 
-（3）使用 RestTemplate？
+### （3）使用 RestTemplate？
+
 　　Step1：先得声明一下 RestTemplate（在配置类中通过 @Bean 创建并交给 Spring 容器管理）
 
 
@@ -746,12 +748,14 @@ producer 端口号为 8000，consumer 端口号为 9000，
 
  
 
-### 4、热部署、IDEA 开启 Run Dashboard 窗口（提高开发效率）
+## 1.4 热部署、IDEA 开启 Run Dashboard 窗口（提高开发效率）
 
-（1）热部署
+### （1）热部署
+
 　　详见：https://www.cnblogs.com/l-y-h/p/13083375.html#_label2_3
 
-（2）IDEA 开启 Run Dashboard 窗口
+### （2）IDEA 开启 Run Dashboard 窗口
+
 　　一般项目启动后，可以在 run 窗口中看到 项目情况，但项目启动的越多，关闭、停止等控制就很麻烦，可以通过开启 Run Dashboard 窗口，简化项目 Run、Debug 等操作。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226161310895-1139680907.png)
@@ -776,9 +780,10 @@ producer 端口号为 8000，consumer 端口号为 9000，
 
  
 
-### 5、项目优化（提取能复用的公共代码）
+## 1.5 项目优化（提取能复用的公共代码）
 
-（1）相关代码
+### （1）相关代码
+
 　　上面演示的相关代码可以在 GitHub 中获取到。
 
 ```
@@ -788,7 +793,8 @@ producer 端口号为 8000，consumer 端口号为 9000，
 
  
 
-（2）抽取公共代码，使其变成一个公共模块
+### （2）抽取公共代码，使其变成一个公共模块
+
 　　通过上面两个模块的编写，可以发现 会出现相同的 代码，比如：Result、User。若模块过多时，每个模块都写一遍这些代码，则代码冗余。若代码需要修改时，还得一个一个模块进行修改，增加了不必要的工作量。
 　　可以将这些相同代码抽取出来，形成一个 公共模块，此时只需要引入这个公共模块即可。修改代码时，只需要针对 公共模块 进行修改、添加即可。
 
@@ -811,15 +817,11 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226161504965-1759375976.png)
 
- 
-
 　　通过上面一系列步骤，已经简单的搭建了一个项目。现在就是考虑 微服务 的问题了，逐步引入 微服务 的各种技术 来解决问题。
 
+# 二、引入服务注册 与 发现
 
-
-## 二、引入服务注册 与 发现
-
-### 1、问题 与 解决
+## 2.1 问题 与 解决
 
 ```
 【问题：】
@@ -844,14 +846,12 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
 服务注册：
     存在一个注册中心，当服务启动时，会将当前服务 的元数据信息 以别名的方式 注册到 注册中心中（比如：主机号、端口号等），使用心跳检测的方式判断当前服务是否可用、剔除。
 服务发现：
-    获取服务时，会向注册中心查询服务别名，用来获取真实服务信息（主机、端口号），再通过 远程调用 的方式访问真实服务。
+    获取服务时，会向注册中心查询服务别名，用来获取真实服务信息（主机、端号），再通过 远程调用 的方式访问真实服务。
 ```
 
+## 2.2 CAP 原则、BASE 理论
 
-
-### 2、CAP 原则、BASE 理论
-
-（1）什么是 CAP？
+### （1）什么是 CAP？
 
 ```
 【CAP：】
@@ -879,9 +879,7 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
     而容错解决的问题 就是 即使两个节点不能通信，仍要对外提供服务，不能因为分区而使整个系统瘫痪。
 ```
 
- 
-
-（2）CAP 选择
+### （2）CAP 选择
 
 ```
 【CAP 选择：】
@@ -907,12 +905,10 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
     CA 不适用于 分布式系统。
     AP 常见组件：Eureka。
     CP 常见组件：Zookeeper、Consul。
-    Nacos 可以实现 AP 与 CP 的切换。
+   Nacos 可以实现 AP 与 CP 的切换。
 ```
 
- 
-
-（3）BASE 理论
+### （3）BASE 理论
 
 ```
 【BASE 理论：】
@@ -941,9 +937,11 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
 
 
 
-## 三、服务注册与发现 -- Eureka
+# 三、服务注册与发现 -- Eureka
 
-### 1、什么是 Eureka ?
+## 3.1 什么是 Eureka ?
+
+### （1）Eureka
 
 　　Eureka 是 NetFlix 公司开发的 实现服务注册与发现的 技术框架，遵循 AP 原则。
 　　SpringCloud 已将其集成到 spring-cloud-netflix 中，实现 SpringCloud 的服务注册与发现。 
@@ -958,10 +956,9 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
 
  
 
-（2）Eureka Server、Eureka Client。
+### （2）Eureka Server、Eureka Client。
+
 　　Eureka  采用 C/S 架构设计，分为 Eureka Server、Eureka Client。
-
-
 
 ```
 【Eureka Server：】
@@ -985,7 +982,7 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
 
  
 
-（3）Eureka 1.x 与 2.x 的依赖区别
+### （3）Eureka 1.x 与 2.x 的依赖区别
 
 ```
 【Eureka 1.x】
@@ -1013,9 +1010,7 @@ Step3：剔除 其他子模块 中的公共代码，并在 pom.xml 文件中引�
 </dependency>
 ```
 
-
-
-（4）Eureka 常用配置参数
+### （4）Eureka 常用配置参数
 
 ```yaml
 【前缀为 eureka.instance 的参数：】
@@ -1078,9 +1073,9 @@ service-url.defaultZone：
 
  
 
-### 2、Eureka 使用 -- 单机版
+## 3.2 Eureka 使用 -- 单机版
 
-（1）基本说明
+### （1）基本说明
 
 ```
 【基本说明：】
@@ -1111,7 +1106,8 @@ service-url.defaultZone：
 
  
 
-（2）创建一个 Eureka Server 子模块（eureka_server_7000）
+### （2）创建一个 Eureka Server 子模块（eureka_server_7000）
+
 　　创建一个 Eureka Server 子模块 eureka_server_7000，作为服务注册中心。
 Step1：引入 Eureka Servers 依赖
 　　在父工程中管理 springcloud 版本。
@@ -1153,8 +1149,6 @@ Step1：引入 Eureka Servers 依赖
 Step2：配置 Eureka Server
 　　编写 Eureka Server 配置文件。
 
-
-
 ```yaml
 【application.yml】
 server:
@@ -1190,7 +1184,8 @@ Step3：启动 Eureka Server 服务
 
  
 
-（3）创建子工程 eureka_client_producer_8001 
+### （3）创建子工程 eureka_client_producer_8001 
+
 　　创建一个与 producer_8000 相同的子工程  eureka_client_producer_8001 。
 　　作为 Eureka Client，并注册到 注册中心中。
 
@@ -1253,7 +1248,8 @@ Step3：启动 Eureka Client 服务
 
  
 
-（4）创建子工程 eureka_client_consumer_9001
+### （4）创建子工程 eureka_client_consumer_9001
+
 　　创建一个与 consumer_9000 相同的子工程  eureka_client_consumer_9001。
 　　作为 Eureka Client，并注册到 注册中心中。
 
@@ -1328,9 +1324,9 @@ Step3：简单测试一下。
 
  ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226162513876-273333454.png)
 
-### 3、Eureka 填坑（通过服务名访问 服务遇到的坑）
+## 3.3 Eureka 填坑（通过服务名访问 服务遇到的坑）
 
-（1）说明
+### （1）说明
 
 ```
 【场景：】
@@ -1344,9 +1340,7 @@ Step3：简单测试一下。
     此处 替换地址后 遇到的三个坑（通过注册中心 服务名 访问真实服务遇到的坑）。
 ```
 
-
-
-（2）错误一：（未添加 @LoadBalanced 注解）
+### （2）错误一：（未添加 @LoadBalanced 注解）
 
 ```
 【错误信息：】
@@ -1358,9 +1352,7 @@ Step3：简单测试一下。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226162600722-1248891133.png)
 
-
-
-（3）错误二：（服务名使用了 下划线 _ 作为连接符 ）
+### （3）错误二：（服务名使用了 下划线 _ 作为连接符 ）
 
 ```
 【错误信息：】
@@ -1374,7 +1366,7 @@ Step3：简单测试一下。
 
  
 
-（4）错误三：（解析主机号、域名失败）
+### （4）错误三：（解析主机号、域名失败）
 
 ```
 【错误信息：】
@@ -1388,9 +1380,9 @@ Step3：简单测试一下。
 
  
 
-### 4、Eureka 伪集群版
+## 3.4 Eureka 伪集群版
 
-（1）基本说明
+### （1）基本说明
 
 ```
 【为什么使用集群：】
@@ -1413,7 +1405,8 @@ Step3：简单测试一下。
 
  
 
-（2）创建 Eureka Server 集群。
+### （2）创建 Eureka Server 集群。
+
 Step1：创建与 eureka_server_7000  相同的  eureka_server_7001。
 　　修改 pom.xml 引入 eureka-server 依赖。
 　　配置 eureka-server。
@@ -1454,8 +1447,6 @@ eureka:
  
 
 Step2：同理创建 eureka_server_7002、eureka_server_7003
-
-
 
 ```
 【eureka_server_7002 的 application.yml：】
@@ -1526,13 +1517,12 @@ Step3：修改 hosts 文件，进行域名映射。
 
  
 
-（3）创建 eureka_client_producer 集群。
+### （3）创建 eureka_client_producer 集群。
+
 Step1：创建与 eureka_client_producer_8001 相同的 eureka_client_producer_8002。
 　　引入 eureka_client 依赖。
 　　修改 application.yml 配置文件。
 　　在启动类上添加 @EnableEurekaClient 注解。
-
-
 
 ```yaml
 【引入依赖：】
@@ -1646,19 +1636,12 @@ Step3：为了防止服务访问失败，修改 hosts 文件，添加域名映�
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226163126966-1365604252.png)
 
- 
+### （4）创建 eureka_client_consumer_9002 
 
- 
-
- 
-
-（4）创建 eureka_client_consumer_9002 
 Step1：创建与 eureka_client_consumer_9001 相同的 eureka_client_consumer_9002。
 　　引入 eureka_client 依赖。
 　　修改 application.yml 配置文件。
 　　在启动类上添加 @EnableEurekaClient 注解。
-
-
 
 ```yaml
 【引入依赖：】
@@ -1751,9 +1734,7 @@ public class UserController {
 
  
 
-（5）启动项目 并访问。
-
-
+### （5）启动项目 并访问。
 
 ```
 【访问流程：】
@@ -1785,9 +1766,10 @@ public class UserController {
 
 
 
-### 5、配置 actuator、服务发现、自我保护机制
+## 3.5 配置 actuator、服务发现、自我保护机制
 
-（1）配置 actuator
+### （1）配置 actuator
+
 　　用于监控 springboot 应用，比如：查看状态、健康检查等。
 
 ```xml
@@ -1812,7 +1794,8 @@ public class UserController {
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226163512360-1155220086.png)
 
-（2）服务发现
+### （2）服务发现
+
 　　对于注册进 注册中心 的服务，可以通过服务发现来获取 服务列表的信息。
 　　以 eureka_client_producer_8002 为例，在其中编写一个 接口，用于返回 服务信息。
 　　在启动类上添加 @EnableDiscoveryClient 注解（不添加好像也可以获取服务信息）。
@@ -2072,7 +2055,7 @@ public class UserController {
 
  
 
-（3）自我保护机制
+### （3）自我保护机制
 
 
 
@@ -2187,14 +2170,16 @@ eureka:
 
 
 
-### 6、Eureka 保证 AP、基本工作流程
+## 3.6 Eureka 保证 AP、基本工作流程
 
-（1）Eureka 保证 AP
+### （1）Eureka 保证 AP
+
 　　前面搭建集群版 Eureka 时，存在多个 Eureka Server 节点，这些节点不分 主、从 节点（所有节点平等），节点之间 相互注册，每个节点通过 service-url 指向其他的 Eureka Server。
 　　当一个 Eureka Server 节点宕机后，会自动切换到其他可用的 Eureka Server 节点，也就意味着 只要有一台 Eureka Server 正常工作，那么系统就不会崩溃（提高了可用性）。
 　　但是 Eureka Server 各节点间采用异步方式进行数据同步，不保证节点间数据强一致性，也即各个 Server 保存的服务列表信息可能不一致，但是数据最终是一致的。也即 保证 AP。
 
-（2）基本工作流程
+### （2）基本工作流程
+
 　　通过前面一系列操作，应该大致理解了 Eureka 工作流程，此处总结一下。 
 
 
@@ -2236,11 +2221,11 @@ Step10：
 
  
 
-## 四、服务注册与发现 -- Zookeeper
+# 四、服务注册与发现 -- Zookeeper
 
-### 1、什么是 Zookeeper？
+## 4.1 什么是 Zookeeper？
 
-（1）什么是 Zookeeper ？
+### （1）什么是 Zookeeper ？
 
 ```
 【Zookeeper：】
@@ -2252,9 +2237,7 @@ Step10：
     https://github.com/apache/zookeeper
 ```
 
-
-
-（2）本质
+### （2）本质
 
 ```
 【本质：】
@@ -2289,9 +2272,7 @@ Step10：
     编号由父节点维护，是一个单调递增的计数器，可用于全局事件的排序（便于推断分布式系统中事件的执行先后顺序）。
 ```
 
- 
-
-（3）Zookeeper 功能举例 -- 分布式应用配置管理
+### （3）Zookeeper 功能举例 -- 分布式应用配置管理
 
 ```
 在实际工作中，一个服务经常以集群的方式进行部署，如果此时需要修改服务的配置，
@@ -2304,9 +2285,8 @@ Step10：
 
  
 
- 
+### （4）zookeeper 选举机制
 
-（4）zookeeper 选举机制
 　　选举发生在 zookeeper 集群中，单机版不存在选举。
 注：
 　　此处仅简单介绍一下，篇幅有限，后续再补充，详情可自行查阅相关文档。
@@ -2342,9 +2322,10 @@ Step10：
 
 
 
-### 2、使用 Docker 安装、使用 Zookeeper
+## 4.2 使用 Docker 安装、使用 Zookeeper
 
-（1）安装
+### （1）安装
+
 　　此处使用 Docker-compose 进行镜像下载 以及 启动容器。
 注：
 　　Docker 以及 Docker-compose 使用可参考：
@@ -2382,7 +2363,8 @@ services:
 
  
 
-（2）常用命令
+### （2）常用命令
+
 　　可以直接进入 容器内部 进行相关操作。
 　　进入 zookeeper_service1 的 bin 目录，并执行 zkCli.sh 命令，可以开启客户端。
 
@@ -2460,9 +2442,9 @@ services:
 
  
 
-### 3、SpringCloud 整合 Zookeeper 单机版
+## 4.3 SpringCloud 整合 Zookeeper 单机版
 
-（1）说明
+### （1）说明
 
 ```
 在之前学习 Eureka 时，SpringCloud 整合了 Eureka 服务端 以及 客户端的实现，
@@ -2478,7 +2460,8 @@ services:
 
  
 
-（2）创建 zookeeper_client_producer_8005 子模块。
+### （2）创建 zookeeper_client_producer_8005 子模块。
+
 　　修改子模块 与 父模块 pom.xml 文件（与前面创建模块类似，此处省略）。
 　　引入 zookeeper_discovery 依赖。
 　　修改 application.yml 配置文件。
@@ -2526,7 +2509,8 @@ spring:
 
  
 
-（3）同理创建 zookeeper_client_consumer_9003 模块
+### （3）同理创建 zookeeper_client_consumer_9003 模块
+
 　　修改子模块 与 父模块 pom.xml 文件（与前面创建模块类似，此处省略）。
 　　引入 zookeeper_discovery 依赖。
 　　修改 application.yml 配置文件。
@@ -2571,9 +2555,10 @@ spring:
 
  
 
-### 4、Zookeeper 伪集群版（docker-compose 启动）
+## 4.4 Zookeeper 伪集群版（docker-compose 启动）
 
-（1）集群角色说明
+### （1）集群角色说明
+
 　　Zookeeper  Server 集群不同于 Eureka，其节点之间存在主从之分，其一个 Server 断开后，将会在剩余节点中 重新选举出一个 Leader。
 
 ```
@@ -2589,7 +2574,7 @@ spring:
 
  
 
-（2）项目说明：
+### （2）项目说明：
 
 ```
 【项目说明：】
@@ -2601,7 +2586,7 @@ spring:
 
  
 
-（3） 通过 docker-compose 启动 Zookeeper 集群
+### （3） 通过 docker-compose 启动 Zookeeper 集群
 
 ```yaml
 【docker-compose.yml】
@@ -2689,7 +2674,8 @@ services:
 
  
 
-（4）创建 producer 集群。
+### （4）创建 producer 集群。
+
 　　与单机版创建 zookeeper_client_producer_8005 同样的流程创建  zookeeper_client_producer_8006、zookeeper_client_producer_8007、zookeeper_client_producer_8008。
 　　此处省略创建过程。
 　　唯一区别在于，配置注册中心地址时，配置集群上所有的 server 地址（以逗号隔开）。
@@ -2755,7 +2741,8 @@ spring:
 
  
 
-（5）创建 consumer
+### （5）创建 consumer
+
 　　与创建 zookeeper_client_consumer_9003 同样流程创建 zookeeper_client_consumer_9004，
 　　此处创建流程省略。
 　　唯一区别在于，配置注册中心地址时，配置集群上所有的 server 地址（以逗号隔开）。
@@ -2780,10 +2767,9 @@ spring:
 
   ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226164928257-1882825875.png)
 
-（6）实现 Discovery
+### （6）实现 Discovery
+
 　　Discovery 代码与 Eureka 代码一致（同样通过 DiscoveryClient 进行操作）。
-
-
 
 ```java
 【ConsumerController：】
@@ -2852,9 +2838,9 @@ public class ConsumerController {
 
  
 
-### 5、Zookeeper 真集群版（docker-compose 启动）
+## 4.5 Zookeeper 真集群版（docker-compose 启动）
 
-（1）说明
+### （1）说明
 
 ```
 【说明：】
@@ -2869,9 +2855,7 @@ public class ConsumerController {
     182.92.120.184
 ```
 
- 
-
-（2）前提条件（开放端口）
+### （2）前提条件（开放端口）
 
 ```
 【服务器 通过 端口 进行 数据交互：】
@@ -2893,11 +2877,7 @@ public class ConsumerController {
 
  
 
- 
-
-（3）搭建环境遇到的坑 以及 解决
-
-
+### （3）搭建环境遇到的坑 以及 解决
 
 ```
 【问题一：】
@@ -2957,10 +2937,9 @@ Step3：
 
  
 
-（4）在 120.26.184.41 服务器上通过 docker-compose.yml 启动 zookeeper。
+### （4）在 120.26.184.41 服务器上通过 docker-compose.yml 启动 zookeeper。
+
 　　此处使用 服务名（容器名）替代 自身 ip 地址。
-
-
 
 ```yaml
 【docker-compose.yml】
@@ -2999,12 +2978,11 @@ services:
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226165225827-1185463179.png)
 
- 
 
-（5）在 182.92.120.184 服务器上通过 docker-compose.yml 启动 zookeeper。
+
+### （5）在 182.92.120.184 服务器上通过 docker-compose.yml 启动 zookeeper。
+
 　　此处使用 0.0.0.0 替代 自身 ip 地址。
-
-
 
 ```yaml
 【docker-compose.yml】
@@ -3045,7 +3023,8 @@ services:
 
  
 
-（6）分别在两个服务器上通过 docker-compose up -d 启动。
+### （6）分别在两个服务器上通过 docker-compose up -d 启动。
+
 　　先在 182.92.120.184 上启动，然后在 120.26.184.41 上启动。
 　　正常搭建后，server 角色 如下所示。
 　　同理，若需要增加节点，按照上面三步操作即可。
@@ -3058,11 +3037,11 @@ services:
 
  
 
-## 五、服务注册与发现 -- Consul
+# 五、服务注册与发现 -- Consul
 
-### 1、什么是 Consul ？
+## 5.1 什么是 Consul ？
 
-（1）什么是 Consul ？
+### （1）什么是 Consul ？
 
 ```
 【Consul：】
@@ -3081,7 +3060,8 @@ services:
 
  
 
-（2）consul 角色
+### （2）consul 角色
+
 　　consul 与 zookeeper 类似，提供了可执行程序作为 服务端。
 　　但其可以细分为两种角色（client、server）。
 
@@ -3100,7 +3080,7 @@ server:
 
  
 
-（3）常用端口说明：
+### （3）常用端口说明：
 
 ```
 【常用端口说明：】
@@ -3113,9 +3093,10 @@ server:
 
 
 
-### 2、官网下载、安装 consul -- windows
+## 5.2 官网下载、安装 consul -- windows
 
-（1）从官网下载。
+### （1）从官网下载。
+
 　　官网提供了各种版本的可执行程序，下载相应版本即可。
 　　此处下载 windows 版本的 consul 为例，并使用。
 
@@ -3130,7 +3111,8 @@ server:
 
  
 
-（2）安装 consul
+### （2）安装 consul
+
 　　下载之后，可以得到一个可执行文件（consul.exe），双击即可运行（会闪一下弹窗）。
 　　判断是否安装成功，可以进入命令行模式，输入 consul -version。
 　　若正常输出版本号，则安装成功。
@@ -3145,7 +3127,8 @@ server:
 
  
 
-（3）启动 consul
+### （3）启动 consul
+
 　　命令行启动，默认通过 8500 端口可以访问 ui 界面。
 
 ```
@@ -3165,11 +3148,9 @@ server:
 
  
 
-### 3、SpringCloud 整合 consul -- 单机版
+## 5.3 SpringCloud 整合 consul -- 单机版
 
-（1）说明：
-
-
+### （1）说明：
 
 ```
 【说明：】
@@ -3182,15 +3163,12 @@ server:
 创建与 zookeeper_client_consumer_9003 类似的 consul_client_consumer_9005 作为 服务消费者。
 ```
 
- 
+### （2）创建 consul_client_producer_8009 子模块。
 
-（2）创建 consul_client_producer_8009 子模块。
 　　修改子模块 与 父模块 pom.xml 文件（与前面创建模块类似，此处省略）。
 　　引入 consul_discovery 依赖 以及 actuator 依赖。
 　　修改 application.yml 配置文件。
 　　在启动类上添加 @EnableDiscoveryClient 注解（不添加好像也可以正常注册）。
-
-
 
 ```yaml
 【依赖：】
@@ -3244,16 +3222,15 @@ spring:
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226165652994-2005651138.png)
 
- 
 
-（3）创建 consul_client_consumer_9005 模块。
+
+### （3）创建 consul_client_consumer_9005 模块。
+
 　　修改子模块 与 父模块 pom.xml 文件（与前面创建模块类似，此处省略）。
 　　引入 consul_discovery 依赖 以及 actuator 依赖。
 　　修改 application.yml 配置文件。
 　　在启动类上添加 @EnableDiscoveryClient 注解（不添加好像也可以正常注册）。
 　　引入 RestTemplate 时，需要添加 @LoadBalanced，并修改访问地址为 服务名。
-
-
 
 ```yaml
 【依赖：】
@@ -3304,7 +3281,8 @@ spring:
 
  
 
-（4）分别启动两个服务
+### （4）分别启动两个服务
+
 　　可以在 consul UI 界面看到服务信息。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226165744093-2066122481.png)
@@ -3315,9 +3293,10 @@ spring:
 
 
 
-### 4、健康检查出错问题
+## 5.4 健康检查出错问题
 
-（1）健康检查出错分析
+### （1）健康检查出错分析
+
 分析一：
 　　一般是 actuator 依赖未添加（能解决大部分问题）。
 
@@ -3328,7 +3307,8 @@ spring:
 　　若使用 云服务器安装并部署 consul，而在本地启动 服务时，此时 健康检查 可能会出错，服务器调用健康检查请求 被拒绝（因为此时 健康检查 URL 非公网 IP 地址，无法访问到服务）。将服务同样部署在 服务器上，将服务器公网 IP 作为健康检查 URL  地址（并开放相关端口），此时通过公网 IP 可以访问到服务，从而健康检查成功。
 　　详见后面 docker-compose 启动 consul 单机版。
 
-（2）添加 actuator 依赖
+### （2）添加 actuator 依赖
+
 　　大多数情况下，添加上 actuator 依赖即可解决问题。
 
 ```xml
@@ -3340,15 +3320,9 @@ spring:
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226165834705-1183890343.png)
 
- 
+## 5.5 docker-compose 启动 consul 单机版
 
- 
-
-### 5、docker-compose 启动 consul 单机版
-
-（1）docker-compose.yml 文件如下：
-
-
+### （1）docker-compose.yml 文件如下：
 
 ```yaml
 【docker-compose.yml：】
@@ -3395,7 +3369,8 @@ services:
 
  
 
-（2）查看集群中成员
+### （2）查看集群中成员
+
 　　通过 consul members 可以查看集群中成员状态。
 比如：
  　　docker exec -t consul_server1 consul members
@@ -3406,7 +3381,8 @@ services:
 
  
 
-（3）访问 UI 界面，可以查看到节点情况。
+### （3）访问 UI 界面，可以查看到节点情况。
+
 　　启动正常情况，访问界面如下：
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202012/1688578-20201226165945995-471726196.png)
@@ -3425,12 +3401,11 @@ services:
 
  
 
-（4）演示健康检查出错
+### （4）演示健康检查出错
+
 　　由于此处在 云服务器上启动 consul 服务器，而服务还是在本地启动。
 　　修改服务的 配置文件，将其注册中心地址改为云服务器公网 IP 地址： 120.26.184.41。
 　　以 consul_client_consumer_9005 为例，修改如下图所示：
-
-
 
 ```yaml
 server:
@@ -3497,7 +3472,7 @@ management:
 
  
 
-### 6、docker-compose 启动 consul 伪集群
+## 5.6 docker-compose 启动 consul 伪集群
 
 （1）说明
 　　篇幅有限，此处仅演示 docker-compose 启动伪集群，不创建服务模块进行演示。

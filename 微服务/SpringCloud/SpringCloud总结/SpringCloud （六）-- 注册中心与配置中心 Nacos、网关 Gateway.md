@@ -9,11 +9,9 @@
 
 ## 一、了解一下 SpringCloud Alibaba
 
+## 1.1 SpringCloudAlibaba
 
-
-### 1、SpringCloudAlibaba
-
-（1）简单说明
+### （1）简单说明
 
 ```
 【说明：】
@@ -31,7 +29,7 @@
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202103/1688578-20210331215023148-1835370432.png)
 
-（2）SpringCloudAlibaba
+### （2）SpringCloudAlibaba
 
 ```
 【SpringCloudAlibaba：】
@@ -56,13 +54,10 @@
 
  
 
- 
+### （3）引入依赖
 
-（3）引入依赖
 　　使用 SpringCloudAlibaba 与使用 SpringCloud 类似，一般都在父工程的  pom.xml 文件中通过 <dependencyManagement>  标签进行版本管理。然后在使用其组件时，直接引入相关组件依赖，无需管理版本。
 　　当然直接引入相关组件依赖 并 指定版本号的方式亦可。
-
-
 
 ```xml
 【在父工程中管理版本：】
@@ -85,9 +80,9 @@
 
 
 
-### 2、SpringCloudAlibaba 主要功能 与 实现组件
+## 1.2 SpringCloudAlibaba 主要功能 与 实现组件
 
-（1）SpringCloudAlibaba 主要功能 与 实现组件
+### （1）SpringCloudAlibaba 主要功能 与 实现组件
 
 ```
 【功能与实现组件：】
@@ -141,9 +136,7 @@
         Alibaba Cloud SMS: 覆盖全球的短信服务，友好、高效、智能的互联化通讯能力，帮助企业迅速搭建客户触达通道。    
 ```
 
- 
-
-（2）开发中常使用的技术搭配
+### （2）开发中常使用的技术搭配
 
 ```
 【开发中使用的技术：】
@@ -170,13 +163,11 @@ SpringCloudAlibaba：
 
  
 
-## 二、服务注册中心、配置中心 -- Nacos
+# 二、服务注册中心、配置中心 -- Nacos
 
+## 2.1 什么是 Nacos？
 
-
-### 1、什么是 Nacos？
-
-（1）Nacos
+### （1）Nacos
 
 ```
 【Nacos：】
@@ -191,9 +182,7 @@ SpringCloudAlibaba：
     https://github.com/alibaba/nacos
 ```
 
- 
-
-（2）如何使用 Nacos
+### （2）如何使用 Nacos
 
 ```
 【如何使用 Nacos：】
@@ -209,13 +198,14 @@ SpringCloudAlibaba：
 
 
 
-### 2、安装 Nacos Server 单机版（Linux 直接下载并启动、持久化数据到 MySQL 8）
+## 2.2 安装 Nacos Server 单机版（Linux 直接下载并启动、持久化数据到 MySQL 8）
 
-（1）说明：
+### （1）说明：
+
 　　Nacos 默认使用内嵌数据库（Derby）实现数据的存储，一般使用 单机版 Nacos Server 无需额外配置持久化操作，直接启动即可。
 　　但大型的项目中，Nacos Server 一般采用集群方式部署，若仍使用默认数据库进行数据存储，那么各个 Nacos Server 之间的数据一致性就是一个头疼的问题。  Nacos 支持持久化数据到 MySQL 中，集群中所有节点共享 MySQL 数据源，从而保证数据一致性。
 
-（2）下载、并解压 nacos-server
+### （2）下载、并解压 nacos-server
 
 ```
 【下载：】
@@ -227,7 +217,8 @@ tar -axvf nacos-server-1.4.1.tar.gz
 
  
 
-（3）直接启动
+### （3）直接启动
+
 　　未进行持久化配置，使用默认的 Derby 进行数据存储。
 
 ```
@@ -256,7 +247,8 @@ tar -axvf nacos-server-1.4.1.tar.gz
 
  
 
-（4）持久化数据到 MySQL 中
+### （4）持久化数据到 MySQL 中
+
 Step1：
 　　连接数据库，并构建数据表。
 
@@ -319,9 +311,10 @@ Step3：
 
  
 
-### 3、安装 Nacos Server 单机版（docker-compose 启动，持久化数据到 MySQL 8）
+## 2.3 安装 Nacos Server 单机版（docker-compose 启动，持久化数据到 MySQL 8）
 
-（1）说明
+### （1）说明
+
 　　若需持久化到 mysql，同样也得在 mysql 中生成相应的表，相关 SQL 文件可以参考上面 持久化操作（此处省略）。
 　　可以直接使用官方提供的 MySQL 镜像，nacos/nacos-mysql:8.0.16，其有一个数据库 nacos_devtest 已包含了相关的表结构。
 
@@ -343,7 +336,8 @@ Step3：
 
  
 
-（2）使用已有的 mysql 文件。
+### （2）使用已有的 mysql 文件。
+
 　　简化操作，直接使用上面的 mysql。
 　　若需启动新的 mysql，需要手动执行 SQL，用于创建 nacos 所需相关表结构。
 注：
@@ -389,7 +383,8 @@ services:
 
  
 
-（3）使用 nacos 官方提供的 mysql 镜像进行持久化操作。
+### （3）使用 nacos 官方提供的 mysql 镜像进行持久化操作。
+
 注意：
 　　此处使用的 nacos 镜像为：nacos/nacos-server:1.4.1。
 　　使用的 mysql 镜像为：nacos/nacos-mysql:8.0.16。
@@ -439,9 +434,9 @@ services:
 
 
 
-### 4、Nacos 作为 服务注册中心（服务注册与发现）
+## 2.4 Nacos 作为 服务注册中心（服务注册与发现）
 
-（1）说明：
+### （1）说明：
 
 ```
 【说明：】
@@ -461,7 +456,8 @@ services:
 
  
 
-（2）新建模块 nacos_client_7100
+### （2）新建模块 nacos_client_7100
+
 Step1：
 　　修改 pom.xml，引入 nacos-discovery 依赖。
 
@@ -589,7 +585,8 @@ Step5：
 
  
 
-（3）新建模块 nacos_client_7101、nacos_client_7102
+### （3）新建模块 nacos_client_7101、nacos_client_7102
+
 　　这两个模块与  nacos_client_7100 类似，仅端口号不同（创建过程此处省略）。
 　　启动服务后，再次查看 nacos 控制台，可以看到出现 3 个实例。
 
@@ -603,7 +600,8 @@ Step5：
 
  
 
-（4）新建模块 nacos_client_consumer
+### （4）新建模块 nacos_client_consumer
+
 　　nacos-discovery 已集成 Ribbon，默认实现负载均衡方式为 轮询。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202103/1688578-20210331220754203-741511013.png)
@@ -725,9 +723,9 @@ Step5：
 
  
 
-### 5、Nacos 作为配置中心（自动刷新）
+## 2.5 Nacos 作为配置中心（自动刷新）
 
-（1）说明
+### （1）说明
 
 ```
 【说明：】
@@ -744,7 +742,8 @@ Step5：
 
  
 
-（2）修改 nacos_client_7100
+### （2）修改 nacos_client_7100
+
 Step1：
 　　添加 nacos-config 依赖。
 
@@ -862,9 +861,9 @@ Step4：
 
  
 
-### 6、Namespace、Group、DataID
+## 2.6 Namespace、Group、DataID
 
-（1）问题与解决：
+### （1）问题与解决：
 
 ```
 【问题：】
@@ -880,7 +879,7 @@ Step4：
 
  
 
-（2）Namespace、Group、DataID
+### （2）Namespace、Group、DataID
 
 ```
 【Namespace：】
@@ -910,7 +909,8 @@ DataID 就是每个配置文件的唯一标识。
 
  
 
-（3）演示
+### （3）演示
+
 Step1：
 　　修改 nacos_client_7100 配置文件如下，添加一个分组 TEST_GROUP。
 
@@ -957,9 +957,9 @@ Step5：
 
 
 
-### 7、nacos 获取配置的方式（配置共享）
+## 2.7 nacos 获取配置的方式（配置共享）
 
-（1）问题与解决
+### （1）问题与解决
 
 ```
 【问题：】
@@ -985,7 +985,8 @@ Step5：
 
  
 
-（2）演示 extension-configs 使用
+### （2）演示 extension-configs 使用
+
 Step1:
 　　extension-configs 说明：
 
@@ -1146,7 +1147,8 @@ Step7：
 
  
 
-（3）演示 shared-configs 使用
+### （3）演示 shared-configs 使用
+
 　　shared-configs 用法 与 extension-configs 相同，区别是 extension-configs 优先级高于 shared-configs。（此处省略验证步骤，参考上面 extension-configs 的使用）
 
 ```yaml
@@ -1181,16 +1183,17 @@ spring:
 
 
 
-### 8、docker-compose 部署 Nacos Server（伪集群版）
+## 2.8 docker-compose 部署 Nacos Server（伪集群版）
 
-（1）说明：
+### （1）说明：
+
 　　集群至少得有 3 个 Nacos Server 节点。节点多的话 可以搞个 Nginx 做个代理。
 　　有条件的可以搞三台 云服务器 玩玩。没条件的可以搞三台 虚拟机 玩玩。
 　　想偷懒的可以直接在一台服务器上启动 三个 Nacos Server 节点（大坑，不建议做）。
 注：
 　　此处为了偷懒，使用 docker-compose 一次性启动 mysql 以及3 个 Nacos 节点，相关的坑我也做了一些说明，鬼知道我为了解决这些坑经历了什么 (=_=)。
 
-（2）Nacos 常用几个日志文件（此处以 伪集群版日志 进行举例）
+### （2）Nacos 常用几个日志文件（此处以 伪集群版日志 进行举例）
 
 ```
 【判断 nacos 是否正常启，一般看下面几个日志文件：】
@@ -1238,7 +1241,8 @@ spring:
 
  
 
-（3）伪集群版（大坑）
+### （3）伪集群版（大坑）
+
 Step1：编写 docker-compose.yml 文件
 　　与单机版 docker-compose.yml 类似，
 　　多了参数 NACOS_SERVERS、NACOS_APPLICATION_PORT。
@@ -1454,7 +1458,8 @@ Step4：填坑记录三
 
  
 
-（4）连接 Nacos 集群
+### （4）连接 Nacos 集群
+
 　　在 Nacos Client 配置文件中，直接通过 server-addr 设置节点地址即可，多个节点之间可使用 逗号 隔开。
 　　若使用 Nginx 做代理，则 server-addr 设置 Nginx 访问地址即可。
 　　Nginx 在 Nacos 真集群版中使用（请继续往下看）。
@@ -1508,9 +1513,10 @@ spring:
 
 
 
-### 9、docker-compose 部署 Nacos Server（真集群版）
+## 2.9 docker-compose 部署 Nacos Server（真集群版）
 
-（1）说明：
+### （1）说明：
+
 　　上面使用 docker-compose  演示了伪集群的操作，许多坑已经踩过了。真集群部署就更加简单了，将上面伪集群版的 docker-compose.yml 文件拆分成 几个小的  docker-compose.yml 文件，分别在不同的机器上启动即可（当然 ip 是需要修改的）。
 此处创建三个 虚拟机，地址分别为：192.168.157.128、192.168.157.129、192.168.157.130。
 　　在 192.168.157.128 上启动 mysql、nginx、nacos1。
@@ -1521,7 +1527,8 @@ spring:
 注：
 　　此处可以使用较高版本的 mysql、nacos。比如：nacos-mysql:8.0.16、nacos-server:1.4.1 。
 
-（2）配置 mysql 以及 nginx。
+### （2）配置 mysql 以及 nginx。
+
 Step1：
 　　自定义一个 nginx.conf，进行代理配置。
 　　如下所示，主要关注 server 以及 upstream nacos_server。
@@ -1627,7 +1634,7 @@ services:
 
  
 
-（3）配置 nacos1、nacos2、nacos3
+### （3）配置 nacos1、nacos2、nacos3
 
 ```yaml
 【nacos1：】
@@ -1708,7 +1715,8 @@ services:
 
  
 
-（4）启动
+### （4）启动
+
 　　分别启动 nginx、mysql、nacos1、nacos2、nacos3。
 　　访问：http://192.168.157.128:10080/  会自动跳转到相应的 Nacos 控制台界面。
 
@@ -1724,7 +1732,8 @@ services:
 
  
 
-（5）连接 nacos 集群
+### （5）连接 nacos 集群
+
 　　若未使用 Nginx 代理时，直接在 Nacos Client 配置文件中，直接通过 server-addr 设置节点地址即可，多个节点之间可使用 逗号 隔开。
 
 ```yaml
@@ -1799,11 +1808,11 @@ Nginx 跳转不了 Nacos Server 控制台界面问题，有时间再来解决。
 
 
 
-## 三、网关 -- Gateway
+# 三、网关 -- Gateway
 
-### 1、什么是 Gateway？
+## 3.1 什么是 Gateway？
 
-（1）什么是 Gateway？
+### （1）什么是 Gateway？
 
 ```
 【Gateway：】
@@ -1832,7 +1841,8 @@ Nginx 跳转不了 Nacos Server 控制台界面问题，有时间再来解决。
 
  
 
-（2）网关使用场景？
+### （2）网关使用场景？
+
 　　如下图所示，网关作为所有流量的 入口，根据路由规则 将请求路由到各个微服务上。
 
 　　若网关部署为 集群时，可以使用 Nginx 对其进行负载均衡。
@@ -1841,7 +1851,8 @@ Nginx 跳转不了 Nacos Server 控制台界面问题，有时间再来解决。
 
  
 
-（3）Gateway 功能
+### （3）Gateway 功能
+
 Gateway 基于 Spring Framework 5，Project Reactor、Spring Boot 2.0 构建，其基本功能如下：
 　　能够匹配任何请求属性的路由（支持动态路由，可以根据微服务名进行路由）。
 　　可以针对特殊路由指定 Predicates 和 Filter 规则，且 Filter、Predicates  易编写。
@@ -1852,19 +1863,23 @@ Gateway 基于 Spring Framework 5，Project Reactor、Spring Boot 2.0 构建，�
 
 
 
-###  2、Gateway 核心概念（Route、Filter、Predicate）
+##  3.2 Gateway 核心概念（Route、Filter、Predicate）
 
-（1）Route（路由）
+### （1）Route（路由）
+
 　　路由是构建网关的基本模块，基本构成组件： ID、目标 URL、Predicate 集合、Filter 集合 组成。当 Predicate 为 true 时，匹配该路由。
 
-（2）Predicate（断言）
+### （2）Predicate（断言）
+
 　　可以参考 JDK8 中 java.util.function.Predicate 进行理解。
 　　可以根据 HTTP 请求中的内容（比如：请求头、请求参数 等）进行匹配，如果匹配结果为 true，则匹配该路由。
 
-（3）Filter（过滤）
+### （3）Filter（过滤）
+
 　　指的是 Spring 框架中 GatewayFilter 的实例，根据过滤器，可以在 请求被 路由前 或者 路由后 对请求进行更改。
 
-（4）gateway 工作流程
+### （4）gateway 工作流程
+
 　　Gateway 整个工作流程就是 路由转发 + 过滤器链。
 　　客户端 向 Gateway 发送请求，在 Gateway Handler Mapping 中找到与 请求匹配的 路由（根据 Predicate 匹配 Route），然后将其转发到 Gateway Web Handler 进行处理。
 　　Handler 通过指定的过滤器链后，将请求发送到实际的业务逻辑进行处理，处理完成后返回。同时过滤器也可以对返回数据进行处理。
@@ -1877,12 +1892,14 @@ Gateway 基于 Spring Framework 5，Project Reactor、Spring Boot 2.0 构建，�
 
  
 
-### 3、简单使用一下 Gateway
+## 3.3 简单使用一下 Gateway
 
-（1）说明
+### （1）说明
+
 　　新建一个子模块 gateway_7200，通过配置文件的方式，简单测试一下 路由匹配规则。此处简单的与 前面使用的 Nacos 一起使用。具体使用规则可参考官方文档：https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/
 
-（2）使用 Gateway
+### （2）使用 Gateway
+
 Step1:
 　　引入 Gateway 依赖。Gateway 注册到 Nacos Server 中。
 注：
@@ -1975,7 +1992,8 @@ Step3：
 
  
 
-（3）根据微服务名进行 路由（动态路由）
+### （3）根据微服务名进行 路由（动态路由）
+
 　　实际开发中，一个服务通常以集群的方式部署，若 uri 配置固定的地址进行跳转，肯定是不合适的。而 微服务注册在 注册中心中，网关 只需要通过 注册中心 提供的 微服务名 找到真实的 微服务，进行路由即可。
 
 修改的配置如下：
@@ -2030,12 +2048,14 @@ spring:
 
 
 
-### 4、predicates 规则
+## 3.4 predicates 规则
 
 　　Gateway 内部有许多 Route Predicate factories，可以与 HTTP 请求的不同属性进行匹配，多个 Predicate 规则可以组合使用。请求匹配成功后，则根据 uri 进行路由跳转。
 
 常见的 Predicate 规则如下。 
-（1）时间相关（Before、After、Between）
+
+### （1）时间相关（Before、After、Between）
+
 　　Before 表示在 指定时间（datetime） 前的请求 才能匹配路由。
 　　After 表示在 指定时间（datetime） 后的请求 才能匹配路由。
 　　Between 表示在 指定时间段（datetime1,datetime2） 内的请求 才能匹配路由。
@@ -2093,7 +2113,8 @@ spring:
 
  
 
-（2）Cookie 相关
+### （2）Cookie 相关
+
 　　Cookie 规则具备两个参数，一个是 Cookie 属性名（name），一个是正则表达式（regexp）。
 　　根据 name 以及 regexp 去匹配路由。带有指定 cookie 信息的请求才能匹配路由。
 有两种写法格式。
@@ -2148,7 +2169,8 @@ curl http://localhost:7200/nacos/info --cookie "username=jarry1"   路由匹配�
 
  
 
-（3）Header、Host、Method、Path、Query、Weight 等
+### （3）Header、Host、Method、Path、Query、Weight 等
+
 　　可以自行尝试，此处不一一举例。
 
 ```yaml
@@ -2251,13 +2273,14 @@ curl "http://localhost:7200/nacos/info?green=test1" --cookie "username=jarry" --
 
  
 
-### 5、Filter 规则
+## 3.5 Filter 规则
 
 　　Gateway 内部有许多 GatewayFilter Factories，可以修改 HTTP 请求 以及 HTTP 响应。
 　　仅简单介绍几个 Filter，其余请自行参阅官方文档进行使用。
 https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gatewayfilter-factories
 
-（1）添加参数（比如：AddRequestParameter）
+### （1）添加参数（比如：AddRequestParameter）
+
 　　参数为 name、value。用于在请求末尾追加参数（比如： ?name1=value1&name2=value2）
 　　可以在 predicates 指定变量 segment，并处理。
 
@@ -2321,7 +2344,7 @@ public String test(@PathVariable String username,
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202103/1688578-20210331224440505-1024398742.png)
 
- （2）修改路径（比如：PrefixPath、StripPrefix）
+###  （2）修改路径（比如：PrefixPath、StripPrefix）
 
 ```yaml
 【PrefixPath：】

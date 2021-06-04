@@ -7,9 +7,9 @@
 
 
 
-## 一、引入配置中心
+# 一、引入配置中心
 
-### 1、问题 与 解决
+## 1.1 问题 与 解决
 
 ```
 【问题：】
@@ -47,13 +47,11 @@
 
 
 
-## 二、配置中心 -- Config
+# 二、配置中心 -- Config
 
+## 2.1 Config 是什么？
 
-
-### 1、Config 是什么？
-
-（1）Config 是什么？
+### （1）Config 是什么？
 
 ```
 【Config：】
@@ -86,7 +84,7 @@ Config Client:
 
  
 
-（2）Config 功能
+### （2）Config 功能
 
 ```
 【功能：】
@@ -98,9 +96,10 @@ Config Client:
 
  
 
-### 2、搭建配置中心（Config Server）
+## 2.2 搭建配置中心（Config Server）
 
-（1）建立一个 Git 仓库
+### （1）建立一个 Git 仓库
+
 　　Config Server 默认使用 Git 实现集中化管理配置信息，即 使用 Git 存储配置信息，
 　　所以需要建立一个 Git 仓库，用于存储配置信息。
 如下：
@@ -115,7 +114,8 @@ Config Client:
 
  
 
-（2）新建一个子工程 config_server_9100，作为 Config Server
+### （2）新建一个子工程 config_server_9100，作为 Config Server
+
 Step1：
 　　修改 父工程、当前工程 pom.xml 文件，并引入相关依赖。
 　　此处以 Eureka 作为服务注册中心，需要引入相关依赖。
@@ -231,9 +231,9 @@ eureka:
 
  
 
-### 3、获取 Git 中配置文件的常见 HTTP 格式
+## 2.3 获取 Git 中配置文件的常见 HTTP 格式
 
-（1）格式说明
+### （1）格式说明
 
 ```
 【三个参数：】
@@ -265,9 +265,10 @@ eureka:
 
 
 
-### 4、搭建客户端（Config Client）
+## 2.4 搭建客户端（Config Client）
 
-（1）新建一个子工程 config_client_9200，作为 Config Client
+### （1）新建一个子工程 config_client_9200，作为 Config Client
+
 Step1：
 　　修改 父工程、当前工程 pom.xml 文件，并引入相关依赖。
 　　此处以 Eureka 作为服务注册中心，需要引入相关依赖。
@@ -405,9 +406,9 @@ Step5：
 
  
 
- 5、存在的问题（刷新问题）
+## 2.5 存在的问题（刷新问题）
 
-（1）问题
+### （1）问题
 
 ```
 【问题：】
@@ -434,7 +435,8 @@ Step5：
 
  
 
-（2）解决方案一（使用 actuator）：
+### （2）解决方案一（使用 actuator）：
+
 Step1：
 　　引入 actuator 依赖。
 
@@ -545,11 +547,9 @@ config client 再次获取的为最新的配置信息。
 
  
 
-## 三、引入消息总线
+# 三、引入消息总线
 
-
-
-### 1、问题与解决
+## 3.1 问题与解决
 
 ```
 【问题：】
@@ -568,13 +568,11 @@ config client 再次获取的为最新的配置信息。
 
  
 
-## 四、消息总线 -- Bus
+# 四、消息总线 -- Bus
 
+## 4.1 Bus 是什么？
 
-
-### 1、Bus 是什么？
-
-（1）Bus 是什么？
+### （1）Bus 是什么？
 
 ```
 【Spring Cloud Bus 是什么：】
@@ -597,9 +595,8 @@ https://spring.io/projects/spring-cloud-bus
 https://docs.spring.io/spring-cloud-bus/docs/current/reference/html/
 ```
 
- 
+### （2）如何实现？
 
-（2）如何实现？
 方式一：
 　　客户端 Config Client 刷新。
 
@@ -660,7 +657,7 @@ Step4:
 
 
 
-### 2、使用 RabbitMQ 作为消息中间件
+## 4.2 使用 RabbitMQ 作为消息中间件
 
 （1）使用 docker-compose 在 CentOS7 上构建基本环境
 　　docker-compose 基本使用可参照：https://www.cnblogs.com/l-y-h/p/12622730.html#_label8_2
@@ -707,7 +704,7 @@ services:
 
  
 
-### 3、Config 整合 Bus
+## 4.3 Config 整合 Bus
 
 （1）Config Server 整合 Bus（RabbitMQ）
 　　此处采用方案二，在 服务端进行 刷新，所以 Config Server 需要引入 actuator 依赖。
@@ -887,9 +884,9 @@ http://localhost:9201/config/getInfo
 
  
 
-## 五、分布式链路追踪
+# 五、分布式链路追踪
 
-### 1、问题 与 解决
+## 5.1 问题 与 解决
 
 ```
 【问题：】
@@ -906,9 +903,9 @@ http://localhost:9201/config/getInfo
 
  
 
-### 2、分布式链路追踪 -- Sleuth
+## 5.2 分布式链路追踪 -- Sleuth
 
-（1）Sleuth 是什么？
+### （1）Sleuth 是什么？
 
 ```
 【什么是 Sleuth：】
@@ -928,7 +925,8 @@ https://docs.spring.io/spring-cloud-sleuth/docs/current/reference/html/getting-s
 
  
 
-（2）下载、启动 Zipkin Server
+### （2）下载、启动 Zipkin Server
+
 　　Zipkin 用于可视化界面，下载 jar 包直接启动即可。
 
 ```
@@ -949,9 +947,9 @@ https://docs.spring.io/spring-cloud-sleuth/docs/current/reference/html/getting-s
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225155731438-1270958478.png)
 
-### 3、简单整合 Sleuth
+## 5.3 简单整合 Sleuth
 
-（1）说明
+### （1）说明
 
 ```
 【说明：】
@@ -961,9 +959,8 @@ https://docs.spring.io/spring-cloud-sleuth/docs/current/reference/html/getting-s
     使用 openfeign 进行服务远程调用。
 ```
 
- 
+### （2）改造 config_server_9100
 
-（2）改造 config_server_9100
 Step1:
 　　引入 sleuth 依赖，并修改配置文件。
 
@@ -1016,9 +1013,8 @@ public class SleuthController {
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225155850395-2099599977.png)
 
- 
+### （3）改造 config_client_9200
 
-（3）改造 config_client_9200
 Step1：
 　　引入 openfeign、sleuth 依赖，并修改配置文件。
 
@@ -1099,16 +1095,14 @@ public class SleuthController {
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225155943042-200113314.png)
 
- 
+### （4）改造 config_client_9201
 
-（4）改造 config_client_9201
 　　config_client_9201 与 config_client_9200 修改代码类似，只是 config_client_9201 远程调用的是 config_client_9200 服务。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225160002403-7492569.png)
 
- 
+### （5）测试
 
-（5）测试
 　　依次启动 eureka_server_7000、config_server_9100、config_client_9200、config_client_9201 服务，并调用其方法。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225160021744-1422962890.png)
@@ -1131,7 +1125,8 @@ public class SleuthController {
 
  
 
-（6）演示服务调用错误
+### （6）演示服务调用错误
+
 　　如下图，在 config_client_9200 中模拟错误调用，并再次发送请求给 config_client_9201。
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225160105896-878707275.png)
@@ -1146,9 +1141,10 @@ public class SleuthController {
 
  
 
-### 4、链路标识、日志整合
+## 5.4 链路标识、日志整合
 
-（1）链路标识
+### （1）链路标识
+
 　　通过上面的截图，每个链路点开后，均有三个 ID：traceID，spanID，parentID。
 
 ```
@@ -1164,7 +1160,8 @@ public class SleuthController {
 
  
 
-（2）日志整合
+### （2）日志整合
+
 　　如下图，在 config_client_9200 中打印日志，并再次发送请求给 config_client_9201。
 　　日志输出格式为：[application name, traceId, spanId, export]。
 注：
@@ -1208,6 +1205,6 @@ public class SleuthController {
 
 ![img](https://img2020.cnblogs.com/blog/1688578/202102/1688578-20210225160233712-1118918799.png)
 
-## 六、配置中心 Nacos
+# 六、配置中心 Nacos
 
 参考：https://www.cnblogs.com/l-y-h/p/14604209.html#_label1
