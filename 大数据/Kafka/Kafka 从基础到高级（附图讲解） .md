@@ -1,4 +1,5 @@
 - [Kafka -- 从基础到高级](https://blog.csdn.net/eraining/article/details/115860664?utm_source=app&app_version=4.5.8)
+- [超详细“零”基础kafka入门篇](https://www.cnblogs.com/along21/p/10278100.html)
 - [干货分享 | 万字讲解Kafka 从基础到高级（附图讲解）](https://mp.weixin.qq.com/s?__biz=MzIxMTE0ODU5NQ==&mid=2650245181&idx=1&sn=048140a7a781afd2cd0176de647c3d3a&chksm=8f5ae261b82d6b770e4b3cbd315174dd5d8af546e908ada1664db0a3564eafa44b0214ee969b&mpshare=1&scene=24&srcid=0422801pslaA8cp0fW3Konrd&sharer_sharetime=1619058923974&sharer_shareid=63281a6430fc669a5b286c6a03545e04#rd)
 
 # 一、为什么有消息系统
