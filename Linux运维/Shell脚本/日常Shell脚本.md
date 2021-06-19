@@ -98,7 +98,7 @@ fi
 else
 echo "Usage:`basename $0` server name"
 echo "But only check for vsftpd httpd sshd crond mysqld" && exit2
-fi1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.
+fi
 ```
 
 # 5、输出192.168.1.0/24网段内在线主机的ip地址
@@ -121,7 +121,7 @@ echo $ip$i >> /tmp/ip.txt
 date >> /tmp/ip.txt
 fi
 done
-echo 不在线的主机台数有 $j1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.
+echo 不在线的主机台数有 $j
 ```
 
 # 6、一个简单的网站论坛测试脚本
@@ -176,7 +176,7 @@ if [ $dbtablepre == $Globalphp ] && [ $dbtablepre == $Ucenterphp ];then
      fi
 else
      exit 2
-fi1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.
+fi
 ```
 
 # 7、检查mysql主从从结构中从数据库服务器的状态

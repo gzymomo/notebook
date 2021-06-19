@@ -20,13 +20,16 @@ nohup java -jar springboot_helloword-0.0.1-SNAPSHOT.jar &
 编写关闭脚本stop.sh：
 ```bash
 #!/bin/bash
-PID=$(ps -ef | grep springboot_helloword-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{ print $2 }')
+PID=$(ps -ef | grep springboot.jar | grep -v grep | awk '{ print $2 }')
 if [ -z "$PID" ]
 then
-    echo Application is already stopped
+    echo '服务已经启动！！！'
 else
-    echo kill $PID
+    echo '停止服务！'
     kill $PID
+    nohup java -jar springboot.jar --spring.profiles.active=prod > /root/logs/springboot.log &
+    echo '查看日志'
+    tail -f /root/logs/springboot.log
 fi
 ```
 
