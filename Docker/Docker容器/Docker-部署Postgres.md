@@ -20,8 +20,6 @@ docker run -itd \
     postgres:10
 ```
 
-
-
 # 二、postgres优秀客户端
 
 [DBeaver](https://dbeaver.io/)支持多种数据库，如PostgreSQL/MySQL/DB2/Oracle等，支持`Mac/Win/Linux`，还支持中文，比较全面。
@@ -31,3 +29,4 @@ docker run -itd \
 [pgAdmin](https://www.pgadmin.org/)基于`Web`的客户端工具。
 
 [![img](https://pkslow.oss-cn-shenzhen.aliyuncs.com/images/2020/10/docker-install-postgres.pgAdmin.png)](https://pkslow.oss-cn-shenzhen.aliyuncs.com/images/2020/10/docker-install-postgres.pgAdmin.png)
+

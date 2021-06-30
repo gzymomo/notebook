@@ -12,13 +12,9 @@ docker部署的方式非常简单，只需要执行简单的运行容器命令�
 
 ```
 docker run -d \
--p 9000:9000 \
--p 8000:8000 \
---restart always \
--v /var/run/docker.sock:/var/run/docker.sock \
--v /opt/docker/portainer-ce/data:/data \
---name portainer-ce portainer/portainer-ce
-复制代码
+-p 9001:9000 \
+-p 8888:8000 \
+--name test portainer/portainer-ce
 ```
 
 命令中映射了物理机的8000端口和9000端口到容器中的8000端口以及9000端口，同时将宿主机的docker通信文件`/var/run/docker.sock`也映射到了容器中，另外为了持久化部署，还将目录` /opt/docker/portainer-ce/data`映射到了容器的`/data`目录下，命令执行完成之后，返回结果信息如下图所示
