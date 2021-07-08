@@ -11,6 +11,8 @@
 - [Kubernetes容器集群管理环境 - 完整部署（下篇）](https://www.cnblogs.com/kevingrace/p/10995648.html)
 - [部署最小化K8S集群](https://www.escapelife.site/posts/180e93f1.html)
 - [企业级k8s高可用集群搭建(无坑版,如有坑请联系解决)](https://blog.51cto.com/luoguoling/2990837)
+- [从零开始--15分钟，快速搭建k8s高版本集群！！！](https://blog.51cto.com/xiaozhagn/2999760)
+- [k8s生产环境应用部署(无坑版本)](https://blog.51cto.com/luoguoling/3006487)
 
 
 
