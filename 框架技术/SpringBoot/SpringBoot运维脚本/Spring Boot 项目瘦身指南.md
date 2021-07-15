@@ -1,10 +1,12 @@
-#### 一、前言
+- [SpringBoot 迭代发布下的Jar瘦身实践](https://mp.weixin.qq.com/s/eXcM362_6w8sOC373iWyeQ)
+
+# 一、前言
 
 SpringBoot部署起来虽然简单，如果服务器部署在公司内网，速度还行，但是如果部署在公网（阿里云等云服务器上），部署起来实在头疼： 编译出来的 Jar 包很大，如果工程引入了许多开源组件（SpringCloud等），那就更大了。
 
 这个时候如果想要对线上运行工程有一些微调，则非常痛苦
 
-#### 二、瘦身前的Jar包
+# 二、瘦身前的Jar包
 
 Tomcat在部署Web工程的时候，可以进行增量更新，SpringBoot也是可以的～
 
@@ -17,9 +19,9 @@ SpringBoot编译出来的Jar包中，磁盘占用大的，是一些外部依赖�
 整个Jar包 18.18 MB, 但是 BOOT-INF/lib 就占用了将近 18 MB：
 ![这里写图片描述](https://img-blog.csdn.net/20180528092414241?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lqZ2l0aHVi/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
-#### 三、解决方法
+# 三、解决方法
 
-##### 步骤1: 正常编译JAR包，解压出lib文件夹
+## 步骤1: 正常编译JAR包，解压出lib文件夹
 
 POM文件如下：
 
@@ -49,7 +51,7 @@ POM文件如下：
 
 将编译后的Jar包解压，拷贝 BOOT-INF 目录下的lib文件夹 到目标路径；
 
-##### 步骤2: 修改pom.xml配置，编译出不带 lib 文件夹的Jar包
+## 步骤2: 修改pom.xml配置，编译出不带 lib 文件夹的Jar包
 
 ```xml
 <build>
@@ -84,7 +86,7 @@ POM文件如下：
 生成的 Jar 包体积明显变小，如下所示， 外部的 jar 包已经不会被引入了：
 ![这里写图片描述](https://img-blog.csdn.net/20180528092552677?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lqZ2l0aHVi/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
-##### 步骤3: 运行编译后的Jar包
+## 步骤3: 运行编译后的Jar包
 
 将 步骤1 解压出来的lib文件夹、步骤2编译的jar包放在同一个目录, 运行下面命令：
 
