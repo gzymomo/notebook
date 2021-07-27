@@ -13,20 +13,19 @@ curl -L https://get.daocloud.io/docker/compose/releases/download/1.24.0/docker-c
 将可执行权限应用于二进制文件：
 
 ```bash
-$ sudo chmod +x /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 ```
 
 创建软链：
 
 ```bash
-$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
 测试是否安装成功：
 
 ```bash
-$ docker-compose --version
-cker-compose version 1.24.1, build 4667896b
+docker-compose --version
 ```
 
 # 二、通过pip方式安装Docker Compose
