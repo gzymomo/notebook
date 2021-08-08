@@ -1,4 +1,4 @@
-# [Gerrit - 一些基本用法](https://www.cnblogs.com/anliven/p/12019989.html)
+- [Gerrit - 一些基本用法](https://www.cnblogs.com/anliven/p/12019989.html)
 
 # 1 - 主配置文件
 
