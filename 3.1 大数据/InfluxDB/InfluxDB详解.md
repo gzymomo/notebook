@@ -1,10 +1,25 @@
-- InfluxDB详解](https://blog.csdn.net/fuhanghang/article/details/105484610)
+- [InfluxDB详解](https://blog.csdn.net/fuhanghang/article/details/105484610)
+- [简析时序数据库 InfluxDB](https://www.cnblogs.com/buttercup/p/15204096.html)
+
+时序数据`TimeSeries`是一连串随**时间**推移而发生变化的**相关**事件。
+
+常见时序数据有：
+
+- 监控日志：机器的 CPU 负载变化
+- 用户行为：用户在电商网站上的访问记录
+- 金融行情：股票的日内成交记录
+
+　这类数据具有以下特点：
+
+- 必然带有时间戳，可能存在时效性
+- 数据量巨大，并且生成速度极快
+- 更关注数据变化的趋势，而非数据本身
 
 InfluxDB（时序数据库）（influx，[ˈɪnflʌks]，流入，涌入），常用的一种使用场景：<font color='red'>监控数据统计</font>。每毫秒记录一下电脑内存的使用情况，然后就可以根据统计的数据，利用图形化界面（InfluxDB V1一般配合Grafana）制作内存使用情况的折线图；<font color='red'>可以理解为按时间记录一些数据（常用的监控数据、埋点统计数据等），然后制作图表做统计；</font>
 
 InfluxDB自带的各种特殊函数如求标准差，随机取样数据，统计数据变化比等，使数据统计和实时分析变得十分方便，适合用于包括**DevOps监控**，**应用程序指标**，**物联网传感器数据**和实时分析的后端存储。类似的数据库有Elasticsearch、Graphite等。
 
-# 1、什么是InfluxDB
+# 一、什么是InfluxDB
 
 InfluxDB是一个由InfluxData开发的<font color='red'>开源时序型数据</font>。它由Go写成，着力于<font color='red'>高性能地查询与存储时序型数据</font>。InfluxDB被广泛应用于存储系统的<font color='red'>监控数据，IoT行业的实时数据等场景。</font>
 
