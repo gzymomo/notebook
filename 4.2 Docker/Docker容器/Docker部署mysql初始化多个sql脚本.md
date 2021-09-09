@@ -12,13 +12,9 @@
 | users.sql | 用户表             | 2        |
 | role.sql  | 用户角色           | 3        |
 
-
-
 **注意：必须严格按照执行顺序来执行，不能错乱。**
 
 有些人可能会问：为啥不把这3个sql文件合并成1个sql？答案是可以的。假设有上万个用户，那么这个sql文件就会很大，后期维护不方便。
-
- 
 
 那么可不可以让一个sql文件，执行另外3个sql文件呢？答案是可以的。这样就可以控制sql文件的执行顺序。比如：
 
@@ -29,11 +25,9 @@ source /opt/sql/users.sql;
 source /opt/sql/role.sql;
 ```
 
- 
-
 # 二、容器演示
 
-## 环境说明
+## 2.1 环境说明
 
 操作系统：centos 7.6
 
@@ -41,9 +35,7 @@ docker版本： 19.03.8
 
 docker-compose版本： 1.24.1
 
- 
-
-## 目录结构
+## 2.2 目录结构
 
 /opt/mysql_test 目录结构如下：
 
@@ -58,10 +50,8 @@ docker-compose版本： 1.24.1
     └── sql
         ├── init.sql
         ├── role.sql
-        └── users.sql
+        └── users.sql 
 ```
-
- 
 
 docker-compose.yml
 
@@ -86,9 +76,7 @@ services:
 
 说明：将sql文件放到容器中的 /docker-entrypoint-initdb.d/ 目录，就会在mysql第一次启动时执行。之后重启容器不会重复执行！
 
-如果此目录放置多个sql文件，它执行时是没有顺序的。因此，这个目录只放一个init.sql，专门用来控制执行sql顺序的。
-
- 
+如果此目录放置多个sql文件，它执行时是没有顺序的。因此，这个目录只放一个init.sql，专门用来控制执行sql顺序的。 
 
 mysql/dockerfile
 
@@ -96,8 +84,6 @@ mysql/dockerfile
 FROM mysql:5.7
 ADD mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
-
- 
 
 mysql/init/init.sql
 
@@ -107,8 +93,6 @@ use test;
 source /opt/sql/users.sql;
 source /opt/sql/role.sql;
 ```
-
- 
 
 mysql/mysqld.cnf
 
@@ -226,8 +210,6 @@ innodb_autoextend_increment = 64
 innodb_autoinc_lock_mode = 1
 ```
 
-
-
 mysql/sql/init.sql 
 
 ```mysql
@@ -238,8 +220,6 @@ grant all PRIVILEGES on test.* to test@'%' identified by '123456';
 flush privileges;
 use test;
 ```
-
-
 
 mysql/sql/users.sql
 
@@ -257,8 +237,6 @@ CREATE TABLE `users` (
 INSERT INTO `test`.`users` (`id`, `username`, `password`, `phone`, `email`, `create_time`) VALUES ('1', 'xiao', '123', '12345678910', '123@qq.com', '2020-04-10 01:22:07');
  ```
 
-
-
 mysql/sql/role.sql
 
 ```mysql
@@ -275,24 +253,18 @@ CREATE TABLE `role` (
 INSERT INTO `test`.`role` (`id`, `name`, `create_time`, `update_time`, `status`, `version`) VALUES ('1', 'admin', '2020-04-17 09:35:48', '2020-04-17 09:35:48', '1', '1');
 ```
 
-
-
-## 构建镜像
+## 2.3 构建镜像
 
 ```
 cd /opt/mysql_test
 docker-compose build
 ```
 
- 
-
-## 运行
+## 2.4 运行
 
 ```
 docker-compose up -d
 ```
-
- 
 
 查看日志
 
@@ -313,9 +285,7 @@ Version: '5.7.29-log'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL 
 
 可以发现，执行了初始化脚本。
 
- 
-
-## 查看数据
+## 2.5 查看数据
 
 用户表
 
@@ -328,3 +298,4 @@ Version: '5.7.29-log'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL 
  ![img](https://img2020.cnblogs.com/blog/1341090/202004/1341090-20200421153126197-1671510902.png)
 
  
+
