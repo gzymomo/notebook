@@ -24,11 +24,11 @@ Spring Cloud  的版本号并不是我们通常见的数字版本号，而是一
 
 但是如果只是租客和房东之间进行寻找的话，他们的效率是很低的，房东找不到租客赚不到钱，租客找不到房东住不了房。所以，后来房东肯定就想到了广播自己的房源信息(比如在街边贴贴小广告)，这样对于房东来说已经完成他的任务(将房源公布出去)，但是有两个问题就出现了。第一、其他不是租客的都能收到这种租房消息，这在现实世界没什么，但是在计算机的世界中就会出现**资源消耗** 的问题了。第二、租客这样还是很难找到你，试想一下我需要租房，我还需要东一个西一个地去找街边小广告，麻不麻烦？
 
-![图片](https://mmbiz.qpic.cn/mmbiz_jpg/JdLkEI9sZfevbHk5roR6nP33eViazD4AF2FI98qquUo81wiavxeibKQeIibTnCBh5ibrc9Xo59URnHfO2Y1fXQd3lIw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
 
 那怎么办呢？我们当然不会那么傻乎乎的，第一时间就是去找 **中介** 呀，它为我们提供了统一房源的地方，我们消费者只需要跑到它那里去找就行了。而对于房东来说，他们也只需要把房源在中介那里发布就行了。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_gif/JdLkEI9sZfevbHk5roR6nP33eViazD4AFWvpSGs8D3icmXm0ZWSFgNictOYqoukpSPfBGMpvv2hH3fuXYy7r2wU2A/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1)
+
 
 那么现在，我们的模式就是这样的了。
 
