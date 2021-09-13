@@ -17,6 +17,7 @@ File -> Settings -> Editor -> Code Completion里把Case sensitive completion设�
 ![](https://img2018.cnblogs.com/blog/1654189/201909/1654189-20190927193438099-1847272681.png)
 
 ## 2.2 Codota—代码智能提示
+
 Codota 这个插件用于智能代码补全，它基于数百万Java程序，能够根据程序上下文提示补全代码。相比于IDEA自带的智能提示来说，Codota 的提示更加全面一些,如下图所示。
 
 我们创建线程池现在变成下面这样：
@@ -44,6 +45,7 @@ Codota 还有一个在线网站，在这个网站上你可以根据代码关键�
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaIdQfEric9TyGFJPg3XcS7wGbNuRukbGLWPMMFsHwic2ciaDVVgWPSic2HxkHYtVia5Nqj7Wia2Q6aGqCuzMzs3bJEsA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
 
 ## 2.4 RestfulToolkit
+
 - 根据接口搜索
 - 提供接口可以测试
 
@@ -74,6 +76,7 @@ Windows 快捷键：ctrl + 鼠标右键
 ![](https://segmentfault.com/img/remote/1460000022552126)
 
 ## 2.7 CodeGlance
+
 装该插件后，IDE右侧会出现一个mini 视图，比如看 ConcurrentHashMap 源码，那么长的内容，可以通过该插件快速的拖动到大概位置，方便很多
 
 ![](https://segmentfault.com/img/bVbGMZT)
