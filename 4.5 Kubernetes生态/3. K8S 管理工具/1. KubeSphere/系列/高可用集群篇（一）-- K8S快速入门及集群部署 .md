@@ -4,8 +4,6 @@
 - [高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群](https://juejin.cn/post/6945360597668069384)
 - [高可用集群篇（五）-- k8s部署微服务](https://juejin.cn/post/6946396542097948702)
 
-
-
 # 一、K8s快速入门
 
 - [集群搭建所需的部分yaml文件以及安装包](https://github.com/free3growth/touch-air-mall/tree/main/doc)
@@ -20,7 +18,7 @@
 
 ### 1.1.1 Kubernetes是什么
 
-- Kubernetes 是一个可移植的、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化； Kubernetes 拥有一个庞大且快速增长的生态系统。Kubernetes 的服务、支持和工具广泛可用
+- Kubernetes 是一个<font color='red'>可移植的、可扩展的开源平台，用于管理容器化的工作负载和服务，可促进声明式配置和自动化</font>； Kubernetes 拥有一个庞大且快速增长的生态系统。Kubernetes 的服务、支持和工具广泛可用。
 - 容器因具有许多优势而变得流行起来。下面列出的是容器的一些好处：
   - 敏捷应用程序的创建和部署：与使用 VM 镜像相比，提高了容器镜像创建的简便性和效率
   - 持续开发、集成和部署：通过快速简单的回滚（由于镜像不可变性），支持可靠且频繁的 容器镜像构建和部署
@@ -67,7 +65,9 @@ Kubernetes 为你提供：
 
 ### 1.1.3 Kubernetes不是什么
 
-Kubernetes 不是传统的、包罗万象的 PaaS（平台即服务）系统。 由于 Kubernetes 在容器级别而不是在硬件级别运行，它提供了 PaaS 产品共有的一些普遍适用的功能， 例如部署、扩展、负载均衡、日志记录和监视。 但是，Kubernetes 不是单体系统，默认解决方案都是可选和可插拔的。 Kubernetes 提供了构建开发人员平台的基础，但是在重要的地方保留了用户的选择和灵活性
+<font color='red'>Kubernetes 不是传统的、包罗万象的 PaaS（平台即服务）系统。 由于 Kubernetes 在容器级别而不是在硬件级别运行，它提供了 PaaS 产品共有的一些普遍适用的功能， 例如部署、扩展、负载均衡、日志记录和监视</font>。
+
+ 但是，Kubernetes 不是单体系统，默认解决方案都是可选和可插拔的。 Kubernetes 提供了构建开发人员平台的基础，但是在重要的地方保留了用户的选择和灵活性
 
 Kubernetes：
 
@@ -267,16 +267,14 @@ Kubernetes：
 
   - 1、创建一个Master节点
 
-    ```
+    ```bash
     $ kubeadm init
-    
     ```
-
+    
   - 2、将一个Node节点加入到当前集群中
-
-    ```
+  
+    ```bash
     $ kubeadm join <Master节点的IP和端口>
-    
     ```
 
 ### 2.1.1 前置要求
@@ -310,49 +308,45 @@ Kubernetes：
 
 - VMware 克隆两个虚拟机，准备三个虚拟机
 
-  ```
+  ```bash
   # vi /etc/sysconfig/network-scripts/ifcfg-ens33
   
   192.168.83.133
   192.168.83.134
   192.168.83.135
-  
   ```
 
 #### 2.1.3.2 设置linux网络环境（三个节点都执行）
 
 - 关闭防火墙
 
-  ```
+  ```bash
   systemctl stop firewalld
   systemctl disable firewalld
-  
   ```
-
+  
 - 关闭 selinux
 
-  ```
+  ```bash
   #设置安全策略暂不开启
   sed -i 's/enforcing/diabled/' /etc/selinux/config
   setenforce 0
-  
   ```
-
+  
 - 关闭swap（内存交换）
 
-  ```
+  ```bash
   #临时
   swapoff -a  
   
   #永久
   sed -ri 's/.*swap.*/#&/' /etc/fstab
   验证是否生效： free -g ，swap必须为0
-  
   ```
-
+  
 - 添加主机名与ip对应关系
 
-  ```
+  ```bash
   #设置对应的hostname
   hostnamectl set-hostname k8s-node1
   
@@ -362,29 +356,27 @@ Kubernetes：
   192.168.83.133  k8s-node1
   192.168.83.134  k8s-node2
   192.168.83.135  k8s-node3
-  
   ```
-
+  
   确保在每个虚拟机中，ping各自的节点名称都能ping通
-
+  
   ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8f47368f3dce41ac96615fc834aa5231~tplv-k3u1fbpfcp-zoom-1.image)
-
   
-
   
-
+  
+  
+  
   ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf0f245986404ef5a6ccf82d9af2ea1c~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
 - 将桥接的ipv4流量传递到iptables的链
 
-  ```
+  ```bash
   cat > /etc/sysctl.d/k8s.conf << EOF   
   net.bridge.bridge-nf-call-ip6tables=1
   net.bridge.bridge-nf-call-iptables=1
   EOF
   
   sysctl --system
-  
   ```
 
 
@@ -400,7 +392,7 @@ Kubernetes：
 
 - 添加阿里云yum源
 
-  ```
+  ```bash
   cat > /etc/yum.repos.d/kubernetes.repo << EOF
   [kubernetes]
   name=Kubernetes
@@ -414,7 +406,7 @@ Kubernetes：
   
 - 指定版本安装
 
-  ```
+  ```bash
   yum list|grep kube
   #基于1.1.7版本的kubernetes
   yum install -y kubelet-1.17.3 kubeadm-1.17.3 kubectl-1.17.3
@@ -442,7 +434,7 @@ Kubernetes：
 
 - 初始化master节点
 
-  ```
+  ```bash
   kubeadm init \
   --apiserver-advertise-address=192.168.83.133 \
   --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers \
@@ -468,27 +460,24 @@ Kubernetes：
 
   ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ca0267127f84603ac7bc9a36fc7d0b5~tplv-k3u1fbpfcp-zoom-1.image)
 
-  ```
+  ```bash
   #启动完成，这句话拷贝出来备用（*），两小时内有效
   kubeadm join 192.168.83.133:6443 --token f9s477.9qh5bg4gd7xy9f67 \
       --discovery-token-ca-cert-hash sha256:8d6007a15b9dfa0940d2ca8fbf2929a108c391541ae59f9c75d66352bdd0aba6
-  
   ```
 
 ### 2.1.5 安装Pod网络插件
 
 - 利用k8s文件夹中的  `kube-flannel.yml`
 
-  ```
+  ```bash
   kubectl apply -f kube-flannel.yml
-  
   ```
-
+  
   ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cab7800df4594c298e8d266b0757c6ac~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ```
-  kubectl get pods --all-namespaces
   
+  ```bash
+  kubectl get pods --all-namespaces
   ```
 
 
@@ -500,42 +489,39 @@ Kubernetes：
 
 - 查看master状态
 
-  ```
+  ```bash
   kubectl get nodes
-  
   ```
-
+  
   ![image-20210313182140812](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0476e705bf5e4cf293d5ebb3d80b1c5c~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
 - node2和node3节点加入集群
 
-  ```
+  ```bash
   #master启动时，日志打印出的内容
   kubeadm join 192.168.83.133:6443 --token f9s477.9qh5bg4gd7xy9f67 \
       --discovery-token-ca-cert-hash sha256:8d6007a15b9dfa0940d2ca8fbf2929a108c391541ae59f9c75d66352bdd0aba6
-  
   ```
-
-  - ![image-20210313182434819](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d65cf77db824142bdad23eadf02f246~tplv-k3u1fbpfcp-zoom-1.image)
-
-    ![image-20210313182520080](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5518ab03214e4f149884c0bd1f2eb24d~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ![image-20210313182544620](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1794ec319b64555af08fea4bd81c649~tplv-k3u1fbpfcp-zoom-1.image)
-
   
-
+  - ![image-20210313182434819](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d65cf77db824142bdad23eadf02f246~tplv-k3u1fbpfcp-zoom-1.image)
+  
+    ![image-20210313182520080](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5518ab03214e4f149884c0bd1f2eb24d~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  ![image-20210313182544620](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b1794ec319b64555af08fea4bd81c649~tplv-k3u1fbpfcp-zoom-1.image)
+  
+  
+  
 - 如果存在NotReady状态，网络问题，可以执行以下命令，监控pod进度
 
-  ```
+  ```bash
   kubectl get pod -n kube-system -o wide
-  
   ```
-
-  ![image-20210313183028711](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/731c1b19a1a6459892d4dbdf8a4256f6~tplv-k3u1fbpfcp-zoom-1.image)
-
-  等待3-10分钟，完全都是running以后，再次查看
-
-  ![image-20210313182811099](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c684064a723d46f19ae820e611641ae9~tplv-k3u1fbpfcp-zoom-1.image)
+  
+![image-20210313183028711](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/731c1b19a1a6459892d4dbdf8a4256f6~tplv-k3u1fbpfcp-zoom-1.image)
+  
+等待3-10分钟，完全都是running以后，再次查看
+  
+![image-20210313182811099](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c684064a723d46f19ae820e611641ae9~tplv-k3u1fbpfcp-zoom-1.image)
 
 
 # 三、入门操作Kubernetes集群
@@ -544,13 +530,12 @@ Kubernetes：
 
 ### 3.1.1 部署一个tomcat
 
-```
+```bash
 #主节点 运行创建一个deployment部署
 kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8 
 
 #获取到tomcat信息
 kubectl get pods -o wide
-
 ```
 
 - 查看节点 和 pod 信息
@@ -575,7 +560,6 @@ kubectl get pods -o wide
 
     ![image-20210314111611425](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e5a294eba734ced8ade71ec4143cd7d~tplv-k3u1fbpfcp-zoom-1.image)
   
-  > 
 
 > 简单的容灾恢复测试
 
@@ -583,20 +567,18 @@ kubectl get pods -o wide
 
 - Pod的80映射容器的8080；service会代理Pod的80
 
-  ```
+  ```bash
   kubectl expose deployment tomcat6 --port=80 --target-port=8080 --type=NodePort
-  
   ```
-
+  
 - 获取service
 
-  ```
+  ```bash
   kubectl get svc
-  
   ```
-
+  
   - ![image-20210314113547955](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ccd00d629b64700b2c5c8028197d9fa~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
     ![image-20210314113606731](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/899ecfa3da0243e4b6fc3b0092bdd3ea~tplv-k3u1fbpfcp-zoom-1.image)
   
 
@@ -604,31 +586,32 @@ kubectl get pods -o wide
 
 - 获取部署信息
 
-  ```
+  ```bash
   kubectl get deployment
   ```
   
+
 ![image-20210314114606206](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ce92b72d56549fd9e0568a55236f1c8~tplv-k3u1fbpfcp-zoom-1.image)
-  
+
 - 扩容
 
-  ```
+  ```bash
   kubectl scale --replicas=3 deployment tomcat6
   ```
   
+
 扩容了多份，所以无论访问那个node的指定端口，都可以访问到tomcat6
-  
+
 ![image-20210314114139240](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b350f09d98b04587bda9a2107ab96cfb~tplv-k3u1fbpfcp-zoom-1.image)
-  
+
 ![image-20210314114210487](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c7ec316dd8a452eb68005036548e54d~tplv-k3u1fbpfcp-zoom-1.image)
-  
+
 - 缩容（改变副本数量）
 
-  ```
+  ```bash
   kubectl scale --replicas=1 deployment tomcat6
-  
   ```
-
+  
   - ![image-20210314114510021](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5129b5fef7a4402a7b64d17a0794ae3~tplv-k3u1fbpfcp-zoom-1.image) 
   
 
@@ -636,21 +619,22 @@ kubectl get pods -o wide
 
 - 获取到所有的资源
 
-  ```
+  ```bash
   kubectl get all
   ```
   
+
 ![image-20210314114841781](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f474bdf901b84f4e92c1e2dba633e43c~tplv-k3u1fbpfcp-zoom-1.image)
-  
+
 - 删除部署
 
-  ```
+  ```bash
   kubectl delete deployment.apps/tomcat6
   ```
   
 - 删除service
 
-  ```
+  ```bash
   kubectl delete service/tomcat6
   ```
   
@@ -706,7 +690,7 @@ kubectl get pods -o wide
 
 - 查看上面的tomcat6创建命令对应的yaml内容
 
-  ```
+  ```bash
   kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8 --dry-run -o yaml
   ```
   
@@ -715,18 +699,19 @@ kubectl get pods -o wide
 
 - 生成yaml文件
 
-  ```
+  ```bash
   kubectl create deployment tomcat6 --image=tomcat:6.0.53-jre8 --dry-run -o yaml > tomcat6.yaml
   ```
   
+
 修改文件中的，副本1 改为3 `vim tomact6.yaml`
-  
+
 运行yaml文件
-  
-```
+
+```bash
   kubectl apply -f tomcat6.yaml
-  ```
-  
+```
+
   ![image-20210314122341809](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1adae322dee4ec88b7e288871cfca4e~tplv-k3u1fbpfcp-zoom-1.image)
 
 - 端口暴露也可以使用yaml文件代替冗长命令
@@ -797,7 +782,7 @@ kubectl get pods -o wide
 
   `tomcat6-deployment.yaml`
 
-  ```
+  ```yaml
   apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -836,10 +821,10 @@ kubectl get pods -o wide
   
 - 运行yaml文件
   
-  ```
+  ```bash
     kubectl apply -f tomcat6-deployment.yaml
-    ```
-    
+  ```
+  
   ![image-20210314141341694](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8b803b0f97264b00a350787628c6d67c~tplv-k3u1fbpfcp-zoom-1.image)
   
   - 任意三个节点地址的30658端口，都可以访问到tomcat
@@ -850,18 +835,17 @@ kubectl get pods -o wide
 
   - 步骤1：运行文件（在k8s文件夹中，该文件已准备好），创建`Ingress Controller`
 
-    ```
+    ```bash
     kubectl apply -f  ingress-controller.yaml
+    ```
     
-    ```
-
     ![image-20210314142549125](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9a06e443a814809b05d51946a0600ff~tplv-k3u1fbpfcp-zoom-1.image)
-
+    
     ![image-20210314142747487](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c0c39391fea4e08bde559502918fd2b~tplv-k3u1fbpfcp-zoom-1.image)
-
+    
   - 步骤2：创建 `Ingress` 规则
-
-    ```
+  
+    ```yaml
     #创建ingress-tomcat6.yaml文件
     apiVersion: extensions/v1beta1
     kind: Ingress 
@@ -877,17 +861,16 @@ kubectl get pods -o wide
                servicePort: 80
     
     ```
-
-    ```
+  
+    ```bash
     #应用ingress规则
     kubectl apply -f ingress-tomcat6.yaml
     #查看信息
     kubectl get all
-    
     ```
-
+    
     ![image-20210314144047165](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/05195bdd31704e07a858dbfb3a6afd19~tplv-k3u1fbpfcp-zoom-1.image)
-
+    
   - 配置本地域名解析 `C:\Windows\System32\drivers\etc\hosts`
 
     ![image-20210314144438834](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5c103dc797842a3b92566fe26ec8ae5~tplv-k3u1fbpfcp-zoom-1.image)

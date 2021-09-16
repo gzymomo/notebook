@@ -1,39 +1,35 @@
-- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
-
-- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
-
-- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
-
-- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
-
-
+- [高可用集群篇（一）-- k8s集群部署](https://juejin.cn/post/6940887645551591455)
+- [高可用集群篇（二）-- KubeSphere安装与使用](https://juejin.cn/post/6942282048107347976)
+- [高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表](https://juejin.cn/post/6944142563532079134)
+- [高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群](https://juejin.cn/post/6945360597668069384)
+- [高可用集群篇（五）-- k8s部署微服务](https://juejin.cn/post/6946396542097948702)
 
 
 
 - MySQL主从复制：提高数据库的整体性能、容灾备份、数据恢复
 - ShardingSphere读写分离、分库分表：**主从复制并不能解决，单表数据库超大导致的性能问题**，因此需要分库分表
 
-## 集群常见的几种基本形式
+# 一、集群常见的几种基本形式
 
-### 集群的目标
+## 1.1 集群的目标
 
-#### 高可用
+### 高可用
 
 - `High Availability`，是当一台服务器停止服务后，对于业务以及用户毫无影响，停止服务的原因可能由于网卡、路由器、机房、CPU负载过高、内存溢出、自然灾害等不可预期的原因导致，在很多时候也称为单点问题
 
-#### 突破数据量限制
+### 突破数据量限制
 
 - 一台服务器不能存储大量数据，需要多台分担，每个存储一部分，共同存储完整的集群数据；最好能做到互相备份，即使单节点故障，也能在其他节点找到数据
 
-#### 数据备份容灾
+### 数据备份容灾
 
 - 单节点故障后，存储的数据仍然可以在别的地方拉起
 
-#### 压力分担
+### 压力分担
 
 - 由于多个服务器都能完成各自一部分工作，所以尽量的避免了单点压力的存在
 
-### 集群基础形式
+## 1.2 集群基础形式
 
 - 主从形式
 - 分片式
@@ -41,23 +37,23 @@
 
 ![image-20210319102338456](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d93124c922ff49b9affdc3e3ce8906c6~tplv-k3u1fbpfcp-zoom-1.image)
 
-## MySQL集群
+# 二、MySQL集群
 
-### MySQL集群原理
+## 2.1 MySQL集群原理
 
-#### MySQL - MMM
+### MySQL - MMM
 
 - `Master-Master Replication Manager for MySQL`（mysql主主复制管理器）的简称，是Google的开源项目（Perl）脚本；MMM是基于MySQL Replication做的扩展架构，主要用来监控mysql主主复制并做失败转移；其原理是将真实数据库节点的IP（RIP）映射为虚拟IP（VIP）集；mysql-mmm的监管端会提供多个虚拟ip（VIP），包括一个可写VIP，多个可读VIP，通过监管的管理，这些IP会绑定在可用mysql之上，当某一台宕机时，监管会将VIP迁移到其他mysql；再整个监管过程中，需要在mysql添加相关授权用户，以便让mysql可以支持监理机的维护；授权的用户包括一个mmm_monitor用户和一个mmm_agent用户，如果想使用mmm备份工具则还需要添加一个mmm_tools用户
 
   - ![image-20210319111742542](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91015d906b7e44e2b99ec05759bd2839~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
+  
 
-#### MHA(Master High Availability)
+### MHA(Master High Availability)
 
 - 简单了解一下
 
-#### InnoDB Cluster
+### InnoDB Cluster
 
 - 支持自动Failover、强一致性、读写分离、读库高可用、读请求负载均衡、横向扩展的特性，是比较完备的一套方案。但是部署起来复杂，想要解决router单点问题好需要新增组件，如没有其他更好的方案可考虑该方案；InnoDB Cluster主要由MySQL shell、MySQL Router和MySQL服务器集群组成，三者协同工作，共同为MySQL提供完整的高可用性解决方案
 
@@ -67,9 +63,9 @@
 
   - ![image-20210319132451476](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4fdf72091fb74e1496992b99a01cbca7~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ### 
+  
 
-### 企业常用的数据库解决方案
+## 2.2 企业常用的数据库解决方案
 
 - 第一步：**数据库代理 dbproxy**；Mycat、cobar、ShardingSphere等等
 
@@ -81,11 +77,11 @@
   
     ![image-20210319132755615](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b761de07c878406aa20d9be3211e1890~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ### 
+  
 
-### Docker部署MySQL集群
+## 2.3 Docker部署MySQL集群
 
-#### 创键Master/Slave实例并启动
+### 创建Master/Slave实例并启动
 
 - 新建本地文件
 
@@ -121,11 +117,11 @@ docker run -p 33070:3306 --name mysql-slave33070 \
      -e ：初始化root用户的密码
 ```
 
-#### 修改配置
+### 修改配置
 
-##### 修改Msater/Slvae基本配置
+#### 修改Msater/Slvae基本配置
 
-- 基本配置，主从都要加上
+- #### 基本配置，主从都要加上
 
   ```
   vim /var/mall/mysql/master/conf/my.cnf
@@ -146,7 +142,7 @@ docker run -p 33070:3306 --name mysql-slave33070 \
   skip-name-resolve
   ```
 
-##### 添加master主从复制部分配置
+#### 添加master主从复制部分配置
 
 - ```
   vim /var/mall/mysql/master/conf/my.cnf
@@ -173,7 +169,7 @@ docker run -p 33070:3306 --name mysql-slave33070 \
   docker restart mysql-master33060
 ```
 
-##### 添加slave主从复制部分配置
+#### 添加slave主从复制部分配置
 
 - ```
   vim /var/mall/mysql/slave/conf/my.cnf
@@ -200,7 +196,7 @@ docker run -p 33070:3306 --name mysql-slave33070 \
   docker restart mysql-slave33070
 ```
 
-##### 为master授权用户来同步数据
+#### 为master授权用户来同步数据
 
 ```
 1、进入master容器
@@ -217,9 +213,9 @@ show master status\G;
 
 ![image-20210319155538556](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc2ff64b27814d2fbf82451a1ffa0774~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 
 
-##### 进入slave，配置同步master数据
+
+#### 进入slave，配置同步master数据
 
 ```
 #如果之前配置过slave节点
@@ -252,19 +248,19 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
     ![image-20210319162426898](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9f8ccad823d476692fc13e3260a924e~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
+  
 
-#### 测试主从同步效果
+### 测试主从同步效果
 
 - 在33060中，创建`touch-air-mall-ums`，然后插入数据，或者直接导入项目数据
 
   - ![image-20210319162802880](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a718c9de960410a926c6edaee59f3d1~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ## 
+  
 
-## ShardingSphere
+# 三、ShardingSphere
 
-### 简介
+## 3.1 简介
 
 - **MySQL主从同步，这种模式下无法解决单表数据量过大导致的性能问题**，因此需要使用到**分库分表**；中间件Mycat或者ShardingSphere
 
@@ -273,8 +269,6 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 - ShardingSphere是一套开源的分布式数据库中间件解决方案组成的生态圈，它由**Sharding-JDBC、Sharding-Proxy和Sharding-Sidecar**（计划中）这3款相互独立的产品组成。 他们均提供标准化的数据分片、分布式事务和数据库治理功能，可适用于如Java同构、异构语言、云原生等各种多样化的应用场景
 
 - Sharding-JDBC采用无中心化架构，适用于Java开发的高性能的轻量级OLTP应用；Sharding-Proxy提供静态入口以及异构语言的支持，适用于OLAP应用以及对分片数据库进行管理和运维的场景；ShardingSphere是多接入端共同组成的生态圈。 通过混合使用Sharding-JDBC和Sharding-Proxy，并采用同一注册中心统一配置分片策略，能够灵活的搭建适用于各种场景的应用系统，架构师可以更加自由的调整适合于当前业务的最佳系统架构
-
-  ![ShardingSphere Hybrid Architecture](https://shardingsphere.apache.org/document/legacy/4.x/document/img/shardingsphere-hybrid.png)
 
   |            | Sharding-JDBC | Sharding-Proxy | Sharding-Sidecar |
   | ---------- | ------------- | -------------- | ---------------- |
@@ -285,22 +279,22 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   | 无中心化   | 是            | 否             | 是               |
   | 静态入口   | 无            | 有             | 无               |
 
-#### 功能列表
+## 3.2 功能列表
 
-##### 数据分片
+### 数据分片
 
 - 分库 & 分表
 - 读写分离
 - 分片策略定制化
 - 无中心化分布式主键
 
-##### 分布式事务
+### 分布式事务
 
 - 标准化事务接口
 - XA强一致事务
 - 柔性事务
 
-##### 数据库治理
+### 数据库治理
 
 - 配置动态化
 - 编排 & 治理
@@ -308,7 +302,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 - 可视化链路追踪
 - 弹性伸缩(规划中)
 
-#### Sharding-JDBC
+## 3.3 Sharding-JDBC
 
 - 定位为轻量级Java框架，在Java的JDBC层提供的额外服务。 它使用客户端直连数据库，以jar包形式提供服务，无需额外部署和依赖，可理解为增强版的JDBC驱动，完全兼容JDBC和各种ORM框架
 
@@ -316,28 +310,25 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   - 支持任何第三方的数据库连接池，如：DBCP, C3P0, BoneCP, Druid, HikariCP等
   - 支持任意实现JDBC规范的数据库。目前支持MySQL，Oracle，SQLServer，PostgreSQL以及任何遵循SQL92标准的数据库
 
-  - ![Sharding-JDBC Architecture](https://shardingsphere.apache.org/document/legacy/4.x/document/img/sharding-jdbc-brief.png)
+    
   
-  #### 
 
-#### Sharding-Proxy
+## 3.4 Sharding-Proxy
 
 - 定位为透明化的数据库代理端，提供封装了数据库二进制协议的服务端版本，用于完成对异构语言的支持。 目前先提供MySQL/PostgreSQL版本，它可以使用任何兼容MySQL/PostgreSQL协议的访问客户端(如：MySQL Command Client, MySQL Workbench, Navicat等)操作数据，对DBA更加友好
 
   - 向应用程序完全透明，可直接当做MySQL/PostgreSQL使用
   - 适用于任何兼容MySQL/PostgreSQL协议的的客户端
 
-  ![](https://shardingsphere.apache.org/document/legacy/4.x/document/img/sharding-proxy-brief_v2.png)
 
-#### Sharding-Sidecar（TODO）
+## 3.5 Sharding-Sidecar（TODO）
 
 - 定位为Kubernetes的云原生数据库代理，以Sidecar的形式代理所有对数据库的访问。 通过无中心、零侵入的方案提供与数据库交互的的啮合层，即Database Mesh，又可称数据网格
 
   Database Mesh的关注重点在于如何将分布式的数据访问应用与数据库有机串联起来，它更加关注的是交互，是将杂乱无章的应用与数据库之间的交互有效的梳理。使用Database Mesh，访问数据库的应用和数据库终将形成一个巨大的网格体系，应用和数据库只需在网格体系中对号入座即可，它们都是被啮合层所治理的对象
 
-  ![](https://shardingsphere.apache.org/document/legacy/4.x/document/img/sharding-sidecar-brief_v2.png)
 
-### 使用Sharding-Proxy
+## 3.6 使用Sharding-Proxy
 
 - [下载Sharding-Proxy](https://www.apache.org/dyn/closer.cgi?path=incubator/shardingsphere/4.0.1/apache-shardingsphere-incubating-4.0.1-sharding-proxy-bin.tar.gz)
 
@@ -353,7 +344,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   
   
 
-#### 配置认证信息
+### 配置认证信息
 
 - `conf/server.yaml`，打开注释
 
@@ -361,7 +352,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
   
   
 
-#### 配置分库分表、读写分离
+### 配置分库分表、读写分离
 
 - `config-master-slave-sharding.yaml`
 
@@ -387,9 +378,9 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
   - ![image-20210320134257453](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2eedd9d8b514fc8892730f448d8854c~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
+  
 
-#### 启动测试
+### 启动测试
 
 - windows环境下，`start.bat`
 
@@ -403,9 +394,9 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
     ![image-20210320134837195](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f15d90acb9df4159b797e998276cfb07~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
+  
 
-##### 创建表测试
+#### 创建表测试
 
 - > 以后所有的数据库操作，都是连上 `sharding-proxy` 的 `sharding_db` 来进行的
 
@@ -434,9 +425,9 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
   - ![image-20210320141132402](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/08ea9849635e46e6a022cefef1a2f39f~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
+  
 
-##### 插入记录测试分库分表
+#### 插入记录测试分库分表
 
 - ```
   INSERT into t_order (user_id,status) VALUES(1,1);
@@ -459,7 +450,7 @@ MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=604,master_port=33060;
 
     ![image-20210320142508227](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d73f32e1ef84dd8bb9771fb8b25e9d9~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 测试读写分离
+#### 测试读写分离
 
 - 手动在slave33070节点上，插入一条记录
 

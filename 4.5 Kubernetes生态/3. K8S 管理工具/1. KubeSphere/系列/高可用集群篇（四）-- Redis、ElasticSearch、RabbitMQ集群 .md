@@ -1,10 +1,8 @@
-- 高可用集群篇（一）-- k8s集群部署：https://juejin.cn/post/6940887645551591455
-
-- 高可用集群篇（二）-- KubeSphere安装与使用：https://juejin.cn/post/6942282048107347976
-
-- 高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表：https://juejin.cn/post/6944142563532079134
-
-- 高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群：https://juejin.cn/post/6945360597668069384
+- [高可用集群篇（一）-- k8s集群部署](https://juejin.cn/post/6940887645551591455)
+- [高可用集群篇（二）-- KubeSphere安装与使用](https://juejin.cn/post/6942282048107347976)
+- [高可用集群篇（三）-- MySQL主从复制&ShardingSphere读写分离分库分表](https://juejin.cn/post/6944142563532079134)
+- [高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群](https://juejin.cn/post/6945360597668069384)
+- [高可用集群篇（五）-- k8s部署微服务](https://juejin.cn/post/6946396542097948702)
 
 
 
@@ -586,7 +584,7 @@
   -v /var/mall/elasticsearch/node-${port}/config/jvm.options:/usr/share/elasticsearch/config/jvm.options \
   -v /var/mall/elasticsearch/node-${port}/data:/usr/share/elasticsearch/data \
   -v /var/mall/elasticsearch/node-${port}/plugins:/usr/share/elasticsearch/plugins \
-elasticsearch:7.6.1;\
+  elasticsearch:7.6.1;\
   done
   
   ```
@@ -595,9 +593,9 @@ elasticsearch:7.6.1;\
   #查看es容器日志信息
   #主节点
   docker logs es-node-1
-#数据节点
+  #数据节点
   docker logs es-node-4
-
+  
   ```
   
   ![image-20210322160539096](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4fe16f0ead6040308bdf3f2ab778996f~tplv-k3u1fbpfcp-zoom-1.image)

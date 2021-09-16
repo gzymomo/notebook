@@ -4,321 +4,45 @@
 - [高可用集群篇（四）-- Redis、ElasticSearch、RabbitMQ集群](https://juejin.cn/post/6945360597668069384)
 - [高可用集群篇（五）-- k8s部署微服务](https://juejin.cn/post/6946396542097948702)
 
+# 一、简介
 
+## 1.1 概述
 
-- [部分安装包](https://gitee.com/OK12138/touch-air-mall/tree/main/doc)
+[KubeSphere](https://kubesphere.io) 是在 [Kubernetes](https://kubernetes.io) 之上构建的面向云原生应用的**分布式操作系统**，完全开源，支持多云与多集群管理，提供全栈的 IT 自动化运维能力，简化企业的 DevOps 工作流。它的架构可以非常方便地使第三方应用与云原生生态组件进行即插即用 (plug-and-play) 的集成。
 
-- 默认的dashboard不好用，我们用kubesphere可以打通全部的devops链路；kubesphere集成了很多套件，集群要求较高
+作为全栈的多租户容器平台，KubeSphere 提供了运维友好的向导式操作界面，帮助企业快速构建一个强大和功能丰富的容器云平台。KubeSphere 为用户提供构建企业级 Kubernetes 环境所需的多项功能，例如**多云与多集群管理、Kubernetes 资源管理、DevOps、应用生命周期管理、微服务治理（服务网格）、日志查询与收集、服务与网络、多租户管理、监控告警、事件与审计查询、存储管理、访问权限控制、GPU 支持、网络策略、镜像仓库管理以及安全管理**等。
 
-  [kubesphere](https://kubesphere.io/)
+KubeSphere 还开源了 [KubeKey](https://github.com/kubesphere/kubekey) 帮助企业一键在公有云或数据中心快速搭建 Kubernetes 集群，提供单节点、多节点、集群插件安装，以及集群升级与运维。https://kubesphere.io/)。
 
-  kuboard也很不错，集群要求不高
-
-  [kuboard](https://kubesphere.io/)
-
-## 一、简介
-
-- KubeSphere 是一款面向云原生设计的开源项目，在目前主流容器调度平台 Kubernetes之上构建的分布式多租户容器管理平台提供简单易用的操作界面以及向导式操作方式，在降低用户使用容器调度平台学习成本的同时，极大降低开发、测试、运维的日常工作的复杂度
-
+![功能概览](https://kubesphere.io/images/docs/zh-cn/introduction/what-is-kubesphere/kubesphere-feature-overview.jpeg)
 
-
-## 二、Kubesphere安装
+## 1.2 开发运维友好
 
-- 注意版本对应 [v2.1](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/prerequisites/)
+KubeSphere  为用户屏蔽了基础设施底层复杂的技术细节，帮助企业在各类基础设施之上无缝地部署、更新、迁移和管理现有的容器化应用。通过这种方式，KubeSphere 使开发人员能够专注于应用程序开发，使运维团队能够通过企业级可观测性功能和故障排除机制、统一监控和日志查询、存储和网络管理，以及易用的  CI/CD 流水线等来加快 DevOps 自动化工作流程和交付流程等。
 
-## 2.1 前提条件
+## 1.3 支持在任意平台运行 KubeSphere
 
-- ![image-20210315150213921](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d7b022810be48ecbc42f1f49746b3c4~tplv-k3u1fbpfcp-zoom-1.image)
+作为一个灵活的轻量级容器 PaaS 平台，KubeSphere 对不同云生态系统的支持非常友好，因为它对原生 Kubernetes 本身没有任何的侵入 (Hack)。换句话说，KubeSphere 可以**部署并运行在任何基础架构以及所有版本兼容的 Kubernetes 集群**之上，包括虚拟机、物理机、数据中心、公有云和混合云等。
 
-### 2.1.1 安装前提环境
+您可以选择在公有云和托管 Kubernetes 集群（例如阿里云、AWS、青云QingCloud、腾讯云、华为云等）上安装 KubeSphere，**还可以导入和纳管已有的 Kubernetes 集群**。
 
-#### 2.1.1.1 安装helm（master节点执行）
+KubeSphere 可以在不修改用户当前的资源或资产、不影响其业务的情况下部署在现有的 Kubernetes 平台上。有关更多信息，请参见[在 Linux 上安装](https://kubesphere.io/zh/docs/installing-on-linux/)和[在 Kubernetes 上安装](https://kubesphere.io/zh/docs/installing-on-kubernetes/)。
 
-- Helm是kubernetes的包管理器，包管理器类似于我们在Ubuntu中使用的apt、Centos中使用的yum或者Python中的pip一样，能快速查找、下载和安装软件包。**Helm由客户端组件helm和服务端组件Tiller组成**，能够将一组k8s资源打包统一管理，是查找、共享和使用为kubernetes构建的软件的最佳方式
+## 1.4 完全开源
 
-  [如何安装与配置 Helm](https://devopscube.com/install-configure-helm-kubernetes/)
+借助开源的模式，KubeSphere 社区驱动着开发工作以开放的方式进行。KubeSphere **100% 开源免费**，已大规模服务于社区用户，广泛地应用在以 Docker 和 Kubernetes 为中心的开发、测试及生产环境中，大量服务平稳地运行在 KubeSphere 之上。您可在 [GitHub](https://github.com/kubesphere/) 上找到所有源代码、文档和讨论，所有主要的开源项目介绍可以在[开源项目列表](https://kubesphere.io/zh/projects/)中找到。
 
-- 下载Helm
+# 二、Kubesphere安装
 
-  - 1、配置了科学上网的
+参考Kubesphere官网进行安装和部署：https://kubesphere.io/zh/docs/
 
-    ```shell
-    #直接执行脚本
-    curl -L https://git.io/get_helm.sh | bash
-    ```
-  
-- 2、下载源码包，解压后将可执行文件`helm`拷贝到`/usr/local/bin`目录下即可，这样`Helm`客户端就在这台机器上安装完成了
-  
-  [下载地址](https://github.com/helm/helm/releases)
-  
-  [好用的资源下载器](https://motrix.app/zh-CN)
-  
-  下载遇到卡顿，暂停或者重启下载器多试几次
-  
-  ```
-    #centos 下载amd64.tar.gz 选择指定版本
-    
-    #解压后将可执行文件helm拷贝到/usr/local/bin目录下即可，这样Helm客户端就在这台机器上安装完成了
-    tar -zxvf helm-v2.16.2-linux-amd64.tar.gz
-    #将解压后的helm执行文件放入 /usr/local/bin/
-    ln -s ln -s /var/touchAirMallVolume/k8s/linux-amd64/helm /usr/local/bin/
-    helm version
-  ```
-  
-  ![image-20210316104202143](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4c2145267c5440fbedc9d238daa8220~tplv-k3u1fbpfcp-zoom-1.image)
-  
-  现在我们可以使用`Helm`命令查看版本了，会提示无法连接到服务端`Tiller`：
-  
-  ![image-20210315172317588](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c82ec777dde4eb9a58e81b4edf87b2e~tplv-k3u1fbpfcp-zoom-1.image)
+![image-20210916114606309](https://gitee.com/er-huomeng/l-img/raw/master/typora/image-20210916114606309.png)
 
-- 默认开启了`RBAC`访问控制，所以我们需要为`Tiller`创建一个`ServiceAccount`，让他拥有执行的权限，详细内容可以查看 Helm 文档中的[Role-based Access Control](https://docs.helm.sh/using_helm/#role-based-access-control)； 创建`rbac.yaml`文件：
+# 三、Kubesphere进阶
 
-  ```yaml
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: tiller
-    namespace: kube-system
-  ---
-  apiVersion: rbac.authorization.k8s.io/v1beta1
-  kind: ClusterRoleBinding
-  metadata:
-    name: tiller
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
-    name: cluster-admin
-  subjects:
-    - kind: ServiceAccount
-      name: tiller
-      namespace: kube-system
-  
-  ```
+详细操作文档参考Kubesphere：https://kubesphere.io/zh/docs/
 
-  应用：`kubectl apply -f helm-rbac.yaml`
-
-  ![image-20210315173743410](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/935f9f61de9847da9b8a4b480f6cc0e2~tplv-k3u1fbpfcp-zoom-1.image)
-
-- 安装`tiller`
-
-  ```
-  #查看是否存在旧版
-  kubectl get deployment -n kube-system
-  #删除旧版
-  kubectl delete deployment tiller-deploy -n kube-system
-  
-  #把默认的 google 的仓库地址替换成稳定的国内镜像地址，并指定account
-  helm init --service-account=tiller  --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.16.2 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts
-  
-  #查看
-  kubectl get pod -n kube-system -l app=helm
-  
-  #再次查看版本信息
-  helm version
-  ```
-  
-
-![image-20210315172622131](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5967bd708bb449469f0d0bd385bbc892~tplv-k3u1fbpfcp-zoom-1.image)
-
-![image-20210316104346092](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38cf0ad9a5264fa08d8444d9310f5e88~tplv-k3u1fbpfcp-zoom-1.image)
-
-#### 2.1.1.2 安装设置默认的存储类型
-
-- 集群已有存储类型（StorageClass），执行 `kubectl get sc`看下当前是否设置了默认的 `storageclass`
-
-  ![image-20210316081607441](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/191bec597ab947a8bd3f001e4d24927e~tplv-k3u1fbpfcp-zoom-1.image)
-
-  若集群还没有准备存储请参考 [安装 OpenEBS 创建 LocalPV 存储类型](https://v2-1.docs.kubesphere.io/docs/zh-CN/appendix/install-openebs) ；用作开发测试环境，生产环境请确保集群配置了稳定的持久化存储
-
-  - 已有 Kubernetes 集群，并安装了 kubectl 或 Helm
-  - Pod 可以被调度到集群的 master 节点（可临时取消 master 节点的 Taint）
-
-  ```
-  #查看所有节点的信息
-  kubectl get node -o wide
-  #查看master是否已有taint
-  kubectl describe node k8s-node1 | grep Taint
-  #临时取消master节点的taint
-  kubectl taint nodes k8s-node1 node-role.kubernetes.io/master:NoSchedule-
-  
-  ```
-
-  ![image-20210316081728555](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f59c5891f41c4ba89d406be6e46da133~tplv-k3u1fbpfcp-zoom-1.image)
-
-  - 创建命名空间并安装
-
-    ```
-    #安装OpenEBS
-    #创建名称空间
-    kubectl create ns openebs
-    
-    #安装openEBS
-    kubectl apply -f https://openebs.github.io/charts/openebs-operator-1.5.0.yaml
-    
-    ```
-
-    ![image-20210317095204141](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5aa19558d5c443ab68500c68dc26ac2~tplv-k3u1fbpfcp-zoom-1.image)
-
-  - 验证是否安装成功
-
-    ```
-    查看所有的pod，直到所有pod的status变成running的时候（等待三分钟左右）
-    kubectl get pods  --all-namespaces
-    #查看
-    kubectl get sc --all-namespaces
-    
-    ```
-
-    - ![image-20210316082205899](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f7adab185d9d47f593d67946b14cb915~tplv-k3u1fbpfcp-zoom-1.image)
-
-- 如下将 `openebs-hostpath`设置为 **默认的 StorageClass**：
-
-  ```
-  kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-  
-  ```
-
-  ![image-20210316082610958](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d1f5bc9cc83e4c66ac93ae5dd429e15d~tplv-k3u1fbpfcp-zoom-1.image)
-
-- 恢复master节点的 taint暂不操作，等kubesphere全部安装完成后，恢复也不迟
-
-#### 踩坑
-
-> 上面OpenEBS安装完成后，一定不要立马恢复主节点的taint，否则在安装kubesphere的时候，会存在各种pods拉取失败的问题
-
-### 在 Kubernetes 安装 KubeSphere
-
-- 完整安装对于硬件要求非常高，因此，选择最小化安装
-
-  ```
-  #第一种：网络环境好的
-  kubectl apply -f https://raw.githubusercontent.com/kubesphere/ks-installer/master/kubesphere-minimal.yaml
-  
-  #第二种：使用已下载好的yaml文件
-  kubectl apply -f kubesphere-mini.yaml
-  
-  #观察kubesphere pod的创建进度
-  kubectl get pods --all-namespaces
-  
-  #监控整个安装过程
-  kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath='{.items[0].metadata.name}') -f
-  ```
-
-  ![image-20210316090346841](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/747e5789df0443a08cf259bea9fcc39c~tplv-k3u1fbpfcp-zoom-1.image)
-
-  
-
-  ```
-  #观察kubesphere pod的创建进度
-  kubectl get pods --all-namespaces
-  直到所有status 都变成running
-  ```
-
-  服务器性能越好，安装完成就越快，我这里大概等待了10分钟才完成
-
-  ![image-20210316105343940](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/479a0b6459f64203947e838d033eead4~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ![image-20210316105732014](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/254e62abbc0b47f7a1729fce9d3fbb24~tplv-k3u1fbpfcp-zoom-1.image)
-
-- 等待全部变为 running 状态，登录 kubeSphere 的控制台（最小化安装完成）
-
-  ```
-  kubectl get pods --all-namespaces
-  
-  ```
-
-  - ![image-20210316110300646](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d40cabee14704f8481257389be069f03~tplv-k3u1fbpfcp-zoom-1.image)
-
-    ![image-20210316110102675](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5e232b43e474a9b994fdadcac3c6722~tplv-k3u1fbpfcp-zoom-1.image)
-  
-  #### 
-
-#### 定制化安装（可插拔组件）
-
-> 硬件要求，再次提高
->
-> 1、master节点，主要是调度作用，4g内存差不多
->
-> 2、两个node节点，各分配8g内存
-
-- KubeSphere 在 2.1 版本的 Installer 对各功能组件进行了 **解耦**，**快速安装将默认仅开启最小化安装（Minimal Installation）**，支持在安装前或安装后 [自定义可插拔的功能组件的安装](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/intro#自定义安装可插拔的功能组件)，使最小化安装 **更快速轻量且资源占用更少**，也方便不同用户 **按需选择安装不同的功能组件**
-
-##### 可插拔组件列表
-
-- KubeSphere 有以下六个可插拔功能组件，您可以根据需求，选择开启安装 KubeSphere 的功能组件。我们非常建议您开启这些功能组件来体验 KubeSphere 完整的功能以及端到端的解决方案
-
-  - [KubeSphere 应用商店](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/install-openpitrix)
-  - [KubeSphere DevOps 系统](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/install-devops)：KubeSphere 针对容器与 Kubernetes 的应用场景，基于 Jenkins 提供了一站式 DevOps 系统，包括丰富的 CI/CD 流水线构建与插件管理功能，还提供 Binary-to-Image（B2I）、Source-to-Image（S2I），为流水线、S2I、B2I 提供代码依赖缓存支持，以及代码质量管理与流水线日志等功能；内置的 DevOps 系统将应用的开发和自动发布与容器平台进行了很好的结合，还支持对接第三方的私有镜像仓库和代码仓库形成完善的私有场景下的 CI/CD，提供了端到端的用户体验
-
-  - [KubeSphere 日志系统](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/install-logging)：KubeSphere 提供了 **强大且易用的日志查询、接收与管理功能**，比如多租户日志管理、多级别日志查询 (包括项目、工作负载、容器组、容器以及关键字)、灵活方便的日志收集配置选项等。相较于 Kibana，KubeSphere 日志系统提供了 **基于多租户的日志查询**，不同的租户只能看到属于自己的日志信息
-
-  - [KubeSphere Service Mesh（基于 Istio）](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/install-servicemesh)：KubeSphere 基于 [Istio](https://istio.io/) 微服务框架提供了可视化的微服务治理功能，无需代码无侵入即可实现 **熔断、蓝绿发布、金丝雀发布、流量镜像、流量管控、限流、链路追踪（Tracing）等完善的微服务治理功能**，从业务角度为微服务组件提供了服务治理的能力，降低了 Istio 服务网格的学习门槛
-
-  - KubeSphere 告警通知系统
-
-    ：KubeSphere 多租户告警系统支持灵活的告警策略和告警规则，支持邮件通知，并具备以下特性：
-
-    - 支持基于多租户、多维度的监控指标告警，目前告警策略支持集群管理员对节点级别和租户对工作负载级别等两个层级；
-    - 灵活的告警策略：可自定义包含多个告警规则的告警策略，并且可以指定通知规则和重复告警的规则；
-    - 丰富的监控告警指标：提供节点级别和工作负载级别的监控告警指标，包括容器组、CPU、内存、磁盘、网络等多个监控告警指标；
-    - 灵活的告警规则：可自定义某监控指标的检测周期长度、周期次数、告警等级等；目前支持邮件通知；
-    - 灵活的重复告警规则：可自定义重复告警周期、最大重复次数并和告警级别挂钩
-
-  - [Metrics-server（HPA）](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/pluggable-components/instal-metrics-server)：KubeSphere 支持对 Deployment 设置 [弹性伸缩 (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/) ，支持根据集群的监控指标如 CPU 使用率和内存使用量来设置弹性伸缩，当业务需求增加时，KubeSphere 能够无缝地自动水平增加 Pod 数量，提高应用系统的稳定性
-
-##### 安装后如何开启 Metrics-server 安装
-
-- 1、通过修改 ks-installer 的 configmap 可以选装组件，执行以下命令
-
-  ```
-  kubectl edit cm -n kubesphere-system ks-installer
-  ```
-  
-
-参考如下修改 ConfigMap
-
-```
-  ···
-  metrics-server:
-       enabled: True
-```
-
-  ![image-20210316132806889](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cbfa8f4db78f4928b4322f59f86a948d~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0dbd7cb0ce3f4a6e9a76e3cb476a89ae~tplv-k3u1fbpfcp-zoom-1.image)
-
-- 2、保存退出，参考 [验证可插拔功能组件的安装](https://v2-1.docs.kubesphere.io/docs/zh-CN/installation/verify-components) ，通过查询 ks-installer 日志或 Pod 状态验证功能组件是否安装成功
-
-  ```
-  #所有pod的安装进度
-  #很重要 如果有存在createContainer状态 表示安装未完成
-  kubectl get pods --all-namespaces
-  #日志查看
-  kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath='{.items[0].metadata.name}') -f
-  
-  ```
-
-  > 这一步操作，由于电脑性能原因，持续了15分钟才算基本完成
-
-  ![image-20210317101557467](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf73a52a12584d46917198a33826315e~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ![image-20210317101616701](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd49c8d7d8074cdab8b6fbbdcca19ab4~tplv-k3u1fbpfcp-zoom-1.image)
-
-  ![image-20210317101636347](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ceb60f0d3b864b7883bd63fb0d83db98~tplv-k3u1fbpfcp-zoom-1.image)
-
-- kubesphere的dashboard还可以对集群进行命令行操作
-
-  - ![image-20210317110233023](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d0cb978b1ad4730b1b951cfdca2ec26~tplv-k3u1fbpfcp-zoom-1.image)
-
-    ![image-20210317110209415](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/63fd3eb28771429cbb39353a41edb1ce~tplv-k3u1fbpfcp-zoom-1.image)
-  
-  ## 
-
-## Kubesphere进阶
-
-### 建立多租户系统
-
-[快速入门](https://v2-1.docs.kubesphere.io/docs/zh-CN/quick-start/quick-start-guide/)
+## 3.1 建立多租户系统
 
 - 本文档面向初次使用 KubeSphere 的集群管理员用户，引导新手用户创建企业空间、创建新的角色和账户，然后邀请新用户进入企业空间后，创建项目和 DevOps 工程，帮助用户熟悉多租户下的用户和角色管理，快速上手 KubeSphere
 
@@ -330,26 +54,23 @@
 
   - ![%E5%A4%9A%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6dd73fb0579413ea75618b0278b69bc~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
 
-#### 第一步：创建角色和账号
+### 第一步：创建角色和账号
 
 - 1.1、首先新建一个角色 (user-manager)，为该角色授予账号管理和角色管理的权限，然后新建一个账号并给这个账号授予 user-manager 角色
 
   ```
   平台角色--创建--user-manager--分配用户管理、角色管理的权限
-  
   ```
-
+  
 - 1.2、 **平台管理 → 账户管理**，可以看到当前集群中所有用户的列表，点击 **创建** 按钮
 
   ```
   touch-air-hr --> 角色为 user-manager
-  
   ```
-
+  
   ![image-20210317132947360](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/205de5e35b6740738b8a6428d4ca2e57~tplv-k3u1fbpfcp-zoom-1.image)
-
+  
 - 1.3、**user-manager** 账户登录来创建下表中的四个账号，`ws-manager`将用于创建一个企业空间，并指定其中一个用户名为 `ws-admin`作为企业空间管理员
 
   | 用户名          | 集群角色           | 职责                                                         |
@@ -361,9 +82,8 @@
 
   - ![image-20210317133918504](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce4a889e512f4a3288625e72ea3f0a7c~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
 
-#### 第二步：创建企业空间
+### 第二步：创建企业空间
 
 - 企业空间 (workspace) 是 KubeSphere 实现多租户模式的基础，是用户管理项目、DevOps 工程和企业成员的基本单位
 
@@ -387,7 +107,7 @@
 
   分别使用`project-admin`和 `project-regular`登录，观察不同，admin可以创建项目，regular只有浏览权限
 
-#### 第三步：创建项目
+### 第三步：创建项目
 
 - 创建工作负载、服务和 CI/CD 流水线等资源之前，需要预先创建项目和 DevOps 工程
 
@@ -401,9 +121,8 @@
 
   - ![image-20210317142138331](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9c8e13684a56438984b4506b43615b05~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
 
-#### 第四步：创建 DevOps 工程
+### 第四步：创建 DevOps 工程
 
 - 4.1、继续使用 `project-admin`用户创建 DevOps 工程。点击 **工作台**，在当前企业空间下，点击 **创建**，在弹窗中选择 **创建一个 DevOps 工程**。DevOps 工程的创建者 `project-admin`将默认为该工程的 Owner，拥有 DevOps 工程的最高权限
 
@@ -417,7 +136,7 @@
 
   - ![image-20210317143015953](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd8688d17db6405d939db349b826f3d1~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 创建WordPress应用
+## 3.2 创建WordPress应用
 
 - [创建WordPress应用](https://v2-1.docs.kubesphere.io/docs/zh-CN/quick-start/wordpress-deployment/)
 
@@ -433,15 +152,15 @@
 
   PVC和PV是一一对应的
 
-#### 前提条件
+### 前提条件
 
 - 已创建了企业空间、项目和普通用户 `project-regular`账号（该已账号已被邀请至示例项目），并开启了外网访问，请参考 [多租户管理快速入门](https://v2-1.docs.kubesphere.io/docs/zh-CN/quick-start/admin-quick-start)
 
-#### 创建密钥
+### 创建密钥
 
 - MySQL 的环境变量 `MYSQL_ROOT_PASSWORD`即 root 用户的密码属于敏感信息，不适合以明文的方式表现在步骤中，因此以创建密钥的方式来代替该环境变量。创建的密钥将在创建 MySQL 的容器组设置时作为环境变量写入
 
-##### 创建MySQL密钥
+### 创建MySQL密钥
 
 - 1、以项目普通用户 `project-regular`登录 KubeSphere，在当前项目下左侧菜单栏的 **配置中心** 选择 **密钥**，点击 **创建**
 
@@ -460,9 +179,8 @@
 
   - ![image-20210317150405010](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbf2f632f4864add82c76a80fa2af2c1~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
 
-##### 创建WordPress密钥
+### 创建WordPress密钥
 
 - 同上，创建一个 WordPress 密钥，Data 键值对填写 `WORDPRESS_DB_PASSWORD`和 `123456`
 
@@ -470,7 +188,7 @@
 
 #### 
 
-#### 创建存储卷
+### 创建存储卷
 
 - 点击创建，配置可以都是默认的
 
@@ -480,13 +198,13 @@
   
   #### 创建应用
 
-##### 添加MySQL组件
+### 添加MySQL组件
 
-##### 添加WordPress组件
+### 添加WordPress组件
 
 [创建应用--按照指导一步步做](https://v2-1.docs.kubesphere.io/docs/zh-CN/quick-start/wordpress-deployment/#创建应用)
 
-#### 查看应用资源
+### 查看应用资源
 
 - 1、在 `工作负载`下查看 **部署** 和 **有状态副本集** 的状态，当它们都显示为 `运行中`，说明 WordPress 应用创建成功
 
@@ -494,9 +212,9 @@
 
     ![image-20210317154107897](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a5537b7bf2cc44bc89c91e2e4651de99~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
+  
 
-##### 外网访问
+### 外网访问
 
 - 2、访问 Wordpress 服务前，查看 wordpress 服务，将外网访问设置为 `NodePort`
 
@@ -512,15 +230,15 @@
 
   - ![image-20210317155415436](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef5f1efdd9744c90a5c6f4cc1447bdf4~tplv-k3u1fbpfcp-zoom-1.image)
   
-  #### 
+  
 
-#### 创建应用总结
+### 创建应用总结
 
 - 至此，您已经熟悉了如何通过创建一个 KubeSphere 应用的方式，通过快速添加多个组件来完成一个应用的构建，最终发布至 Kubernetes；这种创建应用的形式非常适合微服务的构建，只需要将各个组件容器化以后，即可通过这种方式快速创建一个完整的微服务应用并发布 Kubernetes
 
   同时，这种方式还支持用户以 **无代码侵入的形式开启应用治理**，针对 **微服务、流量治理、灰度发布与 Tracing** 等应用场景，开启应用治理后会在每个组件中以 SideCar 的方式注入 Istio-proxy 容器来接管流量，后续将以一个 Bookinfo 的示例来说明如何在创建应用中使用应用治理
 
-### DevOps
+## 3.3 DevOps
 
 - 项目开发需要考虑的维度
   - Dev：怎么开发
@@ -528,7 +246,7 @@
   - 高并发：怎么承担高并发
   - 高可用：怎么做到高可用
 
-#### 什么是DevOps
+### 什么是DevOps
 
 - 微服务：服务自治
 
@@ -540,13 +258,13 @@
   - 突出重视软件开发人员和运维人员的沟通合作，通过自动化流程来使得软件构建、测试、发布更加快捷、频繁和可靠
   - DevOps希望做到的是软件产品交付过程中IT工具链的打通，使得各个团队减少时间损耗，更加高效的协同工作，专家们总结出了下面这个DevOps能力图，良好的闭环可以大大增加整体的产出
 
-#### 什么是CI&CD
+### 什么是CI&CD
 
 ![image-20210317165353841](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92be6016e3b54469bdf55e50d7003d26~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 
 
-##### 持续集成（Continuous Integration）
+
+#### 持续集成（Continuous Integration）
 
 - 持续集成是指软件个人研发的部分想软件整体部分交付，频繁的进行集成以便更快的发现其中的错误，持续集成源自于极限编程（XP），是XP最初的12种实践之一
 
@@ -560,7 +278,7 @@
   - 自动化的构建和软件发布流程的工具：如jenkins
   - 反馈机制：如构建/测试的失败，可以快速的反馈到相关负责人，以尽快解决达到一个更稳定的版本
 
-##### 持续交付（Continuous Delivery）
+#### 持续交付（Continuous Delivery）
 
 - 持续交付在持续集成的基础上，将集成后的代码部署到更贴近真实运行环境的【类生成环境】（production-like environments）中；持续交付优先于整个产品生命周期的软件部署，建立在高水平自动化持续集成之上
 - 灰度发布
@@ -571,7 +289,7 @@
   - 整个交付过程进度可视化：方便团队人员了解项目成熟度
   - 更先进的团队协作方式：从需求分析、产品的用户体验到交互设计、开发、测试、运维等角色紧密协作，相比于传统的瀑布式软件团队，更少浪费
 
-##### 持续部署（Continuous Deployment）
+#### 持续部署（Continuous Deployment）
 
 - 持续部署是指当交付的代码通过评审之后，自动部署到生成环境中；持续部署是持续交付的最高阶段，这意味着所有通过了一些列的自动化测试的改动都将自动部署到生产环境，它也可被称为 Continuous Release
 
@@ -585,15 +303,15 @@ CI&CD持续交付工具链图
 
 ![image-20210317172559183](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14da8fa4c88d48f5a26dd5b944d691d4~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 
 
-#### kubesphere流水线
+
+### kubesphere流水线
 
 - Pipeline 是一系列的插件集合，可以通过组合它们来实现持续集成和持续交付的功能。 Pipeline DSL 为我们提供了一个可扩展的工具集，让我们可以将简单到复杂的逻辑通过代码实现
 
   [基于SpringBoot项目构建流水线](https://v2-1.docs.kubesphere.io/docs/zh-CN/quick-start/devops-online/)
 
-##### 流水线概览
+#### 流水线概览
 
 - 下面的流程图简单说明了流水线的完整的工作过程：
 
@@ -612,7 +330,7 @@ CI&CD持续交付工具链图
   > - **阶段七. Push with tag**: 生成 tag 并 release 到 GitHub，并推送到 DockerHub
   > - **阶段八. Deploy to production**: 将发布的 tag 部署到 Production 环境
 
-##### 创建凭证
+#### 创建凭证
 
 > **注意**：
 >
@@ -647,7 +365,7 @@ CI&CD持续交付工具链图
 
 ##### 
 
-##### 修改jenkinsfile
+#### 修改jenkinsfile
 
 - 第一步：Fork项目：登录 GitHub，将本示例用到的 GitHub 仓库 [devops-java-sample](https://github.com/kubesphere/devops-java-sample) Fork 至您个人的 GitHub
 
@@ -671,7 +389,7 @@ CI&CD持续交付工具链图
   
     ![image-20210318091454519](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/85454653d54a468f941dcb12d1442b1c~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 创建项目
+#### 创建项目
 
 - CI/CD 流水线会根据示例项目的 [yaml 模板文件](https://github.com/kubesphere/devops-java-sample/tree/master/deploy)，最终将示例分别部署到 `kubesphere-sample-dev`和 `kubesphere-sample-prod`这两个项目 (Namespace) 环境中，这两个项目需要预先在控制台依次创建，参考如下步骤创建该项目
 
@@ -709,7 +427,7 @@ CI&CD持续交付工具链图
 
   - ![image-20210318092105759](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9d00deeef884f7a881f5933b3656520~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 创建流水线
+#### 创建流水线
 
 - 切换`project-regular`身份登录
 
@@ -719,9 +437,9 @@ CI&CD持续交付工具链图
 
   - ![image-20210318094301572](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51db46ec7d17402e9f4493216545fcea~tplv-k3u1fbpfcp-zoom-1.image)
   
-  ##### 
+  
 
-##### 运行流水线
+#### 运行流水线
 
 - > **注意**：这里由于github上面的项目一直拉取失败，我将项目导入gitee，并修改了jenkinsfile
 
@@ -747,7 +465,7 @@ CI&CD持续交付工具链图
 
   ![image-20210318132621954](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23ab0c2afa0b4dc0a38e82e62700f06d~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 查看流水线
+#### 查看流水线
 
 - 1、点击流水线中 `活动`列表下当前正在运行的流水线序列号，页面展现了流水线中每一步骤的运行状态，注意，流水线刚创建时处于初始化阶段，可能仅显示日志窗口，待初始化 (约一分钟) 完成后即可看到流水线。黑色框标注了流水线的步骤名称，示例中流水线共 8 个 stage，分别在 [Jenkinsfile-online](https://github.com/kubesphere/devops-java-sample/blob/master/Jenkinsfile-online) 中被定义
 
@@ -757,7 +475,7 @@ CI&CD持续交付工具链图
 
   ![image-20210318144421333](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/807073e033164b43be7934499be5627a~tplv-k3u1fbpfcp-zoom-1.image)
 
-##### 验证流水线
+#### 验证流水线
 
 - 1、若流水线执行成功，点击该流水线下的 `代码质量`，即可看到通过 sonarQube 的代码质量检测结果
 
