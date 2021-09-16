@@ -1,4 +1,4 @@
-# **K9s**
+# 一、K9s
 
 k9s是基于终端的资源仪表板。它只有一个命令行界面。无论在Kubernetes仪表板Web  UI上做什么，都可以在终端使用K9s仪表板工具进行相同的操作。k9s持续关注Kubernetes集群，并提供命令以使用集群上定义的资源。
 
@@ -6,7 +6,7 @@ k9s是基于终端的资源仪表板。它只有一个命令行界面。无论�
 
 K9s的功能包括集群的实时跟踪，使用K9s皮肤自定义视图，通过Kubernetes资源轻松遍历，向下通过选项以检查集群资源问题，提供扩展的插件来创建你自己的命令。
 
-# **Rancher**
+# 二、rancher
 
 Rancher是开源容器管理平台，任何企业都可以轻松采用Kubernetes。可以部署和管理在谷歌云GKE，AWS EKS，Azure  AKS中运行的托管Kubernetes集群，也可以仅在选择的虚拟机或裸机基础架构上部署Kubernetes。
 
@@ -14,7 +14,7 @@ Rancher简化了管理员的操作，主要功能包括监控集群的运行状�
 
 随着企业中Kubernetes的采用速度，Rancher让用户可以直接访问Kubernetes   API和CLI。Rancher的新智能界面简化了应用程序管理;团队可以轻松地部署和管理工作负载，定义机密信息并管理私有注册表，配置持久卷声明，配置负载均衡和服务发现，以及管理CI管道等。
 
-# **Dashboard+Kubectl+Kubeadm**
+# 三、Dashboard+Kubectl+Kubeadm
 
 Kubernetes仪表盘基于Web的界面来部署容器应用。它可以对应用程序进行故障排除，并与资源一起管理集群本身。
 
@@ -26,7 +26,7 @@ Kubectl是用于与API服务进行通信，并将命令发送到主节点的命�
 
 Kubeadm是带有内置命令的工具，用于启动最小的Kubernetes集群。使用kubeadm，可以运行一些基本命令来引导集群，创建令牌以加入集群，还原对Kubernetes集群所做的更改等。
 
-# **Helm**
+# 四、Helm
 
 Helm是Kubernetes的软件包管理工具。它允许开发者和管理员在Kubernetes集群上打包，配置和部署应用程序和服务。它为管理员提供了对Kubernetes集群的更大控制权。
 
@@ -34,7 +34,7 @@ Helm是Kubernetes的软件包管理工具。它允许开发者和管理员在Kub
 
 Helm的主要功能有使应用程序部署容易，标准化和可重用，通过Helm  Charts轻松描述复杂的应用程序，提高开发人员生产力，降低部署复杂性，增强操作准备，加快采用云原生应用程序的速度，轻松回滚到以前的版本等。
 
-# **KubeSpray**
+# 五、KubeSpray
 
 KubeSpray是一个集群生命周期管理器，可帮助部署可用于生产的Kubernetes集群。它使用ansible-playbook来自动化Kubernetes集群配置。
 
@@ -42,7 +42,7 @@ KubeSpray是一个集群生命周期管理器，可帮助部署可用于生产�
 
 默认情况下，Kubespray允许通过kube-master   IP地址和端口6443远程连接到Kubernetes集群。Kubespray最适合于需要灵活部署的用户。它提供了许多自定义配置选项。另外，如果熟悉Ansible，那么Kubespray将会非常易于使用。
 
-# **Kontena Lens**
+# 六、Kontena Lens
 
 Kontena Lens是Kubernetes的智能仪表板。
 
@@ -54,7 +54,7 @@ Kontena Lens  IDE主要功能包括可以一次管理多个集群，实时可视
 
 Kubernetes是一个复杂的工具，Lens  IDE可以帮助初学者轻松地使用Kubernetes。它是用于管理和可视化Kubernetes集群的优秀工具之一。
 
-# **WKSctl**
+# 七、WKSctl
 
 WKSctl代表Weave Kubernetes系统控制，它是Weave Kubernetes平台的一部分。
 

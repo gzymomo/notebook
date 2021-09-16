@@ -1,7 +1,5 @@
 - [Kubernetes客户端Java库fabric8io，快来自定义你的操作](https://www.pkslow.com/archives/kubernetes-client-fabric8io)
 
-
-
 # 一、Kubernetes Java客户端
 
 对于`Kubernetes`集群的操作，官方提供了命令行工具`kubectl`，这也是我们最常用且必须掌握的方式。通过`kubectl`来实现增删改查操作，方便而直接。但总有一些更复杂的场景难以满足，比如我希望在数据库的某个值达到10万后就触发一个`Kubernetes Job`去处理某项任务。
@@ -11,8 +9,6 @@
 从`Kubernetes`的架构图可以看出，我们只要和`API server`做好交互就可以了，实际上`kubectl`也是如此的。那我们就可以使用任何语言来操作`Kubernetes`。
 
 本文将介绍`Java`方面最好用的客户端库`fabric8io/kubernetes-client`，它支持`Kubernetes`和`OpenShift`，并被许多项目引用，如`Spring Cloud`、`Spark`、`Istio Java API`等。
-
-
 
 # 二、使用
 

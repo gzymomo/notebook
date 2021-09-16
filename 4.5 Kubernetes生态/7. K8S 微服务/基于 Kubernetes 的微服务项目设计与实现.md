@@ -2,13 +2,9 @@
 
 随着互联网的发展，后端服务和容器编排技术的日益成熟，微服务成为了后端服务的首选，Kubernetes 也已经成为目前容器编排的事实标准, 微服务拥抱容器时代已经来临。
 
-笔者结合自己的经验，写了这篇微服务+ Kubernetes 入门宝典，希望能够抛砖引玉。能让大家了解 微服务和 Kubernetes 如何配合。
-
 上卷主要描述 微服务设计，项目实现，kubernetes 部署，微服务的部署 高可用和监控 这几个部分。
 
 下卷计划讨论服务化网格和数据持久化, 有状态服务，operator 这几部分。
-
-本文由我独立完成（ppmsn2005@gmail.com）如有任何错误，是我个人原因，请直接和我联系，谢谢！您可以在https://github.com/xiaojiaqi/deploy-microservices-to-a-Kubernetes-cluster 找到本文的全文和相关资料。
 
 本文会从设计开始，设计一个简单的前后端分离的项目，并将它部署在 kubernetes 集群上，期间我们将关注微服务和 kubernetes 配合的各个方面，并且从 系统的可用性，可靠性、强壮性、可扩展进行讨论，最终设计一个可以真正实用的系统。
 
@@ -22,7 +18,7 @@
 
 第四章：微服务高可用部署及验证
 
-> 微服务是一种设计思想，它并不局限于任何开发语言，在本例中我们选择java的spring boot 框架来实现微服务。 微服务之间的 RPC 方案也很多，我们这里选择RESTFUL  这种最常见的方案。 为了项目的简洁，项目也没有涉及数据库和缓存，配置中心相关的内容。 我们主要注重项目的设计思想实践和项目改进。
+> 微服务是一种设计思想，它并不局限于任何开发语言，在本例中我们选择Java的Spring Boot 框架来实现微服务。 微服务之间的 RPC 方案也很多，我们这里选择RESTFUL  这种最常见的方案。 为了项目的简洁，项目也没有涉及数据库和缓存，配置中心相关的内容。 我们主要注重项目的设计思想实践和项目改进。
 
 ## 第一章：微服务项目的设计
 
@@ -32,7 +28,9 @@
 
 ![watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=](https://s4.51cto.com/images/blog/202104/08/883378c9561fc20f71d8c9e0325683ff.jpeg?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
 
-微服务把各个功能拆开了，每个模块的功能更加独立，也更加单一。每个模块都独立发展，可以说做到了功能的高内聚，低偶合。
+微服务把各个功能拆开了，每个模块的功能更加独立，也更加单一。
+
+每个模块都独立发展，可以说做到了功能的高内聚，低偶合。
 
 ![watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=](https://s4.51cto.com/images/blog/202104/08/87b6b0daa676cbf50c43ad09a4971274.jpeg?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
 
@@ -64,7 +62,7 @@
 
 但是多个实例又带来一个问题，各个组件之间如何定位呢？如果有10个b.demo.com  实例，它的上下游又该如何找到它们呢？解决方案之一是注册中心。注册中心解决的是应用之间的寻址问题。有了它，上下游之间的应用可以相互寻址，并且获知那些实例是可用的，应用挑选可用的实例进行工作。注册中心的方案很多，有eureka，zookeeper, console, Nacos  等等，关于讨论各种注册中心是AP、CP的区别，优劣的文章很多，这篇文章不是一篇微服务的开发教程，我们选择比较常见的eureka为演示的注册中心。
 
-注：在kubernetes 中部署微服务，对注册中心是没有任何限制的。所以不要被某些文章误导，按照这篇文章做，你完全可以做到代码零修改，直接在kubernetes 上运行。
+注：<font color='red'>在kubernetes 中部署微服务，对注册中心是没有任何限制的。</font>所以不要被某些文章误导，按照这篇文章做，你完全可以做到代码零修改，直接在kubernetes 上运行。
 
 #### 1.3.2 监控系统 Metrics
 
@@ -82,11 +80,11 @@
 
 ![watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=](https://s4.51cto.com/images/blog/202104/08/25b62b47aedfb29495a74588f8af83e6.jpeg?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
 
-这3个维度分别是Mertics Tracing 和logging
+这3个维度分别是Mertics、Tracing 和logging
 
 Metrics  主要就是指刚才说的监控，它主要反应的就是一个聚合的数据，比如今天200错误是多少，QPS是多少？它指的是一段时间内的数据聚合。
 
-Logging 就是我们现在讨论的日志。的它描述一些离散的（不连续的）事件。比如各个系统里的错误，告警。所以我们需要将日志收集起来。
+Logging 就是我们现在讨论的日志。它描述一些离散的（不连续的）事件。比如各个系统里的错误，告警。所以我们需要将日志收集起来。
 
 Tracing 则关注单次请求中信息。我们关注请求的质量和服务可行性，是我们优化系统，排查问题的工具。
 
@@ -106,7 +104,7 @@ Tracing 则关注单次请求中信息。我们关注请求的质量和服务可
 
 ![watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=](https://s4.51cto.com/images/blog/202104/08/030eeea52f3ad0e6e6c94d981b009143.jpeg?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
 
-Google 的论文描述一种解决办法，我们一般称作APM(Application Performance Monitor).  它把一次调用加入一个独立无二的标记，并且在各个系统里透传标记，从而达到追踪整个消息处理过程的能力。市面上大多数实现都是基于这一思想,可选方案的有很多，如 cat pip, zipkin,  skywalkin。它们有需要代码注入的，有无注入的。关于他们的优劣也有很多文章评述。在这里我们选用zipkin 。Zipkin  需要在项目中加入一个库，并不需要写代码，这对业务的入侵做到了很少，非常方便。
+Google 的论文描述一种解决办法，我们一般称作APM(Application Performance Monitor).  它把一次调用加入一个独立无二的标记，并且在各个系统里透传标记，从而达到追踪整个消息处理过程的能力。市面上大多数实现都是基于这一思想,可选方案的有很多，如 cat pip, zipkin,  skywalkinh。它们有需要代码注入的，有无注入的。关于他们的优劣也有很多文章评述。在这里我们选用zipkin 。Zipkin  需要在项目中加入一个库，并不需要写代码，这对业务的入侵做到了很少，非常方便。
 
 ![watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=](https://s4.51cto.com/images/blog/202104/08/1ee79a1864b662a58ad1d67f52af6765.jpeg?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=)
 
