@@ -1,5 +1,9 @@
 - [kubeadm部署kubernetes高可用集群-VIP版](https://lengxiaobing.github.io/2019/06/04/kubeadm%E9%83%A8%E7%BD%B2kubernetes%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4-VIP%E7%89%88/)
 
+- [使用 kubeadm 快速部署体验 K8s](https://blog.k8s.li/kubeadm-deploy-k8s-v1.17.4.html)
+
+
+
 > [官网](https://kubernetes.io/docs/setup/independent/high-availability/)提供了两种拓扑结构部署集群：**stacked control plane nodes**和**external etcd cluster**，本文基于第一种拓扑结构进行部署，使用**Keepalived** + **HAProxy**搭建高可用**Load balancer**。
 
 **stacked control plane nodes**架构图
@@ -10,7 +14,7 @@
 
 [![img](https://lengxiaobing.github.io/img/docs-pics/kubernetes-external.png)](https://lengxiaobing.github.io/img/docs-pics/kubernetes-external.png)
 
-## 一.环境准备
+# 一.环境准备
 
 | 主机名   | IP地址       | 说明             | 组件                                                   |
 | -------- | :----------- | ---------------- | :----------------------------------------------------- |
@@ -22,11 +26,11 @@
 | node03   | 192.168.3.16 | node节点         | kubeadm、kubelet、docker、kube-proxy                   |
 | 无       | 192.168.3.10 | keepalived虚拟IP | 无                                                     |
 
-### 1.1.系统环境
+## 1.1.系统环境
 
 Linux：Centos_7_5_64 (内核3.10+)
 
-### 1.2.关闭防火墙
+## 1.2.关闭防火墙
 
 > 防火墙一定要提前关闭，否则在后续安装K8S集群的时候是个麻烦。执行下面语句关闭，并禁用开机启动：
 
@@ -34,14 +38,14 @@ Linux：Centos_7_5_64 (内核3.10+)
 systemctl stop firewalld & systemctl disable firewalld 
 ```
 
-### 1.3.关闭SeLinux
+## 1.3.关闭SeLinux
 
 ```bash
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 ```
 
-### 1.4.关闭Swap
+## 1.4.关闭Swap
 
 > 在安装K8S集群时，Linux的Swap内存交换机制是一定要关闭的，否则会因为内存交换而影响性能以及稳定性。这里，我们可以提前进行设置：
 
@@ -52,7 +56,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 sed -i '/ swap / s/^/#/' /etc/fstab 
 ```
 
-### 1.5.设置主机名
+## 1.5.设置主机名
 
 ```
 #主节点
@@ -65,7 +69,7 @@ hostnamectl --static set-hostname  node02
 hostnamectl --static set-hostname  node03
 ```
 
-### 1.6.修改hosts
+## 1.6.修改hosts
 
 ```bash
 cat >> /etc/hosts <<EOF
@@ -78,7 +82,7 @@ cat >> /etc/hosts <<EOF
 EOF
 ```
 
-### 1.7.配置路由参数
+## 1.7.配置路由参数
 
 > CentOS_7可能会出现iptables被绕过而导致流量被错误路由的问题。确保 **net.bridge.bridge-nf-call-iptables**在**sysctl**配置中设置为1。
 
@@ -93,9 +97,9 @@ EOF
 sysctl -p /etc/sysctl.d/k8s.conf
 ```
 
-## 二.开始安装
+# 二.开始安装
 
-### 2.1.配置yum源
+## 2.1.配置yum源
 
 > 所有的节点都需要配置相同的yum源
 
@@ -119,7 +123,7 @@ gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg http://mirrors.a
 EOF
 ```
 
-### 2.2.部署keepalived
+## 2.2.部署keepalived
 
 > 部署在所有的master节点，keeplived的主要作用是为haproxy提供vip，在三个haproxy实例之间提供主备，降低当其中一个haproxy失效的时对服务的影响。vip地址指向master1、master2、master3。
 
@@ -178,7 +182,7 @@ systemctl status keepalived.service
 ip address show ens33
 ```
 
-### 2.3.部署haproxy
+## 2.3.部署haproxy
 
 > 部署在所有的master节点，haproxy为apiserver提供反向代理，haproxy将所有请求轮询转发到每个master节点上。相对于仅仅使用keepalived主备模式仅单个master节点承载流量，这种方式更加合理、健壮。
 
@@ -296,7 +300,7 @@ systemctl status haproxy.service
 ss -lnt | grep -E "16443|1080"
 ```
 
-### 2.4.安装Docker
+## 2.4.安装Docker
 
 > 所有的节点都需要安装Docker
 
@@ -312,9 +316,9 @@ yum install -y docker-ce
 systemctl start docker & systemctl enable docker
 ```
 
-### 2.5.安装kubernetes
+## 2.5.安装kubernetes
 
-#### 2.5.1.master节点安装
+### 2.5.1.master节点安装
 
 > master节点需要安装kubeadm、kubectl、kubelet组件
 
@@ -336,7 +340,7 @@ systemctl enable kubelet
 sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
 ```
 
-#### 2.5.2.初始化matser
+### 2.5.2.初始化matser
 
 > 选择一个master节点初始化，其余的master节点加入
 
@@ -402,11 +406,11 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
 
-#### 2.5.3.安装网络组件
+### 2.5.3.安装网络组件
 
 > 网络组件有多种，常用的有calio和flannel ，只需要选择一种就可以了。
 
-##### 2.5.3.1.calio组件
+#### 2.5.3.1.calio组件
 
 ```bash
 # 下载
@@ -433,7 +437,7 @@ kubectl apply -f rbac-kdd.yaml
 kubectl apply -f calico.yaml
 ```
 
-##### 2.5.3.2.flannel 组件
+#### 2.5.3.2.flannel 组件
 
 ```bash
 # 下载
@@ -466,7 +470,7 @@ kubectl apply -f kube-flannel.yml
 kubectl get pods --all-namespaces
 ```
 
-#### 2.5.4.复制证书
+### 2.5.4.复制证书
 
 - 复制证书到其他master节点，shell脚本如下
 
@@ -490,7 +494,7 @@ for host in ${CONTROL_PLANE_IPS}; do
 done 
 ```
 
-#### 2.5.5.部署其它master
+### 2.5.5.部署其它master
 
 > 在其余的master节点执行，加入集群命令，注意添加 **-experimental-control-plane**
 
@@ -514,7 +518,7 @@ kubectl get serviceaccount
 kubectl cluster-info
 ```
 
-#### 2.5.6.etcd集群
+### 2.5.6.etcd集群
 
 - 查看etcd集群状态
 
@@ -550,7 +554,7 @@ etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/c
 da9bb37422ca7d8d, started, master03, https://192.168.3.13:2380, https://192.168.3.13:2379
 ```
 
-#### 2.5.7.node节点安装
+### 2.5.7.node节点安装
 
 > node节点需要安装kubeadm、kubelet组件，kubectl可以不安装
 
@@ -599,11 +603,11 @@ token=$(kubeadm token generate)
 kubeadm token create $token --print-join-command --ttl=0
 ```
 
-#### 2.5.8.安装dashboard
+### 2.5.8.安装dashboard
 
 > 在node节点上安装，节点上需要有相关镜像。
 
-##### 2.5.8.1.安装
+#### 2.5.8.1.安装
 
 - 下载配置文件
 
@@ -645,7 +649,7 @@ kubectl create -f kubernetes-dashboard.yaml
 kubectl get service -n kube-system -o wide 
 ```
 
-##### 2.5.8.2.创建用户
+#### 2.5.8.2.创建用户
 
 - 创建dashboard-rbac.yaml文件，内容如下：
 
@@ -684,15 +688,15 @@ kubectl create -f dashboard-rbac.yaml
 kubectl describe secret admin -n kube-system
 ```
 
-##### 2.5.8.3.登录页面
+#### 2.5.8.3.登录页面
 
 - 打开连接（**火狐**）： https://192.168.3.11:30001
 - 选择**令牌**登录方式
 - 输入上图中的token，点击登录
 
-##### 2.5.8.4.创建证书
+#### 2.5.8.4.创建证书
 
-1.**创建自签名CA**
+##### 1.**创建自签名CA**
 
 - 生成私钥
 
@@ -712,7 +716,7 @@ openssl req -new -x509 -key ca.key -out ca.crt -days 3650 -subj "/C=CN/ST=HB/L=W
 openssl x509 -in ca.crt -noout -text
 ```
 
-2.**签发Dashboard证书**
+##### 2.**签发Dashboard证书**
 
 - 生成私钥
 
@@ -752,7 +756,7 @@ openssl x509 -req -sha256 -days 3650 -in dashboard.csr -out dashboard.crt -CA ca
 openssl x509 -in dashboard.crt -noout -text
 ```
 
-3.**重新部署dashboard**
+##### 3.**重新部署dashboard**
 
 - 删除已经部署的dashboard
 
@@ -778,7 +782,7 @@ kubectl get secret kubernetes-dashboard-certs -n kube-system -o yaml
 kubectl apply -f kubernetes-dashboard.yaml
 ```
 
-4.**浏览器导入证书**
+##### 4.**浏览器导入证书**
 
 - 将生成的自签名证书**ca.crt**文件，导入浏览器。
 - 访问页面： https://192.168.3.11:30001
