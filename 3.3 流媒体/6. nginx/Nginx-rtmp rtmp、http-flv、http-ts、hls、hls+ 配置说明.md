@@ -1,7 +1,5 @@
 [分布式直播系统（三）【Nginx-rtmp rtmp、http-flv、http-ts、hls、hls+ 配置说明】](https://blog.csdn.net/impingo/article/details/99703528)
 
-
-
 # 全局配置
 
 | 配置项                     | 参数类型 | 默认值                | 描述                                                         |
