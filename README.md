@@ -7,8 +7,6 @@
 
 ​	语雀地址：https://www.yuque.com/lovebetterworld
 
-![image-20210913141936215](https://lovebetterworld.oss-cn-beijing.aliyuncs.com/image-20210913141936215.png)
-
 ## 阅读说明
 
 推荐使用Typora阅读本笔记，里面笔记全部为MarkDown格式。
@@ -18,6 +16,8 @@
    `git clone https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld.git`
 
 2. 通过Typora打开文件夹浏览
+
+![image-20210926090240534](https://gitee.com/er-huomeng/l-img/raw/master/typora/image-20210926090240534.png)
 
 ## 流媒体
 
@@ -31,8 +31,6 @@
 
 ### ffmpeg
 
-
-
 - [CentOS7安装ffmpeg](https://www.cnblogs.com/wangrong1/p/11951856.html)
 
 - [ffmpeg架构]()
@@ -41,8 +39,6 @@
 
 - [FFmpeg Protocols Documentation](https://ffmpeg.org/ffmpeg-protocols.html)
 
-  
-
   【ffmpeg命令】
 
 - [ffmpeg命令](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/ffmpeg/ffmpeg%E5%91%BD%E4%BB%A4)
@@ -50,8 +46,6 @@
   【ffmpeg官方文档详解】
 
   - [ffmpeg官方文档详解](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/tree/master/%E6%B5%81%E5%AA%92%E4%BD%93/ffmpeg/ffmpeg%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E4%B8%AD%E6%96%87)
-
-  
 
   【架构图】
 
