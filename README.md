@@ -1,6 +1,9 @@
 个人学习工作笔记总结(包含Java相关，数据库相关，运维相关，docker，Kubernetes，流媒体相关，项目管理相关，代码审查相关，安全渗透相关，开发工具，框架技术等等内容)。
 
+​														 	[![爱是与世界平行/lovebetterworld](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld/widgets/widget_card.svg?colors=393222,ebdfc1,fffae5,d8ca9f,393222,a28b40)](https://gitee.com/AiShiYuShiJiePingXing/lovebetterworld)
+
 ## 介绍
+
 ​	个人读书，学习，阅读，工作的笔记库，收藏来自各大博文网站，书籍，小道系统的学习笔记，文章汇总等资源，或总结一些个人学习过程的知识点等。
 
 ​	部分内容准备迁移至语雀，为了更方便的实现多端阅读。
