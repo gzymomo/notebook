@@ -2,8 +2,6 @@
 
 Gerrit，一种免费、开放源代码的代码审查软件，使用网页界面。
 
-
-
 # gerrit背景
 
 Gerrit，一种免费、开放[源代码](https://links.jianshu.com/go?to=https%3A%2F%2Fbaike.baidu.com%2Fitem%2F%E6%BA%90%E4%BB%A3%E7%A0%81%2F3969)的代码审查软件，使用网页界面。利用[网页浏览器](https://links.jianshu.com/go?to=https%3A%2F%2Fbaike.baidu.com%2Fitem%2F%E7%BD%91%E9%A1%B5%E6%B5%8F%E8%A7%88%E5%99%A8)，同一个团队的软件程序员，可以相互审阅彼此修改后的程序代码，决定是否能够提交，退回或者继续修改。它使用[Git](https://links.jianshu.com/go?to=https%3A%2F%2Fbaike.baidu.com%2Fitem%2FGit)作为底层版本控制系统。它分支自Rietveld，作者为[Google](https://links.jianshu.com/go?to=https%3A%2F%2Fbaike.baidu.com%2Fitem%2FGoogle)公司的Shawn Pearce，原先是为了管理Android计划而产生。
