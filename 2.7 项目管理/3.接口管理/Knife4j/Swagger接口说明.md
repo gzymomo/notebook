@@ -360,3 +360,4 @@ public class SwaggerConfiguration {
 2、最终在`Dcoket`对象构建后，通过调用`Docket`对象的`extensions`方法进行插件赋值
 
 3、插件赋值需要调用`OpenApiExtensionResolver`提供的`buildExtensions`方法，该方法需要一个逻辑分组名称，就是开发者在`yml`配置文件中配置的`group`名称。
+
