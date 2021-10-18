@@ -6,11 +6,7 @@
 
 OmniDB是一个基于浏览器的工具，它简化了专注于交互性的数据库管理，旨在实现在Web端强大的数据库管理功能且是轻量级的，目前支持PostgreSQL、Oracle、MySQL / MariaDB，未来应该会支持Firebird、 SQLite、Microsoft SQL Server、IBM DB2等数据库
 
- 
-
 让我们一起看看它的一些特点：
-
-
 
 1、Web工具：
 

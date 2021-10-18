@@ -1,3 +1,18 @@
+# API详细说明
+
+注释汇总
+
+| 作用范围           | API                | 使用位置                         |
+| ------------------ | ------------------ | -------------------------------- |
+| 对象属性           | @ApiModelProperty  | 用在出入参数对象的字段上         |
+| 协议集描述         | @Api               | 用于controller类上               |
+| 协议描述           | @ApiOperation      | 用在controller的方法上           |
+| Response集         | @ApiResponses      | 用在controller的方法上           |
+| Response           | @ApiResponse       | 用在 @ApiResponses里边           |
+| 非对象参数集       | @ApiImplicitParams | 用在controller的方法上           |
+| 非对象参数描述     | @ApiImplicitParam  | 用在@ApiImplicitParams的方法里边 |
+| 描述返回对象的意义 | @ApiModel          | 用在返回对象类上                 |
+
 # 一、接口添加作者
 
 有时候在开发接口时,我们希望给该接口添加一个作者,这样前端或者别个团队来对接该接口时,如果该接口返回的数据或者调用有问题,都能准确找到该人,提升效率
@@ -361,3 +376,20 @@ public class SwaggerConfiguration {
 
 3、插件赋值需要调用`OpenApiExtensionResolver`提供的`buildExtensions`方法，该方法需要一个逻辑分组名称，就是开发者在`yml`配置文件中配置的`group`名称。
 
+# 八、@ApiModel和@ApiModelProperty
+
+- [@ApiModel和@ApiModelProperty用法](https://www.cnblogs.com/anycc/p/12910853.html)
+
+## 8.1 @ApiModel
+
+ 使用场景：在实体类上边使用，标记类时swagger的解析类。
+ 概述：提供有关swagger模型的其它信息，类将在操作中用作类型时自动内省。
+ 用法：
+ ![img](https://img2020.cnblogs.com/blog/397648/202005/397648-20200518152915502-1667156516.png)
+
+## 8.2 @ApiModelProperty
+
+ 使用场景：使用在被 @ApiModel 注解的模型类的属性上。表示对model属性的说明或者数据操作更改 。
+ 概述：添加和操作模型属性的数据。
+ 用法：
+ ![img](https://img2020.cnblogs.com/blog/397648/202005/397648-20200518152933653-887862377.png)
