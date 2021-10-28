@@ -1,0 +1,10 @@
+1. [《OpenFaaS实战之一：部署》](https://xinchen.blog.csdn.net/article/details/109805296)
+2. [《OpenFaaS实战之二：函数入门》](https://xinchen.blog.csdn.net/article/details/109816846)
+3. [《OpenFaaS实战之三：Java函数》](https://xinchen.blog.csdn.net/article/details/109845563)
+4. [《OpenFaaS实战之四：模板操作(template)》](https://xinchen.blog.csdn.net/article/details/109900209)
+5. [《OpenFaaS实战之五：大话watchdog》](https://xinchen.blog.csdn.net/article/details/109971608)
+6. [《OpenFaaS实战之六：of-watchdog(为性能而生)》](https://xinchen.blog.csdn.net/article/details/110285578)
+7. [《OpenFaaS实战之七：java11模板解析》](https://xinchen.blog.csdn.net/article/details/110310033)
+8. [《OpenFaaS实战之八：自制模板(maven+jdk8)》](https://xinchen.blog.csdn.net/article/details/114438355)
+9. [《OpenFaaS实战之九：终篇，自制模板(springboot+maven+jdk8)》](https://xinchen.blog.csdn.net/article/details/114483494)
+
