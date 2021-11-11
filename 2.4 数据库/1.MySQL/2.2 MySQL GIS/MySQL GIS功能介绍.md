@@ -1,10 +1,12 @@
-# MySQL · 功能介绍 · GIS功能介绍
+# 一、MySQL · 功能介绍 · GIS功能介绍
 
-从MySQL4.1开始，MySQL就支持了基本空间数据类型以及一部分的空间对象函数，但是对GIS功能的支持非常有限；随着不断发展，MySQL8对GIS功能的支持已经比较丰富了，本文将基于MySQL8.0.18版本对MySQL的GIS功能进行介绍。PolarDB MySQL8.0最新版本即将支持包含GIS函数的并行查询，可以显著提高GIS查询的性能。
+从MySQL4.1开始，MySQL就支持了基本空间数据类型以及一部分的空间对象函数，但是对GIS功能的支持非常有限；随着不断发展，MySQL8对GIS功能的支持已经比较丰富了，本文将基于MySQL8.0.18版本对MySQL的GIS功能进行介绍。
 
-## MySQL支持的GIS数据
+PolarDB MySQL8.0最新版本即将支持包含GIS函数的并行查询，可以显著提高GIS查询的性能。
 
-### GIS数据类型
+# 二、MySQL支持的GIS数据
+
+## 2.1 GIS数据类型
 
 MySQL的GIS功能遵守OGC的OpenGIS Geometry Model，支持其定义的空间数据类型的一个子集，包括以下空间数据类型:
 
@@ -19,7 +21,7 @@ MySQL的GIS功能遵守OGC的OpenGIS Geometry Model，支持其定义的空间�
 
 其中GEOEMTRY、POINT、LINESTRING、POLYGON用于保存单个空间数据，并且GEOMETRY可以存储其它任意单个空间数据类型，即如果一个字段定义是GEOMETRY类型，那么该字段可以存储其它类型（不包括集合）的数据，而其它类型必须存储特定类型的数据，例如：
 
-```
+```mysql
 mysql> CREATE TABLE test(a INT primary key, geom GEOMETRY SRID 4326) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 Query OK, 0 rows affected, 1 warning (0.25 sec)
 
@@ -53,9 +55,11 @@ mysql> INSERT INTO test VALUES(2, ST_SRID(Point(1,1), 4326));
 Query OK, 1 row affected (0.01 sec)
 ```
 
-列geom中的类型为GEOMETRY时插入POINT类型数据和LINESTRING类型数据都可以，而类型为POINT时插入LINESTRING类型数据会失败。 MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、GEOMCOLLECTION用于保存空间数据集合，GEOMCOLLECTION可以存储任意空间数据的集合，即GEOEMTRY类型数据的集合，其他的空间数据集合只能存储特定类型数据的集合。
+列geom中的类型为GEOMETRY时插入POINT类型数据和LINESTRING类型数据都可以，而类型为POINT时插入LINESTRING类型数据会失败。 
 
-### GIS对象属性
+MULTIPOINT、MULTILINESTRING、MULTIPOLYGON、GEOMCOLLECTION用于保存空间数据集合，GEOMCOLLECTION可以存储任意空间数据的集合，即GEOEMTRY类型数据的集合，其他的空间数据集合只能存储特定类型数据的集合。
+
+## 2.2 GIS对象属性
 
 MySQL中每个GIS对象都具有一些属性，MySQL中有一系列函数来获取GIS对象的属性，目前MySQL中GIS对象具有以下属性：
 
@@ -74,13 +78,15 @@ MySQL中每个GIS对象都具有一些属性，MySQL中有一系列函数来获�
 - 空(empty)：表示一个对象是否为空，没有任何点的对象就是空的，目前MySQL中只有空的GEOMRTRYCOLLECTION是有效的。
 - 维度(dimension)：空间对象的维度，目前MySQL最多只支持二维空间对象，因此该值有-1、0、1、2四种，-1是空对象具有的维度、0是点的维度、1是线的维度、2是多边形的维度，集合的维度和其中元素的最大维度相同。
 
-虽然MySQL支持上述八种空间数据类型，但是在Server层都是使用的Field_geom类来处理空间数据列的，Server层统一的类型是MYSQL_TYPE_GEOMETRY， 在`sql/spatial.cc`中定义了GIS数据类型及相关操作。目前MySQL支持GIS数据的存储引擎有MyASIM、InnoDB、NDB以及ARCHIVE，其中MyASIM和InnoDB还支持建立空间索引。
+虽然MySQL支持上述八种空间数据类型，但是在Server层都是使用的Field_geom类来处理空间数据列的，Server层统一的类型是MYSQL_TYPE_GEOMETRY， 在`sql/spatial.cc`中定义了GIS数据类型及相关操作。
 
-### GIS数据格式
+目前MySQL支持GIS数据的存储引擎有MyASIM、InnoDB、NDB以及ARCHIVE，其中MyASIM和InnoDB还支持建立空间索引。
+
+## 2.3 GIS数据格式
 
 MySQL中支持WKT以及WKB两种格式来操作GIS数据，同时在内部以另外一种格式存储GIS数据。
 
-#### WKT
+### 2.3.1 WKT
 
 即文本格式，在用户操作GIS类型的数据时可以使用直观的文本进行插入或查询，MySQL支持OpenGIS定义的语法来写WKT数据，示例如下：
 
@@ -94,7 +100,7 @@ MySQL中支持WKT以及WKB两种格式来操作GIS数据，同时在内部以另
 
 在用户进行插入时可以使用ST_GeomFromText等函数来将WKT格式的GIS数据转换成内部格式进行插入，在进行查询时可以使用ST_AsText函数来将内部数据转换为更直观的WKT结果格式。
 
-#### WKB
+### 2.3.2 WKB
 
 该格式时OpenGIS定义的一个格式，使用二进制数据来保存信息，例如平面坐标系下的点(1,-1)的WKB格式为：
 
@@ -104,7 +110,7 @@ MySQL中支持WKT以及WKB两种格式来操作GIS数据，同时在内部以另
 
 其中第一个字节标识了字节序，0是大端，1是小端；紧接着的四个字节表示数据类型，目前MySQL只支持上述七种数据类型（不包括GEOMETRY），因此只使用了1到7来分别标识七种数据；因为点只有x坐标和y坐标，所以紧接着的16字节中前8字节是x坐标，后8字节是y坐标。 在WKB格式中，前五个字节是所有类型的GIS数据都具有的，而后续具体表示数据的内容就因类型而异了，复杂的数据类型有复杂的表达方式，具体可以参考[OpenGIS标准](https://www.ogc.org/standards/sfs)。用户可以通过ST_GeomFromWKB等函数来将WKB格式的GIS数据转换为内部格式插入到系统中，在进行查询时可以使用ST_AsWKB等函数将内部数据转换成WKB结果格式。
 
-#### 内部存储格式
+### 2.3.3 内部存储格式
 
 MySQL内部存储格式与WKB格式类似，也是使用二进制格式来保存GIS数据，所以MySQL内部存储GIS数据实际上使用的是blob类型。MySQL内部存储的数据格式是四字节的SRID加上WKB格式的数据，同样以平面坐标系下的点(1,-1)为例，点(1,-1)在内部存储的数据为：
 
@@ -114,11 +120,11 @@ MySQL内部存储格式与WKB格式类似，也是使用二进制格式来保存
 
 其中前四个字节标识了对象的SRID，例中为SRID 0；接下来的21个字节就是WKB格式表示了，需要注意的是在MySQL中都是按小端序来存储GIS数据的，因此字节序标记一直为1。
 
-## GIS函数
+# 三、GIS函数
 
 MySQL提供了一系列的空间数据分析计算函数，大部分空间数据计算函数是基于Boost.Geometry库实现的，选择Boost的原因可以参考Manyi Lu的[博客](http://mysqlserverteam.com/why-boost-geometry-in-mysql/)。空间数据计算函数主要分为空间对象构造、空间数据格式转换、空间对象属性、空间对象关系计算，空间对象生成等等几大类，MySQL中GIS函数的实现定义在`sql/item_geofunc*`等文件中，其中大部分定义在`sql/item_geofunc.h`和`sql/item_geofunc.cc`文件中。
 
-### 空间对象构造函数
+## 3.1 空间对象构造函数
 
 这类函数用于构造空间对象，其中点是由两个坐标构成的，其他的对象都是基于点生成的。
 
@@ -132,7 +138,7 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 | MultiPoint(pt [, pt2] …)                             | 根据多个点构造一个点的集合，参数是一个或多个点               |
 | MultiPolygon(poly [, poly] …)                        | 根据多个多边形构造一个多边形的集合，参数是一个或多个多边形   |
 
-### 空间数据格式转换函数
+## 3.2 空间数据格式转换函数
 
 这类函数用于将空间对象从一种格式转化成另一种格式，主要是内部格式和WKB、WKT格式的相互转换，可用于空间数据的导入导出。
 
@@ -160,7 +166,7 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 | ST_AsGeoJSON(g [, max_dec_digits [, options]])               | 将一个空间对象转换成一个GeoJSON形式输出                      |
 | ST_GeomFromGeoJSON(str [, options [, srid]])                 | 读取一个以geojson格式字符串输入的空间对象                    |
 
-### 空间对象属性函数
+## 3.3 空间对象属性函数
 
 | 函数名                                              | 描述                                                         |                                                              |
 | --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -188,7 +194,7 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 | ST_GeometryN(gc, N)                                 | 读取空间对象集合中的第N（第二个参数）个对象，第一个参数需要是GeometryCollection |                                                              |
 | ST_NumGeometries(gc)                                | 返回空间对象集合中对象的个数，参数只能是geometrycollection类型对象 |                                                              |
 
-### 空间对象关系计算函数
+## 3.4 空间对象关系计算函数
 
 这类函数主要是计算两个空间对象之间的关系，比如包含、相交、距离等等。
 
@@ -213,7 +219,7 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 | MBRTouches(g1, g2)           | 测试两个参数的MBR是否相邻，边界挨着而不重叠                  |
 | MBRWithin(g1, g2)            | 测试第二个参数的MBR是否包含第一个参数的MBR，与MBRWithin正好相反 |
 
-### 空间对象生成函数
+## 3.5 空间对象生成函数
 
 这类函数依据某种规则从一个已有的空间对象生成另一个空间对象，比如生成凸包、坐标系转换等等。
 
@@ -228,7 +234,7 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 | ST_Transform(g, target_srid)                              | 将一个空间对象转换到另一个坐标系中，第二个参数决定了目标坐标系 |
 | ST_Union(g1, g2)                                          | 返回两个空间对象的并集，目前只支持平面坐标系                 |
 
-### 其他函数
+## 3.6 其他函数
 
 这类函数主要是一些提供其他操作以提高应用灵活性的函数。
 
@@ -246,9 +252,11 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 
 上面是MySQL-8.0.18所支持的所有空间函数的简单介绍，各个GIS函数的详细信息和用法可以通过[官方文档](https://dev.mysql.com/doc/refman/8.0/en/spatial-analysis-functions.html)了解。在MySQL-8.0.18中常用的空间操作函数都已经支持了，但是还有一些GIS函数并不支持，比如空间聚集函数ST_Collect。
 
-## 总结
+# 四、总结
 
-在MySQL8中对GIS功能的支持已经比较完善了，支持了主要的空间数据类型，还在InnoDB引擎上支持了GIS，使得GIS数据支持完整的MVCC和事务特性，并且支持InnoDB上的R树索引，此外还支持了空间投影，支持大量的空间坐标系，这大大扩展了MySQL中GIS功能的应用场景。 下面是MySQL和开源空间数据库插件PostGIS在部分功能上的对比。
+在MySQL8中对GIS功能的支持已经比较完善了，支持了主要的空间数据类型，还在InnoDB引擎上支持了GIS，使得GIS数据支持完整的MVCC和事务特性，并且支持InnoDB上的R树索引，此外还支持了空间投影，支持大量的空间坐标系，这大大扩展了MySQL中GIS功能的应用场景。 
+
+下面是MySQL和开源空间数据库插件PostGIS在部分功能上的对比。
 
 | 功能           | MySQL                                | PostGIS                              |
 | -------------- | ------------------------------------ | ------------------------------------ |
@@ -258,7 +266,9 @@ MySQL提供了一系列的空间数据分析计算函数，大部分空间数据
 | 空间投影       | 支持多种投影坐标系，支持空间坐标转换 | 支持多种投影坐标系，支持空间坐标转换 |
 | 事务支持       | 在InnoDB引擎上支持完整的事务特性     | 提供了一系列的长事务支持             |
 
-MySQL8对GIS的功能已经比较完善了，但是在某些方面还是有缺失，比如MySQL只能支持二维数据，并且支持的空间操作函数也不够完备。总体而言MySQL的GIS功能相比于PostGIS还有差距，但是MySQL的GIS功能是集成在MySQL服务中的，不需要加载插件，使用起来更方便，MySQL也一直在对GIS功能进行改进，已经能够满足基本的应用场景。
+MySQL8对GIS的功能已经比较完善了，但是在某些方面还是有缺失，<font color='red'>比如MySQL只能支持二维数据，并且支持的空间操作函数也不够完备。</font>
+
+总体而言MySQL的GIS功能相比于PostGIS还有差距，但是MySQL的GIS功能是集成在MySQL服务中的，不需要加载插件，使用起来更方便，MySQL也一直在对GIS功能进行改进，已经能够满足基本的应用场景。
 
 ## 参考文档
 
