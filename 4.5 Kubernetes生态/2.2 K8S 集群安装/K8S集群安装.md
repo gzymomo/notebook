@@ -14,6 +14,7 @@
 - [从零开始--15分钟，快速搭建k8s高版本集群！！！](https://blog.51cto.com/xiaozhagn/2999760)
 - [k8s生产环境应用部署(无坑版本)](https://blog.51cto.com/luoguoling/3006487)
 - [使用 Kubespray 本地开发测试部署 kubernetes 集群](https://blog.k8s.li/deploy-k8s-by-kubespray.html)
+- [kubernetes集群高可用(二进制)](https://blog.51cto.com/kangfs/4570841)
 
 
 

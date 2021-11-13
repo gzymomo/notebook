@@ -1,3 +1,4 @@
+- [Linux K8S（Kubernetes）常用命令](https://juejin.cn/post/7029602998141747236)
 - [kubectl 高效使用技巧](https://mp.weixin.qq.com/s/nqcZRsm4c9JITgXh8jYvTg)
 
 kubectl 是 Kubernetes 集群的控制工具，它可以让你执行所有可能的 Kubernetes 操作。
