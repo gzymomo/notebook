@@ -1,0 +1,51 @@
+- [alertmanager配置文件详解](https://www.cnblogs.com/sanduzxcvbnm/p/14247301.html)
+
+```yaml
+global:
+  smtp_smarthost: 'localhost:25'
+  smtp_from: 'alertmanager@example.org'         #用于邮件通知的P发件人
+route:                                          #每个输入警报进入根路由
+  receiver: 'team-X-mails'                      #根路由不得包含任何匹配项，因为它是所有警报的入口点
+  group_by: ['alertname', 'cluster']            #将传入警报分组的标签。例如，将有个针对cluster = A和alertname = LatencyHigh的警报进入批处理成一个组
+  group_wait: 30s                               #当传入的警报创建了一组新的警报时，请至少等待多少秒发送初始通知
+  group_interval: 5m                            #发送第一个通知时，请等待多少分钟发送一批已开始为该组触发的新警报
+  repeat_interval: 3h                           #如果警报已成功发送，请等待多少小时以重新发送警报
+  routes:                                       #子路由，父路由的所有属性都会被子路由继承
+  - match_re:                                   #此路由在警报标签上执行正则表达式匹配，以捕获与服务列表相关的警报
+      service: ^(foo1|foo2|baz)$
+    receiver: team-X-mails
+    routes:                                     #服务有严重警报，任何警报子路径不匹配，即通过父路由配置直接发送给收件人
+    - match:
+        severity: critical
+      receiver: team-X-pager
+    routes:                                      #此路由处理来自数据库服务的所有警报
+    - match:
+        severity: critical
+      receiver: team-Y-pager
+  - match:
+      service: database
+    receiver: team-DB-pager                       #还可以按受影响的数据库对警报进行分组
+    group_by: [alertname, cluster, database]
+    routes:
+    - match:
+        owner: team-X
+      receiver: team-X-pager
+#如果另一个警报正在触发，则禁止规则允许将一组警报静音，如果同一警报已经严重，我们将使用此选项禁用任何警告级别的通知 
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  equal: ['alertname']
+#如果警报名称相同，则应用抑制，如果源警报和目标警报中均缺少“equal”中列出的所有标签名称，则将应用禁止规则！
+receivers:
+- name: 'team-X-mails'
+  email_configs:
+  - to: 'team-X+alerts@example.org, team-Y+alerts@example.org'
+- name: 'team-X-pager'
+  email_configs:
+  - to: 'team-X+alerts-critical@example.org'
+  pagerduty_configs:
+  - routing_key: <team-X-key>
+```
+
