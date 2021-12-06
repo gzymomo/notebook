@@ -263,15 +263,15 @@ spec:
 
 ### 4.部署结果
 
-![1V`_1D~7OHIIE7MZR9G.png](https://s2.51cto.com/images/20211129/1638174965317020.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=)
+![1V`_1D~7OHIIE7MZR9G.png](https://gitee.com/er-huomeng/img/raw/master/1638174965317020.png)
 
 ### 5.修改策略(镜像集群设置)
 
-![image.png](https://s2.51cto.com/images/20211129/1638180847485492.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=)
+![image.png](https://gitee.com/er-huomeng/img/raw/master/1638180847485492.png)
 
 ### 6.结果展示
 
-![image.png](https://s2.51cto.com/images/20211129/1638180907797316.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=)
+![image.png](https://gitee.com/er-huomeng/img/raw/master/1638180907797316.png)
 
 ## go程序测试集群
 
