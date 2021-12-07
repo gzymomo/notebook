@@ -1,4 +1,5 @@
 - [K8s中 蓝绿部署、金丝雀发布、滚动更新汇总](https://mp.weixin.qq.com/s/YNuN9x-G37sOXCnZVaLm7A)
+- [基于Kubernetes实现前后端应用的金丝雀发布](https://www.cnblogs.com/fulu/p/15648351.html)
 
 ## 1 Kubernetes 中的部署策略
 
