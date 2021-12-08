@@ -1,5 +1,7 @@
 [Kubernetes 上部署 Redis 高可用集群](https://blog.51cto.com/u_11451275/2842835)
 
+[在Kubernetes上部署一套 Redis 集群](https://www.shangmayuan.com/a/98e5d92bb51a43b1b1d178ca.html)
+
 
 
 ### 在 Kubernetes 中部署 Redis 集群
