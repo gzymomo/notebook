@@ -47,11 +47,11 @@ sudo systemctl restart docker
 
 *注意：[容器镜像服务 (aliyun.com)](https://cr.console.aliyun.com/cn-shenzhen/instances/mirrors)，登陆阿里云账号，可查看自己的镜像加速器地址。
 
-![image-20211208200311196](https://img2020.cnblogs.com/blog/1953408/202112/1953408-20211209011151260-2045754518.png)
+![image-20211208200311196](https://gitee.com/er-huomeng/img/raw/master/1953408-20211209011151260-2045754518.png)
 
 配置完之后可以通过`docker info`查看
 
-![image-20211208201623732](https://img2020.cnblogs.com/blog/1953408/202112/1953408-20211209011151310-2143599327.png)
+![image-20211208201623732](https://gitee.com/er-huomeng/img/raw/master/1953408-20211209011151310-2143599327.png)
 
 ## 3 列出本地镜像
 
@@ -181,9 +181,9 @@ bashdocker build -t="skybiubiu/nginx:v1" .
 - `-t`：打标签
 - `.`：表示当前文件夹下
 
-![image-20211208215110959](https://img2020.cnblogs.com/blog/1953408/202112/1953408-20211209011151248-512935133.png)
+![image-20211208215110959](https://gitee.com/er-huomeng/img/raw/master/1953408-20211209011151248-512935133.png)
 
-![image-20211208215201394](https://img2020.cnblogs.com/blog/1953408/202112/1953408-20211209011151315-1114970321.png)
+![image-20211208215201394](https://gitee.com/er-huomeng/img/raw/master/1953408-20211209011151315-1114970321.png)
 
 *注意：更多写法，在后面Dockerfile章节补充。
 
