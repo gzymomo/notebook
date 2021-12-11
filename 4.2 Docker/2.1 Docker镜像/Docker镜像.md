@@ -19,7 +19,7 @@ Docker运行容器前需要本地存在对应的镜像，如果镜像不存在�
 举例：从Docker Hub仓库下载一个Ubuntu操作系统的镜像。
 
 ```bash
-复制代码12345678bash[root@localhost /]# docker pull ubuntu:latest
+bash[root@localhost /]# docker pull ubuntu:latest
 
 latest: Pulling from library/ubuntu
 7b1a6ab2e44d: Pull complete 
@@ -35,7 +35,7 @@ docker.io/library/ubuntu:latest
 有时候官方仓库注册服务器下载比较慢，可以从其他仓库中下载。以阿里云镜像加速为例，配置流程：
 
 ```bash
-复制代码12345678bashsudo mkdir -p /etc/docker
+bashsudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": ["https://<个人的地址号>.mirror.aliyuncs.com"]
@@ -58,7 +58,7 @@ sudo systemctl restart docker
 使用`docker images`显示本地已有的镜像。
 
 ```bash
-复制代码123456bash[root@localhost /]# docker images
+bash[root@localhost /]# docker images
 REPOSITORY    TAG       IMAGE ID       CREATED        SIZE
 ubuntu        latest    ba6acccedd29   7 weeks ago    72.8MB
 ubuntu        test    	ba6acccedd29   7 weeks ago    72.8MB
@@ -80,7 +80,6 @@ hello-world   latest    feb5d9fea6a5   2 months ago   13.3kB
 下面的命令指定使用镜像`ubuntu:latest`来启动一个容器。
 
 ```bash
-复制代码1
 bashsudo docker run -it ubuntu:latest /bin/bash
 ```
 
@@ -105,7 +104,7 @@ bashsudo docker run -it ubuntu:latest /bin/bash
 1. 启动镜像，写入一些文件或者更新软件。
 
 ```bash
-复制代码123456789bash[root@localhost /]# docker images
+bash[root@localhost /]# docker images
 REPOSITORY    TAG       IMAGE ID       CREATED        SIZE
 ubuntu        latest    ba6acccedd29   7 weeks ago    72.8MB
 hello-world   latest    feb5d9fea6a5   2 months ago   13.3kB
@@ -122,7 +121,7 @@ ad84bf1eb7d8   ba6acccedd29   "/bin/bash"   27 seconds ago   Up 26 seconds
 1. 提交镜像更改（将容器转为镜像）
 
 ```bash
-复制代码123456789bash[root@localhost ~]# docker commit -m="Ubuntu image commit test" -a="Skybiubiu" ad84bf1eb7d8 ubuntu2:test
+bash[root@localhost ~]# docker commit -m="Ubuntu image commit test" -a="Skybiubiu" ad84bf1eb7d8 ubuntu2:test
 sha256:5299c83968a8ef1a44308d851593f74620945ccda08a6ea516fd0ad9055dc019
 [root@localhost ~]# 
 [root@localhost ~]# docker images
@@ -147,7 +146,7 @@ hello-world   latest    feb5d9fea6a5   2 months ago    13.3kB
 新建一个目录和一个Dockerfile。
 
 ```bash
-复制代码1234bashcd ~
+bashcd ~
 mkdir Dockerfile_dir
 cd Dockerfile_dir
 touch Dockerfile
@@ -156,7 +155,7 @@ touch Dockerfile
 Dockerfile中每一条指令都创建镜像的一层（并非绝对），以构建一个Nginx镜像为例子
 
 ```bash
-复制代码1234bash[root@localhost Dockerfile_dir]# vim Dockerfile 
+bash[root@localhost Dockerfile_dir]# vim Dockerfile 
 FROM nginx
 MAINTAINER SkyBiuBiu
 RUN echo "It 's a Nginx image,created by skybiubiu." > /usr/share/nginx/html/index.html
@@ -172,7 +171,6 @@ Dockerfile基本的语法是
 编写完成的Dockerfile可以通过`docker build`命令来生成镜像。
 
 ```bash
-复制代码1
 bashdocker build -t="skybiubiu/nginx:v1" .
 ```
 
@@ -198,7 +196,7 @@ bashdocker build -t="skybiubiu/nginx:v1" .
 首先，得通过`docker login`命令登陆Docker Hub。
 
 ```bash
-复制代码1234567bash[root@localhost ~]# docker login
+bash[root@localhost ~]# docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
 Username: skybiubiu
 Password: 
@@ -212,7 +210,7 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 格式`docker push 仓库ID/镜像名:Tag`
 
 ```bash
-复制代码12345678910bash[root@localhost ~]# docker push skybiubiu/nginx:v1
+bash[root@localhost ~]# docker push skybiubiu/nginx:v1
 The push refers to repository [docker.io/skybiubiu/nginx]
 42bab3f962bd: Pushed 
 2bed47a66c07: Mounted from library/nginx 
@@ -229,7 +227,7 @@ v1: digest: sha256:57227eb210f8abbeacd1f54f3334300636968371adfbe7a9a3a94f0093144
 镜像列表如下
 
 ```bash
-复制代码1234567bash[root@localhost ~]# docker images
+bash[root@localhost ~]# docker images
 REPOSITORY        TAG       IMAGE ID       CREATED        SIZE
 skybiubiu/nginx   v1        c841f47ef705   3 hours ago    141MB
 ubuntu2           test      5299c83968a8   3 hours ago    72.8MB
@@ -241,7 +239,7 @@ hello-world       latest    feb5d9fea6a5   2 months ago   13.3kB
 将`ubuntu2:test`导出到本地，`-o`表示output。
 
 ```bash
-复制代码1234bash[root@localhost ~]# docker save -o ubuntu2.tar ubuntu2:test
+bash[root@localhost ~]# docker save -o ubuntu2.tar ubuntu2:test
 
 [root@localhost ~]# ls | grep ubuntu2.tar 
 ubuntu2.tar
@@ -250,7 +248,7 @@ ubuntu2.tar
 将本地`ubuntu2.tar`导入为镜像，`-i`表示input。
 
 ```bash
-复制代码12bash[root@localhost ~]# docker load -i ubuntu2.tar
+bash[root@localhost ~]# docker load -i ubuntu2.tar
 Loaded image: ubuntu2:test
 ```
 
@@ -261,7 +259,7 @@ Loaded image: ubuntu2:test
 通过命令删除skybiubiu/nginx:v1的镜像。
 
 ```bash
-复制代码123456bash[root@localhost ~]# docker rmi skybiubiu/nginx:v1 
+bash[root@localhost ~]# docker rmi skybiubiu/nginx:v1 
 Untagged: skybiubiu/nginx:v1
 Untagged: skybiubiu/nginx@sha256:57227eb210f8abbeacd1f54f3334300636968371adfbe7a9a3a94f00931444d8
 Deleted: sha256:c841f47ef70593e223dfd75f23df2c21dbe7e75cd1a63eea9dd454bf0f6f0d99
@@ -274,7 +272,6 @@ Deleted: sha256:e94202cb0e93a88978d0bacfd032e2158fb68b4803d900868595b351a7801fb3
 有一个删除所有镜像的小技巧，如下。
 
 ```bash
-复制代码1
 bashdocker rmi -f $(docker images -q)
 ```
 
