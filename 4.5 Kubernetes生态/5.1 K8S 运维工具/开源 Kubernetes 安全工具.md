@@ -6,7 +6,7 @@
 
 下面，您将找到我们的调查受访者确定的`前八名`最受欢迎的开源 Kubernetes 安全工具。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/lPwvgkMwLNj5hEJRoYYpZQUpYpTLYeTtG1v7AYiaSWHicZTia0vbNRk1gRIs0libqYspeGL6n6rkk3fklxd3gA5vug/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![image-20211213133521637](https://gitee.com/er-huomeng/img/raw/master/image-20211213133521637.png)
 
 ## 1 Open Policy Agent (OPA)
 
