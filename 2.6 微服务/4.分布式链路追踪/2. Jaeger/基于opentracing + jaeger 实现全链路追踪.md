@@ -1,4 +1,5 @@
 - [基于opentracing + jaeger 实现全链路追踪](https://www.jianshu.com/p/fbedfcdea606)
+- [Jaeger开发入门(java版)](https://www.cnblogs.com/bolingcavalry/p/15700712.html)
 
 ## 链路追踪
 
