@@ -2,7 +2,7 @@
 
 三色标记法是一种垃圾回收法，它可以让JVM不发生或仅短时间发生STW(Stop The World)，从而达到清除JVM内存垃圾的目的。JVM中的**CMS、G1垃圾回收器**所使用垃圾回收算法即为三色标记法。
 
-## 三色标记算法思想
+## 1 三色标记算法思想
 
 三色标记法将对象的颜色分为了黑、灰、白，三种颜色。
 
@@ -12,9 +12,9 @@
 
 **黑色**：该对象已经被标记过了，且该对象下的属性也全部都被标记过了。（程序所需要的对象）
 
-[![img](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210207155947452-729461329.png)](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210207155947452-729461329.png)
+![image-20211218100616826](https://gitee.com/er-huomeng/img/raw/master/image-20211218100616826.png)
 
-### 算法流程
+### 1.1 算法流程
 
 从我们`main`方法的根对象（JVM中称为`GC Root`）开始沿着他们的对象向下查找，用黑灰白的规则，标记出所有跟`GC Root`相连接的对象,扫描一遍结束后，一般需要进行一次短暂的STW(Stop The  World)，再次进行扫描，此时因为黑色对象的属性都也已经被标记过了，所以只需找出灰色对象并顺着继续往下标记（且因为大部分的标记工作已经在第一次并发的时候发生了，所以灰色对象数量会很少，标记时间也会短很多）, 此时程序继续执行，`GC`线程扫描所有的内存，找出扫描之后依旧被标记为白色的对象（垃圾）,清除。
 
@@ -28,12 +28,12 @@
 6. 通过write-barrier检测对象有变化，重复以上操作
 7. 收集所有白色对象（垃圾）
 
-### 三色标记存在问题
+### 1.2 三色标记存在问题
 
 1. 浮动垃圾：并发标记的过程中，若一个已经被标记成黑色或者灰色的对象，突然变成了垃圾，由于不会再对黑色标记过的对象重新扫描,所以不会被发现，那么这个对象不是白色的但是不会被清除，重新标记也不能从`GC Root`中去找到，所以成为了浮动垃圾，**浮动垃圾对系统的影响不大，留给下一次GC进行处理即可**。
 2. 对象漏标问题（需要的对象被回收）：并发标记的过程中，一个业务线程将一个未被扫描过的白色对象断开引用成为垃圾（删除引用），同时黑色对象引用了该对象（增加引用）（这两部可以不分先后顺序）；因为黑色对象的含义为其属性都已经被标记过了，重新标记也不会从黑色对象中去找，导致该对象被程序所需要，却又要被GC回收，此问题会导致系统出现问题，而`CMS`与`G1`，两种回收器在使用三色标记法时，都采取了一些措施来应对这些问题，**CMS对增加引用环节进行处理（Increment Update），G1则对删除引用环节进行处理(SATB)。**
 
-## 解决办法
+## 2 解决办法
 
 在JVM虚拟机中有两种常见垃圾回收器使用了该算法：CMS(Concurrent Mark Sweep)、G1(Garbage First) ，为了解决三色标记法对对象漏标问题各自有各自的法:
 
@@ -55,7 +55,7 @@ CMS(Concurrent Mark  Sweep)收集器是一种以获取最短回收停顿时间�
 
 最后是并发清除阶段，清理删除掉标记阶段判断的已经死亡的对象，由于不需要移动存活对象，所以这个阶段也是可以与用户线程同时并发的。由于在整个过程中耗时最长的并发标记和并发清除阶段中，垃圾收集器线程都可以与用户线程一起工作，所以从总体上来说，CMS收集器的内存回收过程是与用户线程一起并发执行的。
 
-[![img](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210203084504068-2000031218.png)](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210203084504068-2000031218.png)
+![image-20211218100628586](https://gitee.com/er-huomeng/img/raw/master/image-20211218100628586.png)
 
 ### CMS解决办法:增量更新
 
@@ -76,27 +76,21 @@ CMS(Concurrent Mark  Sweep)收集器是一种以获取最短回收停顿时间�
 	所以使用CMS就会出现一种情况，硬件升级了，却越来越卡顿，其原因就是因为进行`Serial Old GC`时，效率过低。
 
 	- 解决方案：使用`Mark-Sweep-Compact`算法，减少垃圾碎片
-
 	- 调优参数（配套使用）：
 
-		
-
-- ```
-	-XX:+UseCMSCompactAtFullCollection  开启CMS的压缩
-	-XX:CMSFullGCsBeforeCompaction 默认为0，指经过多少次CMS FullGC才进行压缩
-	```
+```
+-XX:+UseCMSCompactAtFullCollection  开启CMS的压缩
+-XX:CMSFullGCsBeforeCompaction 默认为0，指经过多少次CMS FullGC才进行压缩
+```
 
 当JVM认为内存不够，再使用CMS进行并发清理内存可能会发生OOM的问题，而不得不进行`Serial Old GC`，`Serial Old`是单线程垃圾回收，效率低
 
 - 解决方案：降低触发`CMS GC`的阈值，让浮动垃圾不那么容易占满老年代
-
 - 调优参数：
 
-	
-
-1. - ```
-		-XX:CMSInitiatingOccupancyFraction 92% 可以降低这个值，让老年代占用率达到该值就进行CMS GC
-		```
+```
+-XX:CMSInitiatingOccupancyFraction 92% 可以降低这个值，让老年代占用率达到该值就进行CMS GC
+```
 
 ### G1回顾
 
@@ -104,7 +98,7 @@ G1(Garbage First)物理内存不再分代，而是由一块一块的`Region`组�
 
 Region中还有一类特殊的Humongous区域，专门用来存储大对象。G1认为只要大小超过了一个Region容量一半的对象即可判定为大对象。每个Region的大小可以通过参数`-XX：G1HeapRegionSize`设定，取值范围为1MB～32MB，且应为2的N次幂。而对于那些超过了整个Region容量的超级大对象，将会被存放在N个连续的Humongous Region之中，G1的大多数行为都把Humongous Region作为老年代的一部分来进行看待，如图所示
 
-[![img](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210207155906754-102190047.png)](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210207155906754-102190047.png)
+![image-20211218100656073](https://gitee.com/er-huomeng/img/raw/master/image-20211218100656073.png)
 
 ### G1前置知识
 
@@ -113,8 +107,9 @@ Region中还有一类特殊的Humongous区域，专门用来存储大对象。G1
 - 由于在进行`YoungGC`时，我们在进行对一个对象是否被引用的过程，需要扫描整个Old区，所以JVM设计了`CardTable`，将Old区分为一个一个Card，一个Card有多个对象；如果一个Card中的对象有引用指向Young区，则将其标记为`Dirty Card`，下次需要进行`YoungGC`时，只需要去扫描`Dirty Card`即可。
 - Card Table 在底层数据结构以 `Bit Map`实现。
 
-[![img](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210207155914345-67461391.png)](https://img2020.cnblogs.com/blog/2002319/202102/2002319-20210207155914345-67461391.png)
- **RSet(Remembered Set)**
+![](https://gitee.com/er-huomeng/img/raw/master/image-20211218100706716.png)
+
+**RSet(Remembered Set)**
 
 是辅助GC过程的一种结构，典型的空间换时间工具，和Card Table有些类似。
 
@@ -171,7 +166,7 @@ SATB(Snapshot At The Beginning),  在应对漏标问题时，G1使用了`SATB`�
 - 提高CPU性能，加快GC回收速度，而对象增加速度赶不上回收速度，则Full GC可以避免；
 - 降低进行Mixed GC触发的阈值，让Mixed GC提早发生（默认45%）
 
-## 站在巨人的肩膀上
+## 3 站在巨人的肩膀上
 
 1. [Getting Started with the G1 Garbage Collector](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html)
 2. [请教G1算法的原理](http://hllvm.group.iteye.com/group/topic/44381)
