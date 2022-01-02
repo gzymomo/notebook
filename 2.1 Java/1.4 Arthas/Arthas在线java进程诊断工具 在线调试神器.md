@@ -1,7 +1,5 @@
 - [Arthas在线java进程诊断工具 在线调试神器](https://www.cnblogs.com/TopGear/p/15508284.html)
 
-> tag: java 诊断 堆栈 在线调试 耗时 死锁 arthas 阿里巴巴
-
 `Arthas` 是 Alibaba 开源的Java诊断工具，深受开发者喜爱。
 
 官网文档：https://arthas.aliyun.com/doc/
