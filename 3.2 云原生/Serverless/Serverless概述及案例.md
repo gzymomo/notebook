@@ -1,8 +1,6 @@
 - [看懂 Serverless，这一篇就够了](https://blog.csdn.net/cc18868876837/article/details/90672971)
 - [Serverless 入门教程](https://ibyte.blog.csdn.net/article/details/108837555)
 
-
-
 # 一、无服务器（Serverless）计算是什么
 
 云计算涌现出很多改变传统IT架构和运维方式的新技术，比如虚拟机、容器、微服务，无论这些技术应用在哪些场景，降低成本、提升效率是云服务永恒的主题。
