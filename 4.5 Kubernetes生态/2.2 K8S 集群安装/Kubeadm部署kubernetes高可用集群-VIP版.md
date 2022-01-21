@@ -2,6 +2,8 @@
 
 - [使用 kubeadm 快速部署体验 K8s](https://blog.k8s.li/kubeadm-deploy-k8s-v1.17.4.html)
 
+- [使用kubeadm搭建生产级别k8s集群](https://blog.51cto.com/liheng1815/4955659)
+
 
 
 > [官网](https://kubernetes.io/docs/setup/independent/high-availability/)提供了两种拓扑结构部署集群：**stacked control plane nodes**和**external etcd cluster**，本文基于第一种拓扑结构进行部署，使用**Keepalived** + **HAProxy**搭建高可用**Load balancer**。
