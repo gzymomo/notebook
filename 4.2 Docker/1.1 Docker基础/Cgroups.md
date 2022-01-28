@@ -1,7 +1,5 @@
 - [Cgroups](https://www.yuque.com/duduniao/docker/iu3nb1)
 
-
-
 # 1. CPU 资源限制
 
 默认情况下，Docker Container 对宿主机的 CPU 资源的使用是没有限制的，这在大多数场景中是不合理的，因为容器异常时可能会占用抢占其它容器的 CPU 资源，因此需要对 CPU 资源进行限制。
