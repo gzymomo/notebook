@@ -14,9 +14,7 @@ git的理论知识，对使用者来说只需要知道它是分布式版本控�
 
 如下图，我们平时提交代码的过程基本都是从工作区`add`到暂存区，然后再`commit`到本地仓库，最后`push`到远程仓库。
 
-![img](https://img2018.cnblogs.com/blog/632381/201907/632381-20190719084919421-1674040764.png)
-
- 
+![image-20220212094619540](https://gitee.com/er-huomeng/l-img/raw/master/l-img/image-20220212094619540.png)
 
 ### 基本命令
 
@@ -129,7 +127,5 @@ git的理论知识，对使用者来说只需要知道它是分布式版本控�
    git config --global alias.ck checkout  # 后面可以用 git ck 来代替 git checkout了
    git config --global alias.cm 'commit -m' # 后面可以用git cm 来代替 git commit -m 了
    ```
-
-    
 
 2. `git pull origin master` 或 `git push origin master`， 可直接 `git pull` 或 `git push`， 如果出现“no tracking information”的提示，则说明本地分支和远程分支的链接关系没有创建，用命令 `git branch --set-upstream-to=origin/master master` 建立关联即可。
