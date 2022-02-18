@@ -10,8 +10,6 @@
 
 说明：我们在平常使用中发现pod不会调度到k8s的master节点，就是因为master节点存在污点。
 
- 
-
 # Taints污点
 
 ## Taints污点的组成
@@ -30,9 +28,7 @@ key=value:effect
 - PreferNoSchedule：表示K8S将尽量避免把Pod调度到具有该污点的Node节点上
 - NoExecute：表示K8S将不会把Pod调度到具有该污点的Node节点上，同时会将Node上已经存在的Pod驱逐出去
 
- 
-
-## 污点taint的NoExecute详解
+污点taint的NoExecute详解
 
 taint 的 effect 值 NoExecute，它会影响已经在节点上运行的 pod：
 

@@ -10,15 +10,13 @@ Spring Cloud Eureka 是一个基于 REST 的服务，并提供了基于 Java 的
 
 2. 引入 eureka-server 依赖（maven）
 
-   
-
    ```
    <dependency>
        <groupId>org.springframework.cloud</groupId>
        <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
    </dependency>
    ```
-
+   
 3. 开启 EurekaServer
    在启动类上添加 `@EnableEurekaServer`注解，开启 EurekaServer 的自动装配功能。
 
@@ -52,18 +50,14 @@ Spring Cloud Eureka 是一个基于 REST 的服务，并提供了基于 Java 的
 
 1. 在application.yml配置定义三个节点的端口：
 
-   
-
    ```
    port:
      master: 8761
      slave1: 8762
      slave2: 8763
    ```
-
-2. 我们可以分别创建三个配置文件application-master.yml、application-slave1.yml、application-slave2.yml，三个配置文件除了有冲突的地方端口不一样，其他配置完全一样
-
    
+2. 我们可以分别创建三个配置文件application-master.yml、application-slave1.yml、application-slave2.yml，三个配置文件除了有冲突的地方端口不一样，其他配置完全一样
 
    ```
    # application-master.yml
@@ -90,7 +84,7 @@ Spring Cloud Eureka 是一个基于 REST 的服务，并提供了基于 Java 的
      server:
        enable-self-preservation: true # 开启自我保护机制，默认也是开启的
    ```
-
+   
 3. IDEA 分别以三个不同的profiles启动
    [![img](https://img2020.cnblogs.com/blog/709068/202011/709068-20201124141459758-1401235544.png)](https://img2020.cnblogs.com/blog/709068/202011/709068-20201124141459758-1401235544.png)
 

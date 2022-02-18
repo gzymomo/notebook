@@ -109,8 +109,6 @@
 
 ![图片](https://mmbiz.qlogo.cn/mmbiz_jpg/JdLkEI9sZfdgoeEN1mmBx8UOp1v5zhhlyvc2T2yiaUjDHk4ibibJweZrsHQZJhOWpObb9Q8TsE4JVUwBAvt7bRYYA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1&retryload=2)
 
-
-
 ### 运维监控
 
 在容器化之前，采用`telegraf + influxdb + grafana`的方案。telegraf作为探针收集jvm，system，mysql等资源的信息，写入influxdb，最终通过grafana做数据可视化。`spring boot actuator`可以配合jolokia暴露jvm的endpoint。整个方案零编码，只需要花时间配置。
