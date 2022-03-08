@@ -1,3 +1,9 @@
+> [再见 Docker，是时候拥抱下一代容器工具了 (qq.com)](https://mp.weixin.qq.com/s?__biz=MzI3MTI2NzkxMA==&mid=2247488720&idx=1&sn=56a3f0c46d3272f103216cf8330cf6af&scene=21#wechat_redirect)
+>
+> [Podman 保姆级使用教程，太顶了！ (qq.com)](https://mp.weixin.qq.com/s/Y-_iqnWe9LcOOK7zG798yw)
+
+
+
 ## 什么是Podman？
 
 ![图片](https://mmbiz.qpic.cn/mmbiz_png/GpcH5Yqqj0lkIK0apRppJHY6e1zHy68EYA0aNScbybCaKMDvuAeUicdOd6dzzjMJWp2pX4GXE7DomWsyH7ia6pLw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
@@ -44,9 +50,9 @@ docker=podman可以进行替换。
 
 因此，即便使用了podman，仍然可以使用docker.io作为镜像仓库，这也是兼容性最关键的部分。
 
-# Podman 常用命令
+## Podman 常用命令
 
-## 容器
+### 容器
 
 ```
 podman run           创建并启动容器
@@ -62,7 +68,7 @@ podman rm            删除容器
 podman logs          查看日志
 ```
 
-## 镜像
+### 镜像
 
 ```
 podman search                检索镜像
@@ -84,16 +90,16 @@ podmanfile                   定制镜像（三个）
         EXPOSE               暴露端口
 ```
 
-## 部署 Podman
+### 部署 Podman
 
 ```
 //安装podman
 [root@localhost ~]# yum -y install podman
 ```
 
-## Podman 加速器
+### Podman 加速器
 
-**版本7配置加速器**
+#### **版本7配置加速器**
 
 ```
 //仓库配置
@@ -106,7 +112,7 @@ registries = ["docker.io"]  #如果只留一个，则只在一个源里查找
 location="j3m2itm3.mirror.aliyuncs.com"
 ```
 
-**版本8配置加速器**
+#### **版本8配置加速器**
 
 ```
 #unqualified-search-registries = ["registry.fedoraproject.org", "registry.access.redhat.com", "registry.centos.org", "docker.io"]   #直接注释掉
@@ -116,11 +122,11 @@ prefix = "docker.io"
 location = "j3m2itm3.mirror.aliyuncs.com" （不用加https://  直接加地址）
 ```
 
-## 使用 Podman
+### 使用 Podman
 
 使用 Podman 非常的简单，Podman 的指令跟 Docker 大多数都是相同的。下面我们来看几个常用的例子：
 
-### 运行一个容器
+运行一个容器
 
 ```
 [root@localhost ~]# podman run -d --name httpd docker.io/library/httpd
