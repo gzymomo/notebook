@@ -1,8 +1,6 @@
 - [Linux的打包和压缩详解](https://www.cnblogs.com/TheGCC/p/14228439.html)
 
-
-
-# 一、打包（归档）和压缩
+## 1 打包（归档）和压缩
 
 **归档**，也称为打包，指的是一个文件或目录的集合，而这个集合被存储在一个文件中。归档文件没有经过压缩，因此，它占用的空间是其中所有文件和目录的总和。*通常，归档总是会和系统（数据）备份联系在一起*。
 
@@ -16,15 +14,13 @@
 
 Linux 下，常用归档命令有 2 个，分别是 tar 和 dd（相对而言，tar 的使用更为广泛）；常用的压缩命令有很多，比如 gzip、zip、bzip2 等。
 
-
-
-# 二、Linux tar打包命令详解
+## 2 Linux tar打包命令详解
 
 Linux 系统中，最常用的归档（打包）命令就是 tar，该命令可以将许多文件一起保存到一个单独的磁带或磁盘中进行归档。不仅如此，该命令还可以从归档文件中还原所需文件，也就是打包的反过程，称为解打包。注：*使用 tar 命令归档的包通常称为 tar 包（tar 包文件都是以“.tar”结尾的）*。
 
 tar 命令最初被用来在磁带上创建备份，现在可以在任何设备上创建备份。利用 tar 命令可以把一大堆的文件和目录打包成一个文件，这对于备份文件或是将几个文件组合成为一个文件进行网络传输是非常有用的。
 
-## 2.1 tar命令做打包操作
+### 2.1 tar命令做打包操作
 
 当 tar 命令用于打包操作时，该命令的基本格式为：
 
@@ -57,13 +53,11 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 [root@localhost ~]# tar -cvf ana.tar anaconda-ks.cfg /tmp/
 ```
 
-### tar打包并压缩
+tar打包并压缩
 
-声明一点，压缩命令不能直接压缩目录，必须先用 tar 命令将目录打包，然后才能用 gzip 命令或 bzip2 命令对打包文件进行压缩。
+> **声明一点，压缩命令不能直接压缩目录，必须先用 tar 命令将目录打包，然后才能用 gzip 命令或 bzip2 命令对打包文件进行压缩。**
 
-
-
-## 2.2 tar命令做打包操作
+### 2.2 tar命令做打包操作
 
 当 tar 命令用于对 tar 包做解打包操作时，该命令的基本格式如下：
 
@@ -99,7 +93,7 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 [root@localhost ~]# tar -tvf test.tar
 ```
 
-## 2.3 tar命令 做打包压缩 和 解压缩解打包操作
+### 2.3 tar命令 做打包压缩 和 解压缩解打包操作
 
 你可能会觉得 Linux 实在太不智能了，一个打包压缩，居然还要先打包成 ".tar" 格式，再压缩成 ".tar.gz" 或 ".tar.bz2" 格式。其实 tar  命令是可以同时打包压缩的，前面的讲解之所打包和压缩分开，是为了让大家了解在 Linux 中打包和压缩的不同。当 tar  命令同时做打包压缩的操作时，其基本格式如下：
 
@@ -115,16 +109,12 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 
 例如：**压缩与解压缩 ".tar.gz"格式**
 
-
-
 ```bash
 #把/temp/目录直接打包压缩为".tar.gz"格式，通过"-z"来识别格式，"-cvf"和打包选项一致 
 [root@localhost ~]# tar -zcvf tmp.tar.gz /tmp/
 ```
 
 解压缩也只是在解打包选项 "-xvf" 前面加了一个 "-z" 选项。
-
-
 
 ```bash
 #解压缩与解打包".tar.gz"格式 
@@ -137,8 +127,6 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 
 **和".tar.gz"格式唯一的不同就是"-zcvf"选项换成了 "-jcvf"，如下所示：**
 
-
-
 ```bash
 #打包压缩为".tar.bz2"格式，注意压缩包文件名
 [root@localhost ~]# tar -jcvf tmp.tar.bz2 /tmp/
@@ -147,11 +135,9 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 [root@localhost ~]# tar -jxvf tmp.tar.bz2
 ```
 
-# 三、zip命令：压缩文件和目录
+## 3 zip命令：压缩文件和目录
 
 我们经常会在 Windows 系统上使用  “.zip”格式压缩文件，其实“.zip”格式文件是 Windows 和 Linux  系统都通用的压缩文件类型，属于几种主流的压缩格式（zip、rar等）之一，是一种相当简单的分别压缩每个文件的存储格式，本节要讲的 zip  命令，类似于 Windows 系统中的 winzip 压缩程序，其基本格式如下：
-
-
 
 ```bash
 [root@localhost ~]#zip [选项] 压缩包名 源文件或源目录列表
@@ -170,11 +156,7 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 | -压缩级别 | 压缩级别是从 1~9 的数字，-1 代表压缩速度更快，-9 代表压缩效果更好。 |
 | -u        | 更新压缩文件，即往压缩文件中添加新文件。                     |
 
- 
-
 例子：**zip 命令的基本使用**
-
-
 
 ```bash
 #压缩 [root@localhost ~]# zip ana.zip anaconda-ks.cfg
@@ -182,26 +164,20 @@ tar命令也可以打包多个文件或目录，只要用空格分开即可。�
 
 **压缩命令同时压缩多个文件**
 
-
-
 ```
 #同时压缩多个文件到test.zip压缩包中 [root@localhost ~]# zip test.zip install.log install.log.syslog
 ```
 
 **使用 zip 命令压缩目录，需要使用“-r”选项**，例如：
 
-
-
 ```bash
 #压缩目录
 [root@localhost ~]# zip -r dir1.zip dir1
 ```
 
-# 四、unzip命令：解压zip文件
+## 4 unzip命令：解压zip文件
 
 unzip 命令可以查看和解压缩 zip 文件。该命令的基本格式如下：
-
-
 
 ```bash
 [root@localhost ~]# unzip [选项] 压缩包名
@@ -220,30 +196,22 @@ unzip 命令可以查看和解压缩 zip 文件。该命令的基本格式如下
 
  **不论是文件压缩包，还是目录压缩包，都可以直接解压缩，例如：**
 
-
-
 ```bash
 #解压缩 [root@localhost ~]# unzip dir1.zip
 ```
 
 **使用 -d 选项手动指定解压缩位置，例如：**
 
-
-
 ```bash
 #把压缩包解压到指定位置
 [root@localhost ~]# unzip -d /tmp/ ana.zip
 ```
 
-
-
-# 五、gzip命令：压缩文件或目录
+## 5 gzip命令：压缩文件或目录
 
 gzip 是 Linux 系统中经常用来对文件进行压缩和解压缩的命令，通过此命令压缩得到的新文件，其扩展名通常标记为“.gz”。注意：gzip 命令只能用来压缩文件，不能压缩目录，即便指定了目录，也只能压缩目录内的所有文件。
 
 gzip 命令的基本格式如下：
-
-
 
 ```
 [root@localhost ~]# gzip [选项] 源文件
@@ -262,8 +230,6 @@ gzip 命令的基本格式如下：
 
  例：**基本压缩**
 
-
-
 ```
 #压缩instal.log 文件 [root@localhost ~]# gzip install.log
 ```
@@ -272,15 +238,11 @@ gzip 命令的基本格式如下：
 
 在使用 gzip 命令压缩文件时，源文件会消失，从而生成压缩文件。这时候如果不想让源文件消失：
 
-
-
 ```
 #使用-c选项，但是不让压缩数据输出到屏幕上，而是重定向到压缩文件中，这样可以缩文件的同时不删除源文件 [root@localhost ~]# gzip -c anaconda-ks.cfg >anaconda-ks.cfg.gz
 ```
 
 **压缩目录**
-
-
 
 ```
 #建立测试目录，并在里面建立几个测试文件 [root@localhost ~]# mkdir test [root@localhost ~]# touch test/test1 [root@localhost ~]# touch test/test2 [root@localhost ~]# touch test/test3 #压缩目录，并没有报错 [root@localhost ~]# gzip -r test/  #但是查看发现test目录依然存在，并没有变为压缩文件 [root@localhost ~]# ls anaconda-ks.cfg anaconda-ks.cfg.gz install.log.gz install.log.syslog test [root@localhost ~]# ls test/ testl .gz test2.gz test3.gz
@@ -288,13 +250,11 @@ gzip 命令的基本格式如下：
 
 　　gzip命令不会打包目录，而是把目录下所有的子文件分别压缩，**在 Linux 中，打包和压缩是分开处理的。而 gzip 命令只会压缩，不能打包，所以才会出现没有打包目录，而只把目录下的文件进行压缩的情况。**
 
-# 六、gunzip：解压缩文件或目录
+## 6 gunzip：解压缩文件或目录
 
 gunzip 是一个使用广泛的解压缩命令，它用于解压被 gzip 压缩过的文件（**扩展名为 .gz**）。
 
 对于解压被 gzip 压缩过的文件，还可以使用 gzip 自己，即 gzip -d 压缩包。gunzip 命令的基本格式为：
-
-
 
 ```
 [root@localhost ~]# gunzip [选项] 文件
@@ -313,15 +273,11 @@ gunzip 是一个使用广泛的解压缩命令，它用于解压被 gzip 压缩�
 
  例：**直接解压缩文件**。
 
-
-
 ```
 [root@localhost ~]# gunzip install.log.gz
 ```
 
 　　**当然，"gunzip -r"依然只会解压缩目录下的文件，而不会解打包。要想解压缩".gz"格式，还可以使用 "gzip -d"命令**，例如：
-
-
 
 ```
 [root@localhost ~]# gzip -d anaconda-ks.cfg.gz
@@ -329,29 +285,21 @@ gunzip 是一个使用广泛的解压缩命令，它用于解压被 gzip 压缩�
 
 **要解压缩目录下的内容，则需使用 "-r" 选项，例如：**
 
-
-
 ```
 [root@localhost ~]# gunzip -r test/
 ```
 
 注意，如果我们压缩的是一个纯文本文件，则可以直接使用 **zcat 命令**在不解压缩的情况下查看这个文本文件中的内容。例如：
 
-
-
 ```
 [root@localhost ~]# zcat anaconda-ks.cfg.gz
 ```
 
-
-
-# 七、bzip2：压缩文件（.bz2格式）
+## 7 bzip2：压缩文件（.bz2格式）
 
 bzip2 命令同 gzip  命令类似，只能对文件进行压缩（或解压缩），对于目录只能压缩（或解压缩）该目录及子目录下的所有文件。当执行压缩任务完成后，会生成一个以“.bz2”为后缀的压缩包。".bz2"格式是 Linux 的另一种压缩格式，从理论上来讲，".bz2"格式的算法更先进、压缩比更好；而 ".gz"格式相对来讲的时间更快。
 
 bzip2 命令的基本格式如下：
-
-
 
 ```
 [root@localhost ~]# bzip2 [选项] 源文件
@@ -372,34 +320,28 @@ bzip2 命令的基本格式如下：
 
  例：**直接压缩文件**
 
-
-
 ```
 #压缩成".bz2"格式，此压缩命令会在压缩的同时删除源文件。 [root@localhost ~]# bzip2 anaconda-ks.cfg
 ```
 
 **压缩的同时保留源文件**
 
-
-
 ```
 #压缩
 [root@localhost ~]# bzip2 -k install.log.syslog
 ```
 
-# 八、bunzip2：bz2格式的解压缩命令
+## 8 bunzip2：bz2格式的解压缩命令
 
 要解压“.bz2”格式的压缩包文件，除了使用“bzip2 -d  压缩包名”命令外，还可以使用 bunzip2 命令。bunzip2 命令的使用和 gunzip 命令大致相同，bunzip2  命令只能用于解压文件，即便解压目录，也是解压该目录以及所含子目录下的所有文件。
 
 bunzip2 命令的基本格式为：
 
-
-
 ```
 [root@localhost ~]# bunzip2 [选项] 源文件
 ```
 
-　　选项：
+选项：
 
 | 选项 | 含义                                                         |
 | ---- | ------------------------------------------------------------ |
@@ -410,23 +352,17 @@ bunzip2 命令的基本格式为：
 
  先试试使用 gunzip2 命令来进行解压缩，例如：
 
-
-
 ```
 [root@localhost ~]# bunzip2 anaconda-ks.cfg.bz2
 ```
 
 ".bz2" 格式也可以使用 "bzip2 -d 压缩包" 命令来进行解压缩，例如：
 
-
-
 ```
 [root@localhost ~]# bzip2 -d install.log.syslog.bz2
 ```
 
 和 ".gz" 格式一样，".bz2" 格式压缩的纯文本文件也可以不解压缩直接查看，使用的命令是 bzcat。例如：
-
-
 
 ```
 [root@localhost ~]# bzcat install.log.syslog.bz2
