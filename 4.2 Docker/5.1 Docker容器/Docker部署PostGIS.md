@@ -194,3 +194,4 @@ vim /etc/resolv.conf
 ## 添加一行：
 nameserver 114.114.114.114
 ```
+
