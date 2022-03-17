@@ -1,4 +1,4 @@
-# 一、mica mqtt 组件
+## 一、mica mqtt 组件
 
 基于 `t-io` 实现的**低延迟**、**高性能**的 `mqtt` 物联网组件。更多使用方式详见： **mica-mqtt-example** 模块。
 
@@ -10,7 +10,7 @@
 - [t-io 官方文档](https://www.tiocloud.com/doc/tio/85)
 - [mqtt 协议文档](https://github.com/mcxiaoke/mqtt)
 
-# 二、功能
+## 二、功能
 
 -  支持 MQTT v3.1、v3.1.1 以及 v5.0 协议。
 -  支持 websocket mqtt 子协议（支持 mqtt.js）。

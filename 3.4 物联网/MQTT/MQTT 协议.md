@@ -1,6 +1,6 @@
 [MQTT 协议](https://www.cnblogs.com/cxuanBlog/p/14917187.html)
 
-## 什么是 MQTT 协议
+## 1 什么是 MQTT 协议
 
 MQTT 协议的全称是 **Message Queuing Telemetry Transport**，翻译为消息队列传输探测，它是 ISO 标准下的一种基于**发布 - 订阅**模式的消息协议，它是基于 TCP/IP 协议簇的，它是为了改善网络设备硬件的性能和网络的性能来设计的。MQTT 一般多用于 IoT 即物联网上，广泛应用于工业级别的应用场景，比如汽车、制造、石油、天然气等。
 
@@ -8,7 +8,7 @@ MQTT 协议的全称是 **Message Queuing Telemetry Transport**，翻译为消�
 
 在了解了 MQTT 的概念和应用场景后，我们下来就来走进 MQTT 的学习中了，先来看一下 MQTT 有哪些概念。
 
-## MQTT 基础
+## 2 MQTT 基础
 
 上面我们解释了 MQTT 协议的基本概念，MQTT 协议总结一点就是一种**轻量级的二进制协议**，MQTT 协议与 HTTP 相比具有一个明显的优势：**数据包开销较小**，数据包开销小就意味着更容易进行网络传输。还有一个优势就是 MQTT 在客户端容易实现，而且具有易用性，非常适合当今资源有限的设备。
 
@@ -24,7 +24,7 @@ MQTT 协议由 Andy Stanford-Clark (IBM) 和 Arlen Nipper（Arcom，现为 Cirru
 
 这些设计也是 MQTT 的精髓所在，MQTT 经过不断的发展，已经成为了物联网 IoT 所必备的一种消息探测协议，官方强烈推荐使用的版本是 MQTT 5。
 
-### 发布 - 订阅模式
+### 2.1 发布 - 订阅模式
 
 发布 - 订阅模式我相信接触消息中间件架构的同学都听过，这是一种传统的**客户端 - 服务器**架构的替代方案，因为一般传统的客户端-服务器是客户端能够直接和服务器进行通信。
 
@@ -40,7 +40,7 @@ pub/sub 最重要的方面是 publisher 与 subscriber 的解藕，这种耦合�
 
 总之，发布/订阅模式消除了传统客户-服务器之间的直接通信，把通信这个操作交给了 broker 进行代理，并在空间、时间、同步三个维度上进行了解藕。
 
-### 可拓展性
+### 2.2 可拓展性
 
 pub/sub 比传统的客户端-服务器模式有了更好的拓展，这是由于 broker 的高度`并行化`，并且是基于`事件驱动`的模式。可拓展性还体现在消息的缓存和消息的智能路由，还可以通过集群代理来实现数百万的连接，使用负载均衡器将负载分配到更多的单个服务器上，这就是 MQTT 的深度应用了。
 
@@ -48,7 +48,7 @@ pub/sub 比传统的客户端-服务器模式有了更好的拓展，这是由�
 
 事件驱动是一种`编程范式`，编程范式是软件工程中的概念，**它指的是一种编程方法或者说程序设计方式**，比如说面向对象编程和面向过程编程就是一种编程范式，事件驱动中的程序流程会由诸如用户操作（点击鼠标、键盘）、传感器输出或者从其他程序或传递的消息事件决定。事件驱动编程是图形用户界面和其他应用程序比如 Web 中使用的主要范式，这些应用程序能够响应用户输入执行某些操作为中心，这同时也适用于驱动程序的编程。
 
-### 消息过滤
+### 2.3 消息过滤
 
 在 pub/sub 的架构模式中，broker 扮演着至关重要的作用，其中非常重要的一点就是 broker 能够对消息进行过滤，使每个订阅者只接收自己感兴趣的消息。
 
@@ -68,7 +68,7 @@ MQTT 是基于 subject 的消息过滤的，每条消息都会有一个 topic �
 
 为了发布/订阅系统的挑战，MQTT 具有三个服务质量级别，你可以指定消息从客户端传到 broker 或者从 broker 传到客户端，在  topic 的订阅中，会存在 topic 没有 subscriber 订阅的情况，作为 broker 必须知道如何处理这种情况。
 
-## MQTT 与消息队列的区别
+## 3 MQTT 与消息队列的区别
 
 我们现在知道，MQTT 是一种消息队列传输探测协议，这种协议是看似是以消息队列为基础，但却与消息队列有所差别。
 
@@ -82,21 +82,21 @@ MQTT 是基于 subject 的消息过滤的，每条消息都会有一个 topic �
 
 我们知道，broker 将 publisher 和 subscriber 进行分离，因此客户端的连接由 broker 代理，所以在我们深入理解 MQTT 之前，我们需要先知道客户端和代理的含义。
 
-## MQTT 重要概念
+## 4 MQTT 重要概念
 
-### MQTT client
+### 4.1 MQTT client
 
 当我们讨论关于客户端的概念时，一般指的就是 **MQTT Client**，publisher 和 subscriber 都属于 MQTT Client。之所以有发布者和订阅者这个概念，其实是一种相对的概念，就是指当前客户端是在发布消息还是在接收消息，**发布和订阅的功能也可以由同一个 MQTT Client 实现**。
 
 MQTT 客户端是指运行 MQTT 库并通过网络连接到 MQTT broker  的任何设备，这些设备可以从微控制器到成熟的服务器。基本上，任何使用 TCP/IP 协议使用 MQTT 设备的都可以称之为 MQTT  Client。MQTT 协议的客户端实现非常简单直接。易于实施是 MQTT 非常适合小型设备的原因之一。 MQTT 客户端库可用于多种编程语言。 例如，Android、Arduino、C、C++、C#、Go、iOS、Java、JavaScript 和 .NET。
 
-### MQTT broker
+### 4.2 MQTT broker
 
 与 MQTT client 对应的就是 MQTT broker，broker 是任何发布/订阅机构的核心，根据实现的不同，代理可以处理多达数百万连接的 MQTT client。
 
 broker 负责接收所有消息，过滤消息，确定是哪个 client 订阅了每条消息，并将消息发送给对应的 client，broker 还负责保存会话数据，这些数据包括订阅的和错过的消息。broker 还负责客户端的身份验证和授权。
 
-### MQTT Connection
+### 4.3 MQTT Connection
 
 MQTT 是基于 TCP/IP 协议基础之上的，所以 MQTT 的 client 和 broker 都需要 TCP/IP 协议的支持。
 
@@ -106,11 +106,11 @@ MQTT 的连接总是在 client 和 broker 之间进行，client 和 client 之�
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622094643863-650618312.png)
 
-## 消息报文
+## 5 消息报文
 
 MQTT 的消息报文主要分为 CONNECT 和 CONNACK 消息。
 
-### CONNECT
+### 5.1 CONNECT
 
 我们上面提到了为了初始化连接，需要 client 向 broker 发送 CONNECT 消息，如果这个 CONNECT  消息格式错误或者打开套接字（因为基于 TCP/IP 协议栈需要初始化 Socket 连接）时间过长，亦或是发送连接消息时间过长的话，broker 就会关闭这条连接。
 
@@ -131,7 +131,7 @@ MQTT 的消息报文主要分为 CONNECT 和 CONNACK 消息。
 
 在聊完 client 与 broker 之间发送建立连接的 CONNECT 消息后，我们再来聊一下 broker 需要对 CONNECT 进行确认的 CONNACK 消息。
 
-### CONNACK
+### 5.2 CONNACK
 
 当 broker 收到 CONNECT 消息时，它有义务回复 CONNACK 消息进行响应。CONNACK 消息包括两部分内容
 
@@ -147,9 +147,9 @@ MQTT 的消息报文主要分为 CONNECT 和 CONNACK 消息。
 
 关于每个连接的详细说明，可以参考 https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html#_Toc398718035
 
-## 消息类型
+## 6 消息类型
 
-### 发布
+### 6.1 发布
 
 当 MQTT client 在连接到 broker 之后就可以发送消息了，MQTT 使用的是基于 topic  主题的过滤。每条消息都应该包含一个 topic ，broker 可以使用 topic 将消息发送给感兴趣的  client。除此之外，每条消息还会包含一个`负载(Payload)`，Payload 中包含要以字节形式发送的数据。
 
@@ -175,7 +175,7 @@ MQTT 中的 PUBLISH 消息结构如下。
 
 最初发布消息的 client 只关心将 PUBLISH 消息发送给 broker，一旦 broker 收到 PUBLISH  消息，broker 就有责任将其传递给所有 subscriber。发布消息的 client 不会知道是否有人对发布的消息感兴趣，同时也不知道多少 client 从 broker 收到了消息。
 
-### 订阅
+### 6.2 订阅
 
 client 会向 broker 发送 SUBSCRIBE 消息来接收有关感兴趣的 topic，这个 SUBSCRIBE 消息非常简单，它包含了一个唯一的数据包标识和一个订阅列表。
 
@@ -184,7 +184,7 @@ client 会向 broker 发送 SUBSCRIBE 消息来接收有关感兴趣的 topic，
 - `Packet Identifier`：这个 PacketId 和上面的 PacketId 一样，都表示消息的唯一标识符。
 - `ListOfSubscriptions`：SUBSCRIBE 消息可以包含一个 client 的多个订阅，每个订阅都会由一个 topic 和一个 Qos 构成。订阅消息中的 topic 可以包含通配符。
 
-### 确认消息
+### 6.3 确认消息
 
 client 在向 broker 发送 SUBSCRIBE 消息后，为了确认每个订阅，broker 会向 client 发送 SUBACK 确认消息。这个 SUBACK 包含原始 SUBSCRIBE 消息的 packetId 和返回码列表。
 
@@ -199,13 +199,13 @@ client 在向 broker 发送 SUBSCRIBE 消息后，为了确认每个订阅，bro
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622094936525-677931524.png)
 
-### 退订
+### 6.4 退订
 
 SUBSCRIBE 消息对应的是 `UNSUBSCRIBE` 消息，这条消息发送后，broker 会删除关于 client 的订阅。所以，UNSUBSCRIBE 消息与 SUBSCRIBE 消息类似，都具有 packetId 和 topic 列表。
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622094943657-465517528.png)
 
-### 确认退订
+### 6.5 确认退订
 
 取消订阅也需要 broker 的确认，此时 broker 会向 client 发送一个 `UNSUBACK` 消息，这个 UNSUBACK 消息非常简单，只有一个 packetId 数据标识符。
 
@@ -217,7 +217,7 @@ SUBSCRIBE 消息对应的是 `UNSUBSCRIBE` 消息，这条消息发送后，brok
 
 当 client 收到来自 broker 的 UNSUBACK 消息后，就可以认为 UNSUBSCRIBE 消息中的订阅被删除了。
 
-## 聊聊 Topic
+## 7 聊聊 Topic
 
 聊了这么多关于 MQTT 的内容，但是我们还没有好好聊过 Topic。在 MQTT 中，Topic 是指 broker 为每个连接的 client 过滤消息的 `UTF-8` 字符串。Topic 是一种分层的结构，可以由一个或者多个 Topic 组成。每个 Topic 由 `/` 进行分割。
 
@@ -229,7 +229,7 @@ SUBSCRIBE 消息对应的是 `UNSUBSCRIBE` 消息，这条消息发送后，brok
 
 当客户端订阅 Topic 时，它可以订阅已发布消息的确切 Topic，也可以使用通配符来同时订阅多个 Topic。通配符有两种：**单级和多级**。
 
-### 单级通配符
+### 7.1 单级通配符
 
 单级通配符可以替换 Topic 的一个级别，`+` 号代表 Topic 中的单级通配符。
 
@@ -241,7 +241,7 @@ SUBSCRIBE 消息对应的是 `UNSUBSCRIBE` 消息，这条消息发送后，brok
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622095036869-90871530.png)
 
-### 多级通配符
+### 7.2 多级通配符
 
 多级通配符涵盖多个 Topic，`#` 代表 Topic 中的多级通配符。为了让 broker 能够确定和哪些 Topic 匹配，多级通配符必须作为 Topic 中的最后一个字符放置，并以 `/` 开头。
 

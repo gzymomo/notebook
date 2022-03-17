@@ -1,7 +1,5 @@
 [Prometheus + Grafana 可视化监控 EMQ X MQTT 服务器](https://wivwiv.com/post/grafana-emqx-prometheus/)
 
-
-
 > [Prometheus](https://prometheus.io/) 是由 SoundCloud 开源监控告警解决方案，支持多维 [数据模型](https://prometheus.io/docs/concepts/data_model/)（时序由 metric 名字和 k/v 的 labels 构成），具备灵活的查询语句（[PromQL](https://prometheus.io/docs/querying/basics/)），支持多种数据采集 [exporters](https://prometheus.io/docs/instrumenting/exporters/)；支持告警管理，基于指标实现告警监控；支持多种统计数据模型，图形化展示友好，图形展示除了内置的浏览器，也支持 Grafana 集成。
 
 EMQ X 提供 [emqx_statsd](https://github.com/emqx/emqx-statsd) 插件，用于将 EMQ X 运行指标及 Erlang 虚拟机状态数据输出到第三方的监控系统如 Prometheus 中。通过 Prometheus 自带的 node-exporter 还可以采集 Linux 服务器相关指标，实现服务器 + EMQ X 整体运维监控。

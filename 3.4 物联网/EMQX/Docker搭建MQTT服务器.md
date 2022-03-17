@@ -3,22 +3,21 @@
 1. [使用Docker镜像搭建EMQ服务器搭建](https://blog.csdn.net/zdy_lyq/article/details/104366193?utm_medium=distribute.pc_relevant.none-task-blog-title-1&spm=1001.2101.3001.4242)
 2. [使用docker搭建EMQ服务器](https://blog.csdn.net/nayiFuFu/article/details/81053894)
 3. [一步步教你用Docker搭建MQTT服务器](https://blog.csdn.net/weixin_43676025/article/details/108401225)
+4. [docker安装EMQX](https://www.cnblogs.com/fangts/p/15147408.html)
 
+## 1 Docker搭建MQTT服务器
 
-
-# 一、Docker搭建MQTT服务器
-
-## 1.1 拉取镜像
+### 1.1 拉取镜像
 
 ```bash
 docker pull registry.cn-hangzhou.aliyuncs.com/synbop/emqttd:2.3.6
 ```
 
-## 1.2 运行镜像
+### 1.2 运行镜像
 
 - –name 名字
 - -p 18083 服务器启动端口
-- -p 1882 TCP端口
+- -p 1883TCP端口
 - -p 8083 WS端口
 - -p 8084 WSS端口
 - -p 8883 SSL端口
@@ -28,7 +27,7 @@ docker pull registry.cn-hangzhou.aliyuncs.com/synbop/emqttd:2.3.6
 docker run --name emq -p 18083:18083 -p 1883:1883 -p 8084:8084 -p 8883:8883 -p 8083:8083 -d registry.cn-hangzhou.aliyuncs.com/synbop/emqttd:2.3.6
 ```
 
-## 1.3 进入emq服务页面
+### 1.3 进入emq服务页面
 
 在浏览器输入`机器IP:18083` 就可以进入emqtt页面
 
@@ -36,7 +35,7 @@ docker run --name emq -p 18083:18083 -p 1883:1883 -p 8084:8084 -p 8883:8883 -p 8
 
 ![emq页面](https://img-blog.csdnimg.cn/20200904113705510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzY3NjAyNQ==,size_16,color_FFFFFF,t_70#pic_center)
 
-## 1.4 配置emq(对于V3.1.0)
+### 1.4 配置emq(对于V3.1.0)
 
 为emq的用户配置权限 , emq还支持多种数据库验证, 包括 mongo, redis, pgsql 等等, 有兴趣可以自行研究
 
@@ -128,7 +127,7 @@ auth.mysql.database = emq
 
 ------
 
-####  ACL规则
+#### ACL规则
 
   **规则表字段说明：**
 
@@ -159,6 +158,39 @@ INSERT INTO mqtt_acl (allow, ipaddr, username, clientid, access, topic) VALUES (
 
 ------
 
-### 拓展:
+**拓展:**
 
 emq还支持分布式集群, 共享订阅, 离线消息, 密码加盐等等的功能。
+
+## 2 Docker部署EMQX
+
+### 2.1 下载镜像
+
+```
+docker pull emqx/emqx
+```
+
+### 2.2 后台运行镜像
+
+```
+docker run -dit --name emqx -p 18083:18083 -p 1883:1883 -p 8083:8083 -p 8084:8084 --restart=always emqx/emqx:latest
+```
+
+### 2.3 访问emqt的web管理页面
+
+```
+http://ip:18083
+
+#账号： admin
+#密码: public
+```
+
+### 2.4 端口
+
+```
+1883：MQTT 协议端口
+8883：MQTT/SSL 端口
+8083：MQTT/WebSocket 端口
+8080：HTTP API 端口
+18083：Dashboard 管理控制台端口
+```

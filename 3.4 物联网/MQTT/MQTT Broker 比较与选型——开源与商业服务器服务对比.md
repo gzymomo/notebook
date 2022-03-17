@@ -1,3 +1,5 @@
+- [MQTT Broker 选型 - 简书 (jianshu.com)](https://www.jianshu.com/p/cf91f4bea071)
+
 ## 开源 MQTT Broker 对比
 
 #### 常见开源 MQTT Broker
@@ -6,8 +8,6 @@
 - Eclipse Mosquitto - Mosquitto 是开源时间较早的 MQTT Broker，它包含了一个C/C ++的客户端库，以及用于发布和订阅的 `mosquitto_pub`、`mosquitto_sub` 命令行客户端。Mosquitto 比较轻量，适合在从低功耗单板计算机到完整服务器的所有设备上使用。
 - VerneMQ - VerneMQ 基于 Erlang/OTP 平台开发，是高性能的分布式 MQTT 消息代理。它可以在硬件上水平和垂直扩展，以支持大量并发客户端，同时保持较低的延迟和容错能力。
 - HiveMQ CE - HiveMQ CE 是基于 Java 的开源 MQTT 消息服务器，它完全支持 MQTT 3.x 和 MQTT 5，是 HiveMQ 企业版消息连接平台的基础。
-
-
 
 本文选取了几个热门开源的 MQTT Broker，其中部分项目提供商业支持，做简单选型对比。
 
