@@ -1,5 +1,3 @@
-[TOC]
-
 # 一、登录DockerHub
 `docker login -u aishiyushijiepingxing -p 15............`
 
@@ -8,3 +6,4 @@
 
 # 三、推送
 ` docker push aishiyushijiepingxing/jdk:tag`
+

@@ -6,8 +6,6 @@
 
 ### 2. Docker开启远程访问
 
-
-
 ```
 vim /usr/lib/systemd/system/docker.service
 # 在ExecStart=/usr/bin/dockerd追加
@@ -16,15 +14,11 @@ vim /usr/lib/systemd/system/docker.service
 
 [![img](https://i.loli.net/2020/12/02/zjmryVLKf4U2sCv.png)](https://i.loli.net/2020/12/02/zjmryVLKf4U2sCv.png)
 
-
-
 ```
 # 重新启动
 systemctl daemon-reload
 systemctl restart docker
 ```
-
-
 
 ```
 # 开放2375端口
@@ -33,8 +27,6 @@ firewall-cmd --reload
 ```
 
 ### 3. 远程访问测试
-
-
 
 ```
 # 查看端口监听是否开启
@@ -76,8 +68,6 @@ maven构建docker镜像有两种方式，分别docker-maven-plugin和dockerfile-
 ### 2. docker-maven-plugin方式构造镜像
 
 **(1). 配置pom.xml**
-
-
 
 ```
 <plugin>

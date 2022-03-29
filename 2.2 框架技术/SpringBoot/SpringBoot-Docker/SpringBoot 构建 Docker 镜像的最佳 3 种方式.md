@@ -1,6 +1,4 @@
-[SpringBoot 构建 Docker 镜像的最佳 3 种方式](https://www.cnblogs.com/fengpinglangjingruma/p/13994545.html)
-
-
+- [SpringBoot 构建 Docker 镜像的最佳 3 种方式](https://www.cnblogs.com/fengpinglangjingruma/p/13994545.html)
 
 本文将介绍3种技术，通过 Maven 把 SpringBoot 应用构建成 Docker 镜像。
 

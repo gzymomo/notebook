@@ -1,5 +1,6 @@
+- [SpringBoot整合MQTT( EMQ) - Forever丶随风 - 博客园 (cnblogs.com)](https://www.cnblogs.com/Forever-wind/p/14894597.html)
+- [SpringBoot 集成 MQTT - 云天 - 博客园 (cnblogs.com)](https://www.cnblogs.com/tqlin/p/14566458.html)
 - [Springboot中使用MQTT的详细教程 | w3c笔记 (w3cschool.cn)](https://www.w3cschool.cn/article/6048135.html)
-
 - [SpringBoot 集成MQTT配置 ](https://www.cnblogs.com/itdragon/p/12463050.html)
 
 ## 1 SpringBoot集成MQTT配置

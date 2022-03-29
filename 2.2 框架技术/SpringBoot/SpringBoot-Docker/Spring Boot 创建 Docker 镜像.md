@@ -1,6 +1,4 @@
-[Spring Boot 创建 Docker 镜像](https://www.cnblogs.com/liululee/p/13992852.html)
-
-
+- [Spring Boot 创建 Docker 镜像](https://www.cnblogs.com/liululee/p/13992852.html)
 
 ## 1. 传统Docker构建
 

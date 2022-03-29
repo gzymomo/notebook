@@ -10,8 +10,6 @@ EMQ X 提供 [emqx_statsd](https://github.com/emqx/emqx-statsd) 插件，用于�
 
 ### Docker 镜像下载
 
-复制
-
 ```
 # Docker 镜像包下载
 docker pull prom/node-exporter
@@ -22,8 +20,6 @@ docker pull prom/pushgateway
 ### 启动 node-exporter
 
 可选，用于收集服务器指标如 CPU、内存、网络等，如果使用 Docker 安装则需要映射目标服务器响应的状态文件：
-
-复制
 
 ```
 docker run -d -p 9100:9100 \
@@ -38,8 +34,6 @@ docker run -d -p 9100:9100 \
 
 pushgateway 用于接收 EMQ X 指标推送数据，**需要保证 EMQ X 能够访问**：
 
-复制
-
 ```
 docker run -d -p 9091:9091 prom/pushgateway
 ```
@@ -47,8 +41,6 @@ docker run -d -p 9091:9091 prom/pushgateway
 ### 启动 Prometheus
 
 指定配置文件与监听端口以启动 Prometheus：
-
-复制
 
 ```
 # 指定配置文件并启动
@@ -59,8 +51,6 @@ docker run -p 9090:9090 \
 ```
 
 Prometheus 配置文件 `prometheus.yaml` 样例如下，详细含义请参考 [Prometheus 文档](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)：
-
-复制
 
 ```
 # prometheus.yaml
@@ -109,8 +99,6 @@ scrape_configs:
 
 打开 `etc/emqx_statsd.conf`，确认以下配置：
 
-复制
-
 ```
 ## pushgateway 地址
 statsd.push.gateway.server = http://127.0.0.1:9091
@@ -139,8 +127,6 @@ Grafana 是一个开源、通用的度量分析与可视化展示工具，通过
 ### 启动 Grafana
 
 通过 Docker 拉取并启动 Grafana 镜像：
-
-复制
 
 ```
 docker run -d --name=grafana -p 3000:3000 grafana/grafana
@@ -189,8 +175,6 @@ Prometheus 与 Grafana 均支持指标告警功能，配置告警规则后，服
 ## 附：emqx-statsd 所有指标
 
 EMQ X 通过 Prometheus push gateway 推送指标数据，支持的指标项如下：
-
-复制
 
 ```
 # TYPE erlang_vm_ets_limit gauge
@@ -475,3 +459,4 @@ emqx_session_discarded 0
 # TYPE emqx_session_terminated counter
 emqx_session_terminated 0
 ```
+

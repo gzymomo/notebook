@@ -1,7 +1,5 @@
 - [正确的在 docker 中启动 springboot](https://shanhy.blog.csdn.net/article/details/110051774)
 
-
-
 使用 docker 构建 springboot 应用
 
 # 1、直接启动
@@ -15,8 +13,6 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","${JAVA_OPTS}","-jar","/app.jar"]
 ```
-
-
 
 # 2、通过脚本启动
 
@@ -47,8 +43,6 @@ exec java $JAVA_OPTS -jar /app.jar
 
 
 **当 docker 容器被正常关闭时，只有 init（pid 1）进程能收到中断信号，如果容器的 pid 1 进程是 sh 进程，它不具备转发结束信号到它的子进程的能力（而我们第二种在 run.sh 中启动的 java 进程是 pid 为 1 的 run.sh 进程的子进程），所以我们真正的 java 程序得不到中断信号，springboot 也就不能正常的回收资源（比如正在执行中的线程不能正常的执行结束），也就不能实现优雅关闭（会导致我们程序被暴力终止无法善始善终）。**
-
-
 
 ## 解决
 

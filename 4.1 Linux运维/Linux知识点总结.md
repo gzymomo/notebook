@@ -1,3 +1,5 @@
+- [Unix_Linux_常用命令总结_sun0322的博客-CSDN博客_linux 常用命令总结](https://blog.csdn.net/sxzlc/article/details/107622786)
+
 # 一、基础篇
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210526145536528.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2Mzc0OTY5,size_16,color_FFFFFF,t_70)

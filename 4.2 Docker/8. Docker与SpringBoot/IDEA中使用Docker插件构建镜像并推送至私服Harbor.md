@@ -6,8 +6,6 @@
 - [Idea远程一键部署springboot到Docker](https://juejin.cn/post/6844903865192562696)
 - [Docker教程(九)部署Spring Boot项目](https://cloud.tencent.com/developer/article/1667567)
 
-
-
 # 一、开启Docker服务器的远程访问
 
 ## 1.1 开启2375远程访问
@@ -42,8 +40,6 @@ ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock 
 
 其中，2375端口为docker远程服务端口，包含了docker可视化工具portainer，以及远程上传镜像的功能。
 
-
-
 ## 1.2 添加harbor镜像配置
 
 编辑docker的配置文件：
@@ -55,8 +51,6 @@ vi /etc/docker/daemon.json
  "insecure-registries": ["192.168.0.20:81"]
 }
 ```
-
-
 
 ## 1.3 重启docker服务
 
@@ -112,8 +106,6 @@ idea可以通过可视化的方式拉取镜像，不用自己去敲命令
 CSDN：喝醉的咕咕鸟：[docker--私服搭建和推送于Springboot项目打成镜像](https://blog.csdn.net/weixin_43549578/article/details/87864614)
 
 将构建好的镜像通过docker-maven-plugin插件上传到harbor私服
-
-
 
 ## 3.1 修改maven的配置文件settings.xml
 
@@ -277,9 +269,8 @@ ENTRYPOINT ["java", "-jar", "demo1-2.jar"]
 
 点击pakage打包，target 上生成了springboot工程的jar包
 
-
-
 完了之后，点击docker bulid 构建工程镜像
+
 ![](https://upload-images.jianshu.io/upload_images/13965490-bf11c9dcb4a265fb.png?imageMogr2/auto-orient/strip|imageView2/2/w/370/format/webp)
 
 然后点击push，将镜像推送到harbor私服中
@@ -291,10 +282,6 @@ ENTRYPOINT ["java", "-jar", "demo1-2.jar"]
 此部分内容参考：
 
 - 掘金：MacroZheng：https://juejin.im/post/6868060821927723021
-
-
-
-
 
 - `docker-maven-plugin`不仅可以操作镜像，还可以操作容器，比如我们以前需要使用如下Docker命令来运行容器；
 
@@ -356,8 +343,6 @@ mvn docker:remove
 # 四、Java API上传镜像到Harbor仓库
 
 [**Lesise**](javascript:void(0);):[docker---java上传镜像到Harbor仓库](https://www.it610.com/article/1304427940234170368.htm)
-
-
 
 SpringBoot项目上传镜像到Harbor
 
