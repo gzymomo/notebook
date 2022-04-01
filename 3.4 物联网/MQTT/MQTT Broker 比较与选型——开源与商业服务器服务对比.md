@@ -59,21 +59,15 @@ MQTT Broker 性能测试对比，包含快速使用的测试工具。
 
 ### 下载安装测试工具
 
-复制
-
 ```
 git clone https://github.com/emqx/emqtt-bench.git
-
 cd emqtt-bench
-
 ./emqtt-bench sub --help
 ```
 
 ### MQTT 连接性能测试
 
 建立 100 个客户端连接
-
-复制
 
 ```
 ./emqtt_bench conn -c 100 -h broker.hivemq.com
@@ -82,8 +76,6 @@ cd emqtt-bench
 ### MQTT 订阅性能测试
 
 建立 100 个客户端连接，每 10ms 建立一个连接，每个连接均订阅 testtopic/# 主题，QoS 为 2
-
-复制
 
 ```
 ./emqtt_bench sub -c 100 -i 10 -t testtopic/# -q 2 -h broker.hivemq.com
@@ -121,8 +113,6 @@ MQTT 是传输协议，绝大部分 MQTT Broker 不保证消息顺序（Queue）
 
 ## EMQ X Docker 安装
 
-复制
-
 ```
 docker run -d --name emqx -p 1883:1883 -p 8083:8083 -p 8083:8083 -p 8084:8084 -p 18083:18083 emqx/emqx
 ```
@@ -136,8 +126,6 @@ EMQ X Dashboard 默认用户名密码：
 密码：public
 
 ## HiveMQ Docker 安装
-
-复制
 
 ```
 docker run -p 8080:8080 -p 1883:1883 -p 8083:8083 hivemq/hivemq4
@@ -153,15 +141,11 @@ HiveMQ 默认用户名密码：
 
 ## VerneMQ Docker 安装
 
-复制
-
 ```
 docker run -p 1883:1883 -e "DOCKER_VERNEMQ_ACCEPT_EULA=yes" --name vernemq1 -d vernemq/vernemq
 ```
 
 ## Mosquitto Docker 安装
-
-复制
 
 ```
 docker run -it --name=mosquitto -p 1883:1883 -p 9001:9001 -d eclipse-mosquitto
@@ -193,3 +177,4 @@ docker run -it --name=mosquitto -p 1883:1883 -p 9001:9001 -d eclipse-mosquitto
 - [MQTTnet](https://github.com/chkr1011/MQTTnet). Embedded MQTT broker, C#
 - [MyQttHub](https://myqtthub.com/)
 - [Jmqtt](https://github.com/Cicizz/jmqtt)
+

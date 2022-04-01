@@ -2,7 +2,9 @@
 
 ## 1 什么是 MQTT 协议
 
-MQTT 协议的全称是 **Message Queuing Telemetry Transport**，翻译为消息队列传输探测，它是 ISO 标准下的一种基于**发布 - 订阅**模式的消息协议，它是基于 TCP/IP 协议簇的，它是为了改善网络设备硬件的性能和网络的性能来设计的。MQTT 一般多用于 IoT 即物联网上，广泛应用于工业级别的应用场景，比如汽车、制造、石油、天然气等。
+MQTT 协议的全称是 **Message Queuing Telemetry Transport**，翻译为消息队列传输探测，它是 ISO 标准下的一种基于**发布 - 订阅**模式的消息协议，它是**基于 TCP/IP 协议簇**的，它**是为了改善网络设备硬件的性能和网络的性能来设计的。**
+
+MQTT 一般多用于 IoT 即物联网上，广泛应用于工业级别的应用场景，比如汽车、制造、石油、天然气等。
 
 ![img](https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/baike/pic/item/b2de9c82d158ccbfdff06f371ed8bc3eb135416b.jpg)
 
@@ -28,11 +30,11 @@ MQTT 协议由 Andy Stanford-Clark (IBM) 和 Arlen Nipper（Arcom，现为 Cirru
 
 发布 - 订阅模式我相信接触消息中间件架构的同学都听过，这是一种传统的**客户端 - 服务器**架构的替代方案，因为一般传统的客户端-服务器是客户端能够直接和服务器进行通信。
 
-但是发布 - 订阅模式 `pub/sub`就不一样了，发布订阅模式会将发送消息的发布者 `publisher`与接收消息的订阅者 `subscribers`进行分离，publisher 与 subscribers 并不会直接通信，他们甚至都不清楚对方是否存在，他们之间的交流由第三方组件 `broker` 代理。
+但是发布 - 订阅模式 `pub/sub`就不一样了，**发布订阅模式会将发送消息的发布者 `publisher`与接收消息的订阅者 `subscribers`进行分离，publisher 与 subscribers 并不会直接通信，他们甚至都不清楚对方是否存在，他们之间的交流由第三方组件 `broker` 代理。**
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622094555525-1465895187.png)
 
-pub/sub 最重要的方面是 publisher 与 subscriber 的解藕，这种耦合度有下面三个维度：
+**pub/sub 最重要的方面是 publisher 与 subscriber 的解藕**，这种耦合度有下面三个维度：
 
 - 空间解耦：publisher 与 subscriber 并不知道对方的存在，例如不会有 IP 地址和端口的交互，也更不会有消息的交互。
 - 时间解藕：publisher 与 subscriber 并不一定需要同时运行。
@@ -50,7 +52,7 @@ pub/sub 比传统的客户端-服务器模式有了更好的拓展，这是由�
 
 ### 2.3 消息过滤
 
-在 pub/sub 的架构模式中，broker 扮演着至关重要的作用，其中非常重要的一点就是 broker 能够对消息进行过滤，使每个订阅者只接收自己感兴趣的消息。
+在 pub/sub 的架构模式中，broker 扮演着至关重要的作用，其中非常重要的一点就是 **broker 能够对消息进行过滤，使每个订阅者只接收自己感兴趣的消息。**
 
 broker 有几个可以过滤的选项
 
@@ -82,27 +84,37 @@ MQTT 是基于 subject 的消息过滤的，每条消息都会有一个 topic �
 
 我们知道，broker 将 publisher 和 subscriber 进行分离，因此客户端的连接由 broker 代理，所以在我们深入理解 MQTT 之前，我们需要先知道客户端和代理的含义。
 
+| 场景                          | 部署端   | MQTT                                         | 消息队列                           |
+| :---------------------------- | :------- | :------------------------------------------- | :--------------------------------- |
+| 设备端上报状态数据、设备通信  | 移动终端 | √                                            | ×                                  |
+| 接收并处理分析设备的上报数据  | 移动终端 | ×                                            | √                                  |
+| 对多个设备下发控制指令        | 服务器   | ×                                            | √                                  |
+| 直播、弹幕、聊天 App 收发消息 | 应用     | √                                            | ×                                  |
+| 服务端接收并分析聊天消息      | 服务器   | ×                                            | √                                  |
+| 客户端连接数                  |          | 客户端规模庞大，百万甚至千万级               | 一般服务器规模较小，极少数万级     |
+| 单客户端消息量                |          | 单个客户端需要处理的消息少，一般定时收发消息 | 单个客户端处理消息量大，注重吞吐量 |
+
 ## 4 MQTT 重要概念
 
 ### 4.1 MQTT client
 
-当我们讨论关于客户端的概念时，一般指的就是 **MQTT Client**，publisher 和 subscriber 都属于 MQTT Client。之所以有发布者和订阅者这个概念，其实是一种相对的概念，就是指当前客户端是在发布消息还是在接收消息，**发布和订阅的功能也可以由同一个 MQTT Client 实现**。
+当我们讨论关于客户端的概念时，一般指的就是 **MQTT Client**，**publisher 和 subscriber 都属于 MQTT Client**。之所以有发布者和订阅者这个概念，其实是一种相对的概念，就是指当前客户端是在发布消息还是在接收消息，**发布和订阅的功能也可以由同一个 MQTT Client 实现**。
 
-MQTT 客户端是指运行 MQTT 库并通过网络连接到 MQTT broker  的任何设备，这些设备可以从微控制器到成熟的服务器。基本上，任何使用 TCP/IP 协议使用 MQTT 设备的都可以称之为 MQTT  Client。MQTT 协议的客户端实现非常简单直接。易于实施是 MQTT 非常适合小型设备的原因之一。 MQTT 客户端库可用于多种编程语言。 例如，Android、Arduino、C、C++、C#、Go、iOS、Java、JavaScript 和 .NET。
+MQTT 客户端是指运行 MQTT 库并通过网络连接到 MQTT broker  的任何设备，这些设备可以从微控制器到成熟的服务器。基本上，**任何使用 TCP/IP 协议使用 MQTT 设备的都可以称之为 MQTT  Client**。MQTT 协议的客户端实现非常简单直接。易于实施是 MQTT 非常适合小型设备的原因之一。 MQTT 客户端库可用于多种编程语言。 例如，Android、Arduino、C、C++、C#、Go、iOS、Java、JavaScript 和 .NET。
 
 ### 4.2 MQTT broker
 
 与 MQTT client 对应的就是 MQTT broker，broker 是任何发布/订阅机构的核心，根据实现的不同，代理可以处理多达数百万连接的 MQTT client。
 
-broker 负责接收所有消息，过滤消息，确定是哪个 client 订阅了每条消息，并将消息发送给对应的 client，broker 还负责保存会话数据，这些数据包括订阅的和错过的消息。broker 还负责客户端的身份验证和授权。
+broker 负责接收所有消息，过滤消息，确定是哪个 client 订阅了每条消息，并将消息发送给对应的 client，broker 还负责保存会话数据，这些数据包括订阅的和错过的消息。**broker 还负责客户端的身份验证和授权。**
 
 ### 4.3 MQTT Connection
 
-MQTT 是基于 TCP/IP 协议基础之上的，所以 MQTT 的 client 和 broker 都需要 TCP/IP 协议的支持。
+**MQTT 是基于 TCP/IP 协议基础之上的，所以 MQTT 的 client 和 broker 都需要 TCP/IP 协议的支持。**
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622094636513-790215887.png)
 
-MQTT 的连接总是在 client 和 broker 之间进行，client 和 client 之间并不会相互连接。如果要发起连接的话，那么 client 就会向 broker 发起 `CONNECT` 消息，代理会使用 `CONNACK` 消息和状态码进行响应。一旦 client 和 broker 的连接建立后，broker 就会使客户端的连接一直处于打开状态，直到 client 发出断开命令或者连接中断。
+MQTT 的连接总是在 client 和 broker 之间进行，client 和 client 之间并不会相互连接。如果要发起连接的话，那么 client 就会向 broker 发起 `CONNECT` 消息，代理会使用 `CONNACK` 消息和状态码进行响应。**一旦 client 和 broker 的连接建立后，broker 就会使客户端的连接一直处于打开状态，直到 client 发出断开命令或者连接中断。**
 
 ![img](https://img2020.cnblogs.com/blog/1515111/202106/1515111-20210622094643863-650618312.png)
 
@@ -151,9 +163,9 @@ MQTT 的消息报文主要分为 CONNECT 和 CONNACK 消息。
 
 ### 6.1 发布
 
-当 MQTT client 在连接到 broker 之后就可以发送消息了，MQTT 使用的是基于 topic  主题的过滤。每条消息都应该包含一个 topic ，broker 可以使用 topic 将消息发送给感兴趣的  client。除此之外，每条消息还会包含一个`负载(Payload)`，Payload 中包含要以字节形式发送的数据。
+当 MQTT client 在连接到 broker 之后就可以发送消息了，**MQTT 使用的是基于 topic  主题的过滤。每条消息都应该包含一个 topic** ，broker 可以使用 topic 将消息发送给感兴趣的  client。除此之外，每条消息还会包含一个`负载(Payload)`，Payload 中包含要以字节形式发送的数据。
 
-MQTT 是数据无关性的，也就是说数据是由发布者 - publisher 决定要发送的是 XML 、JSON 还是二进制数据、文本数据。
+**MQTT 是数据无关性的，也就是说数据是由发布者 - publisher 决定要发送的是 XML 、JSON 还是二进制数据、文本数据。**
 
 MQTT 中的 PUBLISH 消息结构如下。
 
