@@ -192,7 +192,6 @@ interface MQTTMessageGateway {
     fun sendToMqtt(data: String, @Header(MqttHeaders.TOPIC) topic: String)
         fun sendToMqtt(data: String, @Header(MqttHeaders.QOS) qos: Int, @Header(MqttHeaders.TOPIC) topic: String)
 }
-
 ```
 
 注册MessageHandler

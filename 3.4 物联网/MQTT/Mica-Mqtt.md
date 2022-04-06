@@ -12,15 +12,15 @@
 
 ## 二、功能
 
--  支持 MQTT v3.1、v3.1.1 以及 v5.0 协议。
--  支持 websocket mqtt 子协议（支持 mqtt.js）。
--  支持 http rest api，[http api 文档详见](https://gitee.com/596392912/mica-mqtt/blob/master/docs/http-api.md)。
--  支持 MQTT client 客户端。
--  支持 MQTT server 服务端。
--  支持 MQTT 遗嘱消息。
--  支持 MQTT 保留消息。
--  支持自定义消息（mq）处理转发实现集群。
--  MQTT 客户端 阿里云 mqtt 连接 demo。
--  支持 GraalVM 编译成本机可执行程序。
--  支持 Spring boot 项目快速接入（mica-mqtt-spring-boot-starter）。
--  mica-mqtt-spring-boot-starter 支持对接 Prometheus + Grafana。
+- 支持 MQTT v3.1、v3.1.1 以及 v5.0 协议。
+- 支持 websocket mqtt 子协议（支持 mqtt.js）。
+- 支持 http rest api，[http api 文档详见](https://gitee.com/596392912/mica-mqtt/blob/master/docs/http-api.md)。
+- 支持 MQTT client 客户端。
+- 支持 MQTT server 服务端。
+- 支持 MQTT 遗嘱消息。
+- 支持 MQTT 保留消息。
+- 支持自定义消息（mq）处理转发实现集群。
+- MQTT 客户端 阿里云 mqtt 连接 demo。
+- 支持 GraalVM 编译成本机可执行程序。
+- 支持 Spring boot 项目快速接入（mica-mqtt-spring-boot-starter）。
+- mica-mqtt-spring-boot-starter 支持对接 Prometheus + Grafana。

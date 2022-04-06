@@ -10,8 +10,6 @@ Centos7以上的发行版都试自带了firewalld防火墙的，firewalld去掉�
 
 区域对于 firewalld 来说是一大特色，但是对于我们使用Centos7一般是在服务器上，需要切换zone的需求比较少。
 
-
-
 # 二.firewalld操作与配置
 
 ## 2.1 firewall服务操作
@@ -79,8 +77,6 @@ firewall-cmd --permanent --add-port=80/tcp
 firewall-cmd --permanent --remove-port=8080/tcp
 ```
 
-
-
 ### 修改配置后重启防火墙
 
 ```bash
@@ -88,8 +84,6 @@ firewall-cmd --permanent --remove-port=8080/tcp
 firewall-cmd --reload
 # firwall-cmd：是Linux提供的操作firewall的一个工具；
 ```
-
-
 
 ## 2.3 置文件说明
 
