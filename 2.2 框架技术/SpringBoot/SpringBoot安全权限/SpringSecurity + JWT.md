@@ -1,3 +1,5 @@
+- [SpringSecurity+JWT实现登录认证！ ](https://www.cnblogs.com/qing-gee/p/16112239.html)
+
 思维导图如下：
 
 ![img](https://mmbiz.qpic.cn/mmbiz_jpg/J5qtMtfPAwsgrN7f72sXuTEwrKgvaS0p5eDCSTW92I8hY9XI7iagiblT1Dp3IfLtzVe8J8Eu9ZTWvUXBh9LXKKHg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
