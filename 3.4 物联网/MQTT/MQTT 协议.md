@@ -6,8 +6,6 @@ MQTT 协议的全称是 **Message Queuing Telemetry Transport**，翻译为消�
 
 MQTT 一般多用于 IoT 即物联网上，广泛应用于工业级别的应用场景，比如汽车、制造、石油、天然气等。
 
-![img](https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/baike/pic/item/b2de9c82d158ccbfdff06f371ed8bc3eb135416b.jpg)
-
 在了解了 MQTT 的概念和应用场景后，我们下来就来走进 MQTT 的学习中了，先来看一下 MQTT 有哪些概念。
 
 ## 2 MQTT 基础
