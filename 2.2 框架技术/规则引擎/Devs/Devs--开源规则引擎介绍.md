@@ -95,8 +95,6 @@ METHOD:POST
 
 ### 例子
 
-
-
 ```
 {
   "templateId": 1,

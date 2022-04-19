@@ -1,15 +1,12 @@
-- 原文链接：https://mp.weixin.qq.com/s/Cmw3QExqCfBAz9V0AlsS9A
+> 事务是一个程序执行单元，里面的所有操作要么全部执行成功，要么全部执行失败。
 
-事务是一个程序执行单元，里面的所有操作要么全部执行成功，要么全部执行失败。RocketMQ、Kafka和Pulsar都是当今业界应用十分广泛的开源消息队列（MQ）组件，笔者在工作中遇到关于MQ选型相关的内容，了解到关于“事务消息”这个概念在不同的MQ组件里有不同内涵。故借此文，试着浅析一番这三种消息队列（MQ）的事务消息有何异同，目的是形成关于消息队列事务消息的全景视图，给有类似业务需求的同学提供一些参考和借鉴。
-
-### 消息队列演化
+## 1 消息队列演化
 
 消息队列（Message Queue，简称MQ），是指在消息的传输中保存消息的容器或服务，是一种异步的服务间通信方式，适用于无服务器和微服务架构，是分布式系统实现高性能、高可用、可伸缩等高级特效的重要组件。
 
-常见的主流消息队列有ActiveMQ、RabbitMQ、ZeroMQ、Kafka、MetaMQ、RocketMQ、Pulsar等。而在公司内有TubeMQ、Ckafka、TDMQ、CMQ、CDMQ、Hippo等。
+常见的主流消息队列有ActiveMQ、RabbitMQ、ZeroMQ、Kafka、MetaMQ、RocketMQ、Pulsar等。
 
 ​	[![1.png](http://dockone.io/uploads/article/20210915/117dc55af1741a67554f1c888d74f465.png)](http://dockone.io/uploads/article/20210915/117dc55af1741a67554f1c888d74f465.png)
-
 
 **Kafka**：Apache  Kafka是由Apache软件基金会开发的一个开源消息系统项目，由Scala写成。Kafka最初是由LinkedIn开发，并于2011年初开源。2012年10月从Apache Incubator毕业。该项目的目标是为处理实时数据提供一个统一、高通量、低等待的平台。
 
@@ -18,40 +15,45 @@ Kafka是一个分布式的、分区的、多复本的日志提交服务。它通
 ​	[![2.png](http://dockone.io/uploads/article/20210915/7ac9f96ce6ecb2b6233c297b67b9f417.png)](http://dockone.io/uploads/article/20210915/7ac9f96ce6ecb2b6233c297b67b9f417.png)
 
 
+
 **RocketMQ**：Apache RocketMQ是一个分布式消息和流媒体平台，具有低延迟、强一致、高性能和可靠性、万亿级容量和灵活的可扩展性。它有借鉴Kafka的设计思想，但不是Kafka的拷贝，其整体架构图如下所示。
+
+
 
 ​	[![3.png](http://dockone.io/uploads/article/20210915/2fb22cf68526128758f9b921d45fab7f.png)](http://dockone.io/uploads/article/20210915/2fb22cf68526128758f9b921d45fab7f.png)
 
 
+
 **Pulsar**：Apache  Pulsar是Apache软件基金会顶级项目，是下一代云原生分布式消息流平台，集消息、存储、轻量化函数式计算为一体，采用计算与存储分离架构设计，支持多租户、持久化存储、多机房跨区域数据复制，具有强一致性、高吞吐、低延时及高可扩展性等流数据存储特性，被看作是云原生时代实时消息流传输、存储和计算最佳解决方案，其整体架构图如下所示。
+
+
 
 ​	[![4.png](http://dockone.io/uploads/article/20210915/106a40d4d2df357324140f32f8f10bc9.png)](http://dockone.io/uploads/article/20210915/106a40d4d2df357324140f32f8f10bc9.png)
 
 
 
-### 背景知识
+## 2 背景知识
 
-#### 什么是事务？
+### 2.1 什么是事务？
 
-**事务（Trasaction）**
+#### 2.1.1 事务（Trasaction）
 
 事务是一个程序执行单元，里面的所有操作要么全部执行成功，要么全部执行失败。
 
-一个事务有**四**个基本特性，也就是我们常说的（ACID）。
+一个事务有四个基本特性，也就是我们常说的（ACID）。
 
 - Atomicity（**原子性**）：事务是一个不可分割的整体，事务内所有操作要么全做成功，要么全失败。
 - Consistency（**一致性**）：事务执行前后，数据从一个状态到另一个状态必须是一致的（A向B转账，不能出现A扣了钱，B却没收到）。
 - Isolation（**隔离性**）：多个并发事务之间相互隔离，不能互相干扰。
 - Durablity（**持久性**）：事务完成后，对数据的更改是永久保存的，不能回滚。
 
-
-**分布式事务**
+#### 2.1.2 分布式事务
 
 分布式事务是指事务的参与者、支持事务的服务器、资源服务器以及事务管理器分别位于不同的分布式系统的不同节点之上。分布式事务通常用于在分布式系统中保证不同节点之间的数据一致性。
 
 分布式事务的解决方案一般有以下几种：
 
-1、XA（2PC/3PC）
+##### 1、XA（2PC/3PC）
 
 最具有代表性的是由Oracle  Tuxedo系统提出的XA分布式事务协议。XA中大致分为两部分：事务管理器和本地资源管理器。其中本地资源管理器往往由数据库实现，比如Oracle、DB2这些商业数据库都实现了XA接口，而事务管理器作为全局的调度者，负责各个本地资源的提交和回滚。XA协议通常包含两阶段提交（2PC）和三阶段提交（3PC）两种实现。两阶段提交顾名思义就是要进行两个阶段的提交：第一阶段，准备阶段（投票阶段）；第二阶段，提交阶段（执行阶段）。实现过程如下所示：
 
@@ -60,24 +62,29 @@ Kafka是一个分布式的、分区的、多复本的日志提交服务。它通
 
  二阶段提交看似能够提供原子性的操作，但它存在着一些缺陷，三段提交（3PC）是对两段提交（2PC）的一种升级优化，有兴趣的可以深入了解一下，这里不再赘述。
 
-2、TCC
+##### 2、TCC
 
 TCC（Try-Confirm-Cancel）是Try、Commit、Cancel三种指令的缩写，又被称**补偿事务**，其逻辑模式类似于XA两阶段提交，事务处理流程也很相似，但2PC是应用于在DB层面，TCC则可以理解为在应用层面的2PC，是需要我们编写业务逻辑来实现。
 
 TCC它的核心思想是：“针对每个操作都要注册一个与其对应的确认（Try）和补偿（Cancel）”。
 
-3、消息事务
+##### 3、消息事务
 
 所谓的消息事务就是基于消息队列的两阶段提交，本质上是对消息队列的一种特殊利用，它是将本地事务和发消息放在了一个分布式事务里，保证要么本地操作成功成功并且对外发消息成功，要么两者都失败。
 
 基于消息队列的两阶段提交往往用在高并发场景下，将一个分布式事务拆成一个消息事务（A系统的本地操作+发消息）+B系统的本地操作，其中B系统的操作由消息驱动，只要消息事务成功，那么A操作一定成功，消息也一定发出来了，这时候B会收到消息去执行本地操作，如果本地操作失败，消息会重投，直到B操作成功，这样就变相地实现了A与B的分布式事务。原理如下：
 
-​	[![6.png](http://dockone.io/uploads/article/20210915/40265016f5f62326cbfd0d8bcf380dc4.png)](http://dockone.io/uploads/article/20210915/40265016f5f62326cbfd0d8bcf380dc4.png)
+![1](http://dockone.io/uploads/article/20210915/40265016f5f62326cbfd0d8bcf380dc4.png)
 
 
- 虽然上面的方案能够完成A和B的操作，但是A和B并不是强一致的，而是**最终一致（Eventually consistent）**的。而这也是满足BASE理论的要求的。这里引申一下，BASE是Basically Available（基本可用）、Soft state（软状态）和Eventually  consistent（最终一致性）三个短语的缩写。BASE理论是对CAP中AP（CAP已经被证实一个分布式系统最多只能同时满足CAP三项中的两项）的一个扩展，通过牺牲强一致性来获得可用性，当出现故障允许部分不可用但要保证核心功能可用，允许数据在一段时间内是不一致的，但最终达到一致状态。满足BASE理论的事务，我们称之为“**柔性事务**”。
 
-#### 什么是Exactly-once（精确一次）语义？
+虽然上面的方案能够完成A和B的操作，但是A和B并不是强一致的，而是**最终一致（Eventually consistent）**的。而这也是满足BASE理论的要求的。
+
+这里引申一下，BASE是Basically Available（基本可用）、Soft state（软状态）和Eventually  consistent（最终一致性）三个短语的缩写。
+
+BASE理论是对CAP中AP（CAP已经被证实一个分布式系统最多只能同时满足CAP三项中的两项）的一个扩展，通过牺牲强一致性来获得可用性，当出现故障允许部分不可用但要保证核心功能可用，允许数据在一段时间内是不一致的，但最终达到一致状态。满足BASE理论的事务，我们称之为“**柔性事务**”。
+
+### 2.2 什么是Exactly-once（精确一次）语义？
 
 在分布式系统中，任何节点都有可能出现异常甚至宕机。在消息队列中也一样，当Producer在生产消息时，可能会发生Broker宕机不可用，或者网络突然中断等异常情况。根据在发生异常时Producer处理消息的方式，系统可以具备以下三种消息语义。
 
@@ -93,9 +100,9 @@ Producer通过接收Broker的ACK（消息确认）通知来确保消息成功写
 
 Exactly-once语义保证了即使Producer多次发送同一条消息到服务端，服务端也仅仅会记录一次。Exactly-once语义是最可靠的，同时也是最难理解的。Exactly-once语义需要消息队列服务端，消息生产端和消费端应用三者的协同才能实现。比如，当消费端应用成功消费并且ACK了一条消息之后，又把消费位点回滚到之前的一个消息ID，那么从那个消息ID往后的所有消息都会被消费端应用重新消费到。即：**消息不会丢失，也不会被重复发送**。
 
-### RocketMQ、Kafka、Pulsar事务消息
+## 3 RocketMQ、Kafka、Pulsar事务消息
 
-#### RocketMQ的事务消息
+### 3.1 RocketMQ的事务消息
 
 RocketMQ在4.3.0版中已经支持**分布式事务消息**，这里RocketMQ采用了2PC的思想来实现了提交事务消息，同时增加一个补偿逻辑来处理二阶段超时或者失败的消息，流程如下图所示：
 
@@ -116,13 +123,13 @@ RocketMQ在4.3.0版中已经支持**分布式事务消息**，这里RocketMQ采�
 
 讲到这里大家就明白了，这里说的就是上文提到分布式事务中的**消息事务**，目的是在分布式事务中实现系统的最终一致性。
 
-#### Kafka的事务消息
+### 3.2 Kafka的事务消息
 
 与RocketMQ的事务消息用途不同，**Kafka的事务基本上是配合其幂等机制来实现Exactly-once（见上文）语义的**。
 
 开发此功能的原因可以总结如下：
 
-**流处理的需求**
+#### 3.2.1 流处理的需求
 
 随着流处理的兴起，对具有更强处理保证的流处理应用的需求也在增长。例如，在金融行业，金融机构使用流处理引擎为用户处理借款和信贷。这种类型的用例要求每条消息都只处理一次，无一例外。
 
@@ -158,7 +165,7 @@ SequenceNumber：对于每个ProducerID，Producer发送数据的每个Topic和P
 
 Kafka事务消息是由Producer、事务协调器、Broker、组协调器、Consumer等共同参与实现的。
 
-**Producer**
+#### 3.2.2 Producer
 
 为Producer指定固定的TransactionalId（事务id），可以穿越Producer的多次会（Producer重启/断线重连）中，持续标识Producer的身份。
 
@@ -166,7 +173,7 @@ Kafka事务消息是由Producer、事务协调器、Broker、组协调器、Cons
 
 Producer遵从幂等消息的行为，并在发送的BatchRecord中增加事务id和epoch。
 
-**事务协调器（Transaction Coordinator）**
+#### 3.2.3 事务协调器（Transaction Coordinator）
 
 引入事务协调器，类似于消费组负载均衡的协调者，每一个实现事务的生产端都被分配到一个事务协调者。以两阶段提交的方式，实现消息的事务提交。
 
@@ -176,7 +183,7 @@ Producer遵从幂等消息的行为，并在发送的BatchRecord中增加事务i
 
 每一个Broker都会启动一个事务协调器，使用hash(TransactionalId)确定Producer对应的事务协调器，使得整个集群的负载均衡。
 
-**Broker**
+#### 3.2.4 Broker
 
 引入控制消息（Control Messages）：这些消息是客户端产生的并写入到主题的特殊消息，但对于使用者来说不可见。它们是用来让Broker告知消费者之前拉取的消息是否被原子性提交。
 
@@ -189,7 +196,7 @@ Broker处理事务协调器的commit/abort控制消息，把控制消息向正�
 
 如果在事务过程中，提交了消费偏移，组协调器在offset log中写入事务消费偏移。当事务提交时，在offset log中写入事务offset确认消息。
 
-**Consumer**
+#### 3.2.5 Consumer
 
 Consumer过滤未提交消息和事务控制消息，使这些消息对用户不可见。
 
@@ -201,7 +208,7 @@ Consumer过滤未提交消息和事务控制消息，使这些消息对用户不
 
 因为事务机制会影响消费者所能看到的消息的范围，它不只是简单依赖高水位来判断。它依靠一个名为LSO（Log Stable Offset）的位移值来判断事务型消费者的可见性。
 
-#### Pulsar的事务消息
+### 3.3 pulsar的事务消息
 
 Apache  Pulsar在2.8.0正式支持了事务相关的功能，Pulsar这里提供的事务区别于RocketMQ中2PC那种事务的实现方式，没有本地事务回查的机制，更类似于Kafka的事务实现机制。Apache Pulsar中的事务主要用来保证类似Pulsar Functions这种流计算场景中Exactly-once语义的实现，这也符合Apache  Pulsar本身Event Streaming的定位，即保证端到端（End-to-End）的事务实现的语义。
 
@@ -265,7 +272,7 @@ Pulsar的事务处理流程与Kafka的事务处理思路大致上保持一致，
 
 不同的是，第一：Kafka中对于未确认的消息是维护在Broker端的，但是Pulsar的是维护在Client端的，通过Transaction Timeout来决定这个事务是否执行成功，所以有了Transaction  Timeout的存在之后，就可以确保Client和Broker侧事务处理的一致性。第二：由于Kafka本身没有单条消息的Ack，所以Kafka的事务处理只能是顺序执行的，当一个事务请求被阻塞之后，会阻塞后续所有的事务请求，但是Pulsar是可以对消息进行单条Ack的，所以在这里每一个事务的Ack动作是独立的，不会出现事务阻塞的情况。
 
-### 结论
+## 4 结论
 
 RocketMQ和Kafka/Pulsar的事务消息实用的场景是不一样的。
 
