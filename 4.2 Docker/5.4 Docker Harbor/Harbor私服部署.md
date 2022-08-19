@@ -233,27 +233,34 @@ Error response from daemon: Get https://10.0.86.193/v1/users/: dial tcp 10.0.86.
 这是因为docker1.3.2版本开始默认docker registry使用的是https，我们设置Harbor默认http方式，所以当执行用docker login、pull、push等命令操作非https的docker regsitry的时就会报错。
 
 **解决办法**：
+
 如果是在Harbor本机登录可以这样做如下解决
+
 在/etc/docker/daemon.json 加上如下内容(注意是json字符串)
-```yml
-     {
-      "insecure-registries": [
+
+```json
+{
+    "insecure-registries": [
         "10.0.86.193"
-      ]
-    }
+    ]
+}
 ```
 
 打开docker-compose.yml添加如下内容，注意前边的空格
 ![](https://img-blog.csdn.net/2018092610475038?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjA4MjYzNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 然后我们执行docker-compose stop
+
 ./install.sh
 
 **如果是远程登录的话，也会出现这个错误**
+
 查找Docker的服务文件：登录到已经安装Docker的服务器，输入 systemctl status docker查看Docker的service文件
+
 ![](https://img-blog.csdn.net/20180926170307401?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjA4MjYzNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 编辑docker.service文件：在ExecStart处添加 –insecure-registry 参数。
+
 ![](https://img-blog.csdn.net/20180926170436296?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjA4MjYzNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 远程也可直接通过以下方式解决：
