@@ -159,7 +159,7 @@ scrape_configs:
 3. 启动Prometheus
 
 ```bash
-docker run -d --restart=always --name=prometheus -p 9090:9090 -v /etc/localtime:/etc/localtime:ro  -v /var/project/prometheus:/etc/prometheus prom/prometheus
+docker run -d --restart=always --name=prometheus -p 9090:9090 -v /etc/localtime:/etc/localtime:ro  -v /data/prometheus:/etc/prometheus prom/prometheus
 ```
 
 - -d：后台启动
