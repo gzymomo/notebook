@@ -1,0 +1,1 @@
+- [Java调用kettle的作业和转换_51CTO博客_kettle java](https://blog.51cto.com/u_15483586/5078851)
