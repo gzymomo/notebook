@@ -23,6 +23,7 @@ DataHub前端的设计目标如下：
 ## 前端文件存放在哪？
 
 DataHub的组件datahub-frontend-react负责前端的展示，
+
 前端文件存放在容器`linkedin/datahub-frontend-react:v0.8.26` 中的/datahub-frontend/lib/datahub-frontend-assets.jar 中
 
 将此文件从docker 容器中复制出来，使用命令如下：
@@ -37,7 +38,7 @@ datahub-web-react是一个React项目，使用yarn进行依赖管理、craco进�
 
 步骤如下：
 
-- 参考 [DataHub: 现代数据栈的元数据平台–如何搭建本地开发环境](https://editor.csdn.net/md/?articleId=122819787) ，搭建DataHub的开发环境
+- 参考 DataHub: 现代数据栈的元数据平台–如何搭建本地开发环境 ，搭建DataHub的开发环境
 - cd datahub-web-react所在的目录，如`E:\gitcodes\datahub\datahub-web-react`
 - 修改如下配置文件：
   - package.json ，在依赖中增加：`"cross-env": "^5.2.0",` ，并在所用的scripts中的变量设置前添加：`cross-env`，如`cross-env CI=false REACT_APP_MOCK=false`

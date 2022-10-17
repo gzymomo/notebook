@@ -1,6 +1,23 @@
 - [一站式元数据治理平台——Datahub](https://www.cnblogs.com/tree1123/p/15743253.html)
 - [万字保姆级长文——Linkedin元数据管理平台Datahub离线安装指南 - 独孤风 - 博客园 (cnblogs.com)](https://www.cnblogs.com/tree1123/p/16454963.html)
 - [企业级数据治理工作怎么开展？Datahub这样做 - 独孤风 - 博客园 (cnblogs.com)](https://www.cnblogs.com/tree1123/p/16543018.html)
+- [【DataHub】 现代数据栈的元数据平台--如何与spark集成，自动产生spark作业的数据血缘关系？_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125758179)
+- [【DataHub】 现代数据栈的元数据平台--如何删除元数据？_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125758137)
+- [【DataHub】 现代数据栈的元数据平台--如何处理同一平台类型的多个实例？_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125758114)
+- [【DataHub】 现代数据栈的元数据平台--如何配置DataHub作为Airflow的数据血缘后端存储，自动将工作流DAG写入DataHub作为数据血缘？_九层之台起于累土的博客-CSDN博客_datahub 血缘](https://blog.csdn.net/m0_54252387/article/details/125758016)
+- [【DataHub】 现代数据栈的元数据平台--如何从DataHub容器中提取日志?_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757985)
+- [【DataHub】 现代数据栈的元数据平台--组件日志时间早8个小时，怎么办？_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757946)
+- [【DataHub】 现代数据栈的元数据平台--如何使用数据领域Domain?_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757892)
+- [【DataHub】 现代数据栈的元数据平台--如何针对DataHub UI 前端展示进行汉化_九层之台起于累土的博客-CSDN博客_前端汉化](https://blog.csdn.net/m0_54252387/article/details/125757866)
+- [【DataHub】 现代数据栈的元数据平台--如何快速验证所有组件容器都在正确的运行?_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757780)
+- [【DataHub】 现代数据栈的元数据平台--如何监控DataHub_九层之台起于累土的博客-CSDN博客_datahub 使用](https://blog.csdn.net/m0_54252387/article/details/125757717)
+- [【DataHub】 现代数据栈的元数据平台--如何搭建本地开发环境_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757670)
+- [【DataHub】 现代数据栈的元数据平台--如何添加自定义数据平台_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757622)
+- [【DataHub】 现代数据栈的元数据平台--如何将数据血缘关系写入DataHub_九层之台起于累土的博客-CSDN博客_datahub 血缘](https://blog.csdn.net/m0_54252387/article/details/125757573)
+- [【DataHub】 现代数据栈的元数据平台--如何将自定义的元数据事件发送到DataHub_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757523)
+- [【DataHub】 现代数据栈的元数据平台--如何针对元数据建模？_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757404)
+- [【DataHub】 现代数据栈的元数据平台的Serving Architecture【服务体系架构】讲解_九层之台起于累土的博客-CSDN博客](https://blog.csdn.net/m0_54252387/article/details/125757339)
+- [【DataHub】 现代数据栈的元数据平台的入门体验及填坑记录_九层之台起于累土的博客-CSDN博客_datahub](https://blog.csdn.net/m0_54252387/article/details/125757267)
 
 随着数字化转型的工作推进，数据治理的工作已经被越来越多的公司提上了日程。作为新一代的元数据管理平台，Datahub在近一年的时间里发展迅猛，大有取代老牌元数据管理工具Atlas之势。国内Datahub的资料非常少，大部分公司想使用Datahub作为自己的元数据管理平台，但可参考的资料太少。
 
