@@ -1,0 +1,1 @@
+- [kettle web 版本 (webspoon) 中文部署 kettle 页面编辑 kettleweb 中文_ljlao2的博客-CSDN博客_kettle webspoon](https://blog.csdn.net/qq_37349379/article/details/127082840)
