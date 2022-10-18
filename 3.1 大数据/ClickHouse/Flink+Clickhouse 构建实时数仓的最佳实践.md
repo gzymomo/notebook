@@ -45,8 +45,6 @@
 
 大数据技术高速发展的时期，涌现出了一批 A 性能非常好的 OLAP 引擎，比如基于 cube 预聚合的 kylin、Impala、阿里 AnalyticsDB，但是适合实时摄入又能够做离线分析的数据分析系统选择性并不多，当前流行的有 Druid 或 Clickhouse，它们是典型的列存架构，能构建 index、或者通过向量化计算加速列式计算的分析。在 Clickhouse 还未被广泛接受之前，Druid 作为实时 OLAP 被一些互联网大厂极力推崇使用，但是一直被诟病的是它复杂的技术架构，组件非常多，包括 4 个节点 3 个依赖，四个节点分别是实时节点（Realtime Node）、历史节点（Histrical Node）、查询节点（Broker Node）、协调节点（Coodinator Node），三个依赖分别是 Mysql、Deep storage(如本地磁盘、Hdfs、S3)、Zookeeper，相当于内部实现了一个 Lambda+OLAP 的架构，学习成本和使用成本都非常高。下面从 TPC-DH 性能测试来看看几大 OLAP 引擎对比。
 
-
-
 ![img](https://static001.geekbang.org/infoq/f1/f129f4a439557dc28f46c6951b92f683.png)
 
 Clickhouse与其他分析性系统的性能对比
@@ -149,8 +147,6 @@ UNION ALL
 SELECT *
 FROM jc_bi.ads_journal_dist;
 ```
-
-复制代码
 
 # 四、实时数仓 1.0
 
