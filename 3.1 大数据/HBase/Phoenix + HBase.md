@@ -1,7 +1,5 @@
 - [Phoenix + HBase](https://blog.51cto.com/simplelife/2483684)
 
-
-
 ## Phoenix关联HBase的操作（三种情况）
 
 #### 情况一：Hbase已经有已存在的表了，可在Phoenix中创建对应的视图，视图只能做查询操作，不能做增删改

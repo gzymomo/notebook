@@ -107,19 +107,19 @@ HBase 的原型是 Google 的 BigTable 论文，受到了该论文思想的启�
 
 **Hbase 适合存储 PB 级别的海量数据，在 PB 级别的数据以及采用廉价 PC 存储的情况下，能在几十到百毫秒内返回数据**。这与 Hbase 的极易扩展性息息相关。正式因为 Hbase 良好的扩展性，才为海量数据的存储提供了便利。
 
-1. 列式存储
+2. 列式存储
 
 这里的列式存储其实说的是列族存储，Hbase 是根据列族来存储数据的。列族下面可以有非常多的列，列族在创建表的时候就必须指定。
 
-1. 极易扩展
+3. 极易扩展
 
 Hbase 的扩展性主要体现在两个方面，一个是基于上层处理能力（RegionServer）的扩展，一个是基于存储的扩展（HDFS）。通过横向添加 RegionSever 的机器，进行水平扩展，提升 Hbase 上层的处理能力，提升 Hbsae 服务更多 Region 的能力。备注：RegionServer 的作用是管理 region、承接业务的访问，这个后面会详细的介绍通过横向添加 Datanode 的机器，进行存储层扩容，提升 Hbase 的数据存储能力和提升后端存储的读写能力。
 
-1. 高并发
+4. 高并发
 
 由于目前大部分使用 Hbase 的架构，都是采用的廉价 PC，因此单个 IO 的延迟其实并不小，一般在几十到上百 ms 之间。这里说的高并发，主要是在并发的情况下，Hbase 的单个 IO 延迟下降并不多。能获得高并发、低延迟的服务。
 
-1. 稀疏
+5. 稀疏
 
 稀疏主要是针对 Hbase 列的灵活性，在列族中，你可以指定任意多的列，在列数据为空的情况下，是不会占用存储空间的。
 
@@ -155,19 +155,19 @@ Hbase 的扩展性主要体现在两个方面，一个是基于上层处理能�
 
 HBase 的修改记录，当对 HBase 读写数据的时候，数据不是直接写进磁盘，它会在内存中保留一段时间（时间以及数据量阈值可以设定）。但把数据保存在内存中可能有更高的概率引起数据丢失，为了解决这个问题，数据会先写在一个叫做 Write-Ahead logfile 的文件中，然后再写入内存中。所以在系统出现故障的时候，数据可以通过这个日志文件重建。
 
-1. **HFile**
+2. **HFile**
 
 这是在磁盘上保存原始数据的实际的物理文件，是实际的存储文件。
 
-1. **Store**
+3. **Store**
 
 HFile 存储在 Store 中，一个 Store 对应 HBase 表中的一个列族。
 
-1. **MemStore**
+4. **MemStore**
 
 顾名思义，就是内存存储，位于内存中，用来保存当前的数据操作，所以当数据保存在 WAL 中之后，RegsionServer 会在内存中存储键值对。
 
-1. **Region**
+5. **Region**
 
 Hbase 表的分片，HBase 表会根据 RowKey 值被切分成不同的 region 存储在 RegionServer 中，在一个 RegionServer 中可以有多个不同的 region。
 
@@ -181,25 +181,19 @@ Hbase 表的分片，HBase 表会根据 RowKey 值被切分成不同的 region �
 $ bin/hbase shell
 ```
 
-复制
-
-1. 查看帮助命令
+2. 查看帮助命令
 
 ```javascript
 hbase(main):001:0> help
 ```
 
-复制
-
-1. 查看当前数据库中有哪些表
+3. 查看当前数据库中有哪些表
 
 ```javascript
 hbase(main):002:0> list
 ```
 
-复制
-
-1. 创建一张表
+4. 创建一张表
 
 创建 user 表，包含 info、data 两个列族
 
@@ -207,17 +201,13 @@ hbase(main):002:0> list
 hbase(main):010:0> create 'user', 'info', 'data'
 ```
 
-复制
-
 或者
 
 ```javascript
 hbase(main):010:0> create 'user', {NAME => 'info', VERSIONS => '3'}，{NAME => 'data'}
 ```
 
-复制
-
-1. 添加数据操作
+5. 添加数据操作
 
 向 user 表中插入信息，row key 为 rk0001，列族 info 中添加 name 列标示符，值为 zhangsan
 
@@ -225,15 +215,11 @@ hbase(main):010:0> create 'user', {NAME => 'info', VERSIONS => '3'}，{NAME => '
 hbase(main):011:0> put 'user', 'rk0001', 'info:name', 'zhangsan'
 ```
 
-复制
-
 向 user 表中插入信息，row key 为 rk0001，列族 info 中添加 gender 列标示符，值为 female
 
 ```javascript
 hbase(main):012:0> put 'user', 'rk0001', 'info:gender', 'female'
 ```
-
-复制
 
 向 user 表中插入信息，row key 为 rk0001，列族 info 中添加 age 列标示符，值为 20
 
@@ -241,15 +227,11 @@ hbase(main):012:0> put 'user', 'rk0001', 'info:gender', 'female'
 hbase(main):013:0> put 'user', 'rk0001', 'info:age', 20
 ```
 
-复制
-
 向 user 表中插入信息，row key 为 rk0001，列族 data 中添加 pic 列标示符，值为 picture
 
 ```javascript
 hbase(main):014:0> put 'user', 'rk0001', 'data:pic', 'picture'
 ```
-
-复制
 
 ### **2) 查询操作**
 
@@ -261,8 +243,6 @@ hbase(main):014:0> put 'user', 'rk0001', 'data:pic', 'picture'
 hbase(main):015:0> get 'user', 'rk0001'
 ```
 
-复制
-
 1. 查看 rowkey 下面的某个列族的信息
 
 获取 user 表中 row key 为 rk0001，info 列族的所有信息
@@ -270,8 +250,6 @@ hbase(main):015:0> get 'user', 'rk0001'
 ```javascript
 hbase(main):016:0> get 'user', 'rk0001', 'info'
 ```
-
-复制
 
 1. 查看 rowkey 指定列族指定字段的值
 
@@ -281,8 +259,6 @@ hbase(main):016:0> get 'user', 'rk0001', 'info'
 hbase(main):017:0> get 'user', 'rk0001', 'info:name', 'info:age'
 ```
 
-复制
-
 1. 查看 rowkey 指定多个列族的信息
 
 获取 user 表中 row key 为 rk0001，info、data 列族的信息
@@ -291,23 +267,17 @@ hbase(main):017:0> get 'user', 'rk0001', 'info:name', 'info:age'
 hbase(main):018:0> get 'user', 'rk0001', 'info', 'data'
 ```
 
-复制
-
 或者这样写
 
 ```javascript
 hbase(main):019:0> get 'user', 'rk0001', {COLUMN => ['info', 'data']}
 ```
 
-复制
-
 或者这样写
 
 ```javascript
 hbase(main):020:0> get 'user', 'rk0001', {COLUMN => ['info:name', 'data:pic']}
 ```
-
-复制
 
 1. 指定 rowkey 与列值查询
 
@@ -317,8 +287,6 @@ hbase(main):020:0> get 'user', 'rk0001', {COLUMN => ['info:name', 'data:pic']}
 hbase(main):030:0> get 'user', 'rk0001', {FILTER => "ValueFilter(=, 'binary:zhangsan')"}
 ```
 
-复制
-
 1. 指定 rowkey 与列值模糊查询
 
 获取 user 表中 row key 为 rk0001，列标示符中含有 a 的信息
@@ -326,8 +294,6 @@ hbase(main):030:0> get 'user', 'rk0001', {FILTER => "ValueFilter(=, 'binary:zhan
 ```javascript
 hbase(main):031:0> get 'user', 'rk0001', {FILTER => "(QualifierFilter(=,'substring:a'))"}
 ```
-
-复制
 
 继续插入一批数据
 
@@ -338,8 +304,6 @@ hbase(main):034:0> put 'user', 'rk0002', 'info:nationality', '中国'
 hbase(main):035:0> get 'user', 'rk0002', {FILTER => "ValueFilter(=, 'binary:中国')"}
 ```
 
-复制
-
 1. 查询所有数据
 
 查询 user 表中的所有信息
@@ -347,8 +311,6 @@ hbase(main):035:0> get 'user', 'rk0002', {FILTER => "ValueFilter(=, 'binary:中�
 ```javascript
 scan 'user'
 ```
-
-复制
 
 1. 列族查询
 
@@ -360,8 +322,6 @@ scan 'user', {COLUMNS => 'info', RAW => true, VERSIONS => 5}
 scan 'user', {COLUMNS => 'info', RAW => true, VERSIONS => 3}
 ```
 
-复制
-
 1. 多列族查询
 
 查询 user 表中列族为 info 和 data 的信息
@@ -371,8 +331,6 @@ scan 'user', {COLUMNS => ['info', 'data']}
 scan 'user', {COLUMNS => ['info:name', 'data:pic']}
 ```
 
-复制
-
 1. 指定列族与某个列名查询
 
 查询 user 表中列族为 info、列标示符为 name 的信息
@@ -380,8 +338,6 @@ scan 'user', {COLUMNS => ['info:name', 'data:pic']}
 ```javascript
 scan 'user', {COLUMNS => 'info:name'}
 ```
-
-复制
 
 1. 指定列族与列名以及限定版本查询
 
@@ -391,8 +347,6 @@ scan 'user', {COLUMNS => 'info:name'}
 scan 'user', {COLUMNS => 'info:name', VERSIONS => 5}
 ```
 
-复制
-
 1. 指定多个列族与按照数据值模糊查询
 
 查询 user 表中列族为 info 和 data 且列标示符中含有 a 字符的信息
@@ -400,8 +354,6 @@ scan 'user', {COLUMNS => 'info:name', VERSIONS => 5}
 ```javascript
 scan 'user', {COLUMNS => ['info', 'data'], FILTER => "(QualifierFilter(=,'substring:a'))"}
 ```
-
-复制
 
 1. rowkey 的范围值查询
 
@@ -411,8 +363,6 @@ scan 'user', {COLUMNS => ['info', 'data'], FILTER => "(QualifierFilter(=,'substr
 scan 'user', {COLUMNS => 'info', STARTROW => 'rk0001', ENDROW => 'rk0003'}
 ```
 
-复制
-
 1. 指定 rowkey 模糊查询
 
 查询 user 表中 row key 以 rk 字符开头的
@@ -420,8 +370,6 @@ scan 'user', {COLUMNS => 'info', STARTROW => 'rk0001', ENDROW => 'rk0003'}
 ```javascript
 scan 'user',{FILTER=>"PrefixFilter('rk')"}
 ```
-
-复制
 
 1. 指定数据范围值查询
 
@@ -431,15 +379,11 @@ scan 'user',{FILTER=>"PrefixFilter('rk')"}
 scan 'user', {TIMERANGE => [1392368783980, 1392380169184]}
 ```
 
-复制
-
 1. 统计一张表有多少行数据
 
 ```javascript
 count 'user'
 ```
-
-复制
 
 ### **3) 更新操作**
 
@@ -455,8 +399,6 @@ count 'user'
 hbase(main):050:0> alter 'user', NAME => 'info', VERSIONS => 5
 ```
 
-复制
-
 ### **4) 删除操作**
 
 1. 指定 rowkey 以及列名进行删除
@@ -467,8 +409,6 @@ hbase(main):050:0> alter 'user', NAME => 'info', VERSIONS => 5
 hbase(main):045:0> delete 'user', 'rk0001', 'info:name'
 ```
 
-复制
-
 1. 指定 rowkey，列名以及字段值进行删除
 
 删除 user 表 row key 为 rk0001，列标示符为 info:name，timestamp 为 1392383705316 的数据
@@ -476,8 +416,6 @@ hbase(main):045:0> delete 'user', 'rk0001', 'info:name'
 ```javascript
 delete 'user', 'rk0001', 'info:name', 1392383705316
 ```
-
-复制
 
 1. 删除一个列族
 
@@ -487,23 +425,17 @@ delete 'user', 'rk0001', 'info:name', 1392383705316
 alter 'user', NAME => 'info', METHOD => 'delete'
 ```
 
-复制
-
 或者
 
 ```javascript
 alter 'user', NAME => 'info', METHOD => 'delete'
 ```
 
-复制
-
 1. 清空表数据
 
 ```javascript
 hbase(main):017:0> truncate 'user'
 ```
-
-复制
 
 1. 删除表
 
@@ -513,15 +445,11 @@ hbase(main):017:0> truncate 'user'
 hbase(main):049:0> disable 'user
 ```
 
-复制
-
 然后才能 drop 这个表，使用命令：
 
 ```javascript
  hbase(main):050:0> drop 'user'
 ```
-
-复制
 
 > **注意**：如果直接 drop 表，会报错：Drop the named table. Table must first be disabled
 
@@ -535,8 +463,6 @@ hbase(main):049:0> disable 'user
 hbase(main):058:0> status 'node01'
 ```
 
-复制
-
 1. whoami
 
 显示 HBase 当前用户，例如：
@@ -544,8 +470,6 @@ hbase(main):058:0> status 'node01'
 ```javascript
 hbase> whoami
 ```
-
-复制
 
 1. list
 
@@ -555,8 +479,6 @@ hbase> whoami
 hbase> list
 ```
 
-复制
-
 1. count
 
 统计指定表的记录数，例如：
@@ -564,8 +486,6 @@ hbase> list
 ```javascript
 hbase> count 'user'
 ```
-
-复制
 
 1. describe
 
@@ -575,8 +495,6 @@ hbase> count 'user'
 hbase> describe 'user'
 ```
 
-复制
-
 1. exists
 
 检查表是否存在，适用于表量特别多的情况
@@ -585,8 +503,6 @@ hbase> describe 'user'
 hbase> exists 'user'
 ```
 
-复制
-
 1. is_enabled、is_disabled
 
 检查表是否启用或禁用
@@ -594,8 +510,6 @@ hbase> exists 'user'
 ```javascript
 hbase> is_enabled 'user'
 ```
-
-复制
 
 1. alter
 
@@ -607,15 +521,11 @@ hbase> is_enabled 'user'
 hbase> alter 'user', NAME => 'CF2', VERSIONS => 2
 ```
 
-复制
-
 为当前表删除列族：
 
 ```javascript
 hbase(main):002:0>  alter 'user', 'delete' => 'CF2'
 ```
-
-复制
 
 1. disable/enable
 
@@ -664,8 +574,6 @@ hbase(main):002:0>  alter 'user', 'delete' => 'CF2'
     }
 ```
 
-复制
-
 1. **向表中添加数据**
 
 ```javascript
@@ -691,8 +599,6 @@ hbase(main):002:0>  alter 'user', 'delete' => 'CF2'
         myuser.close();
     }
 ```
-
-复制
 
 1. 查询数据
 
@@ -778,8 +684,6 @@ hbase(main):002:0>  alter 'user', 'delete' => 'CF2'
     }
 ```
 
-复制
-
 **按照 rowkey 进行查询获取所有列的所有值**
 
 查询主键 rowkey 为 0003 的人：
@@ -806,8 +710,6 @@ hbase(main):002:0>  alter 'user', 'delete' => 'CF2'
 }
 ```
 
-复制
-
 **按照 rowkey 查询指定列族下面的指定列的值**：
 
 ```javascript
@@ -829,8 +731,6 @@ get.addColumn("f1".getBytes(),"id".getBytes());
         myuser.close();
 }
 ```
-
-复制
 
 **通过 startRowKey 和 endRowKey 进行扫描**：
 
@@ -865,8 +765,6 @@ get.addColumn("f1".getBytes(),"id".getBytes());
     }
 ```
 
-复制
-
 **通过 scan 进行全表扫描**：
 
 ```javascript
@@ -893,8 +791,6 @@ get.addColumn("f1".getBytes(),"id".getBytes());
     }
 ```
 
-复制
-
 ### **2. 过滤器查询**
 
 过滤器的类型很多，但是可以分为两大类——**比较过滤器，专用过滤器**。
@@ -913,8 +809,6 @@ GREATER >
 NO_OP 排除所有
 ```
 
-复制
-
 Hbase 过滤器的比较器（指定比较机制）：
 
 ```javascript
@@ -925,8 +819,6 @@ BitComparator 按位比较
 RegexStringComparator 提供一个正则的比较器，仅支持 EQUAL 和非EQUAL
 SubstringComparator 判断提供的子串是否出现在value中。
 ```
-
-复制
 
 #### **1) 比较过滤器**
 
@@ -961,8 +853,6 @@ SubstringComparator 判断提供的子串是否出现在value中。
     }
 ```
 
-复制
-
 1. 列族过滤器 FamilyFilter
 
 查询比 f2 列族小的所有的列族内的数据
@@ -991,8 +881,6 @@ SubstringComparator 判断提供的子串是否出现在value中。
     }
 ```
 
-复制
-
 1. 列过滤器 QualifierFilter
 
 只查询 name 列的值
@@ -1019,8 +907,6 @@ public  void qualifierFilter() throws IOException {
         myuser.close();
 }
 ```
-
-复制
 
 1. 列值过滤器 ValueFilter
 
@@ -1049,8 +935,6 @@ public  void valueFilter() throws IOException {
         myuser.close();
 }
 ```
-
-复制
 
 #### **2) 专用过滤器**
 
@@ -1081,8 +965,6 @@ public void singleColumnFilter() throws IOException {
         myuser.close();
 }
 ```
-
-复制
 
 1. 列值排除过滤器 SingleColumnValueExcludeFilter
 
@@ -1116,8 +998,6 @@ public void preFilter() throws IOException {
         myuser.close();
 }
 ```
-
-复制
 
 1. 分页过滤器 PageFilter
 
@@ -1176,8 +1056,6 @@ public void pageFilter2() throws IOException {
 }
 ```
 
-复制
-
 #### **3) 多过滤器综合查询 FilterList**
 
 **需求**：使用 SingleColumnValueFilter 查询 f1 列族，name 为刘备的数据，并且同时满足 rowkey 的前缀以 00 开头的数据（PrefixFilter）
@@ -1211,8 +1089,6 @@ public void manyFilter() throws IOException {
 }
 ```
 
-复制
-
 ### **3. 根据 rowkey 删除数据**
 
 ```javascript
@@ -1229,8 +1105,6 @@ public  void  deleteByRowKey() throws IOException {
 }
 ```
 
-复制
-
 ### **4. 删除表操作**
 
 ```javascript
@@ -1246,8 +1120,6 @@ public void  deleteTable() throws IOException {
         admin.close();
 }
 ```
-
-复制
 
 ## **六、HBase 底层原理**
 
@@ -1541,7 +1413,6 @@ hbase(main):010:0> create 'myuser2','f1'
 
 ```javascript
 public class HBaseMR extends Configured implements Tool{
-
 
     public static class HBaseMapper extends  TableMapper<Text,Put>{
         /**

@@ -16,7 +16,9 @@
 
 关于每个Region Server节点中，Region数量大致合理的范围，HBase官网上也给出了定义：
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFeAicxbwAkcCCrw8ic0PzIEhKxTQ6h2o1wYPnw4Jib2Swb6pJjhpI7HjVBw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)region-number
+![图片](https://mmbiz.qpic.cn/mmbiz_png/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFeAicxbwAkcCCrw8ic0PzIEhKxTQ6h2o1wYPnw4Jib2Swb6pJjhpI7HjVBw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+region-number
 
 可见，通常情况下，每个节点拥有20-200个Region是比较正常的。
 
@@ -35,7 +37,7 @@
 
 > 500个region反推每个节点需要的堆内存为：`500 * 256 / 0.6 / 1024 ≈ 208G` (500 * 128 / 0.6 / 1024  ≈ 104G)
 
-上述最理想的情况是假设每个Region上的填充率都一样，包括数据写入的频次、写入数据的大小，但实际上每个Region的负载各不相同，有的Region可能特别活跃、负载特别高，有的Region则比较空闲。所以，通常我们认为2~3倍的理想Region数量也是比较合理的，针对上面举例来说，大概200~300个Region左右算是合理的。
+上述最理想的情况是假设每个Region上的填充率都一样，包括数据写入的频次、写入数据的大小，但实际上每个Region的负载各不相同，有的Region可能特别活跃、负载特别高，有的Region则比较空闲。所以，通常我们认为2 ~ 3倍的理想Region数量也是比较合理的，针对上面举例来说，大概200~300个Region左右算是合理的。
 
 ##  3. Region数量优化 
 
@@ -72,17 +74,23 @@
 
 `hbase-site.xml`配置文件一定不要直接从`/etc/hbase/conf`中获取，这里的配置文件是给客户端用的。CDH管理的HBase，配置文件都是运行时加载的，所以，找到HBase最新启动时创建的进程相关的目录，即可获取到服务端最新的配置文件，如：/var/run/cloudera-scm-agent/process/5347-hbase-REGIONSERVER。需要准备的目录结构如下：
 
-![图片](https://mmbiz.qpic.cn/mmbiz_jpg/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFekLvKO8NMLpZNw7E1dnyEnO80jG0iamCMCM8qZ3xkLRFPKnqdt5ibCnVw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)dir-hbase
+![图片](https://mmbiz.qpic.cn/mmbiz_jpg/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFekLvKO8NMLpZNw7E1dnyEnO80jG0iamCMCM8qZ3xkLRFPKnqdt5ibCnVw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+dir-hbase
 
 不需要HBase完整安装包中的内容（在自编译的完整安装包中运行RS进程时，依赖冲突或其他莫名其妙的报错会折磨的你抓狂），只需要bin、conf目录即可，pids文件夹是自定义的，RS进程对应pid文件的输出目录，start_rs.sh、stop_rs.sh是自定义的RS进程的启动和关闭脚本。
 
 重点修改下图标注的配置文件，
 
-![图片](https://mmbiz.qpic.cn/mmbiz_jpg/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFe6lRsWvBdxpHyljUjgH29Z5DoBhNZ8g3iatVpCsGM3d6YRrl9TfFibPoQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)conf
+![图片](https://mmbiz.qpic.cn/mmbiz_jpg/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFe6lRsWvBdxpHyljUjgH29Z5DoBhNZ8g3iatVpCsGM3d6YRrl9TfFibPoQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+conf
 
 - hbase-site.xml
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFewMD5751KoEW5BuHbwZknQ4YGCpCqmZiakt1FzjUxDnzgQnSjmpXtRmg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)hbase-site
+![图片](https://mmbiz.qpic.cn/mmbiz_png/EXXNkN9fahoz0stibV3UNQx4icibAmxEKFewMD5751KoEW5BuHbwZknQ4YGCpCqmZiakt1FzjUxDnzgQnSjmpXtRmg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+hbase-site
 
 - log4j
 

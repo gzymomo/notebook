@@ -2,8 +2,6 @@
 
 原文地址：掘金：https://juejin.cn/post/6987036728594792484
 
-
-
 #### HBASE是什么？
 
 HBase是一个分布式的、面向列的开源数据库，该技术来源于 Fay Chang 所撰写的Google论文“Bigtable：一个结构化数据的分布式存储系统”。就像Bigtable利用了Google文件系统（File System）所提供的分布式数据存储一样，HBase在Hadoop之上提供了类似于Bigtable的能力。
@@ -24,9 +22,9 @@ HBase是Apache的Hadoop项目的子项目。HBase不同于一般的关系数据�
 
 #### **（3）系统架构**
 
-首先它也是一套标准的存储架构。他的**Hmaster**主要负责简单的协调服务，比如**region的转移，均衡，以及错误的恢复**，实际上他并不参与查询，真正的**查询是发生在region server**。region server事负责存储的，刚才我们说过，每一个表会分为几个region。然后存储在region server。
+首先它也是一套标准的存储架构。他的**Hmaster**主要负责简单的协调服务，比如**region的转移，均衡，以及错误的恢复**，实际上他并不参与查询，真正的**查询是发生在region server**。region server是负责存储的，刚才我们说过，每一个表会分为几个region。然后存储在region server。
 
-这里最重要的部分是hlog。为了保证数据一致性，首先会写一份日志文件，这是数据库系统里面以来的一种特性，创建了日志以后，我们才能写入成功。我们刚才提到HBase里面有很多column-family列族，没个列族在一个region里对应一个store，store分别包含storefile和menstore。
+这里最重要的部分是hlog。为了保证数据一致性，首先会写一份日志文件，这是数据库系统里面以来的一种特性，创建了日志以后，我们才能写入成功。我们刚才提到HBase里面有很多column-family列族，每个列族在一个region里对应一个store，store分别包含storefile和menstore。
 
 为了后续对HBase可以优化，我们首先考虑把**文件写入menstore**里面，随着menstore里面的数据满了之后，会把数据**分发到磁盘里**，然后storefile和memstore整体的话，依赖一个数据模型，叫做**lmstree**。
 
@@ -152,8 +150,6 @@ HBASE基本讲解就到此结束了，开始讲解实战演练吧！
 #### 三、实战经验
 
 #### 怎么设计rowkey
-
-加班回来才能开始写文章，好了，开始了。
 
 在告警业务场景中，一般分为两类场景
 
