@@ -1,4 +1,5 @@
 - [datax + datax_web避坑指南 - 欲乘风上云霄 - 博客园 (cnblogs.com)](https://www.cnblogs.com/zsf-note/p/15727339.html)
+- [CentOS7安装DataX和datax-web - yangkang666 - 博客园 (cnblogs.com)](https://www.cnblogs.com/simple-young/p/16295144.html)
 
 用datax_web 原因：后续有各个项目需要用到datax抽数据，配置json浪费时间，用python脚本去调度也麻烦，datax_web 可以批量配置ison 并存储到数据库里，迁移也方便。
 
