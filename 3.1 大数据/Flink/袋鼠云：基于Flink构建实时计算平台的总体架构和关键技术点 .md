@@ -2,13 +2,11 @@
 
 原文地址：https://blog.51cto.com/u_15137832/3114262
 
-[数栈](https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fwww.dtstack.com%2Fdtinsight%2F)是云原生—站式数据中台PaaS，我们在github和gitee上有一个有趣的开源项目：[FlinkX](https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fwww.dtstack.com%2Fdtinsight%2F)，[FlinkX](https://gitee.com/dtstack_dev_0/flinkx)是一个基于Flink的批流统一的数据同步工具，既可以采集静态的数据，也可以采集实时变化的数据，是全域、异构、批流一体的数据同步引擎。大家喜欢的话请给我们点个**star！star！star！**
+[数栈](https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fwww.dtstack.com%2Fdtinsight%2F)是云原生—站式数据中台PaaS，我们在github和gitee上有一个有趣的开源项目：[FlinkX](https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fwww.dtstack.com%2Fdtinsight%2F)，[FlinkX](https://gitee.com/dtstack_dev_0/flinkx)是一个基于Flink的批流统一的数据同步工具，既可以采集静态的数据，也可以采集实时变化的数据，是全域、异构、批流一体的数据同步引擎。
 
 github开源项目：https://github.com/DTStack/flinkx
 
 gitee开源项目：https://gitee.com/dtstack_dev_0/flinkx
-
-
 
 # 一、平台建设背景
 
