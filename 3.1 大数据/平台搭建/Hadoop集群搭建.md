@@ -96,8 +96,6 @@
 | ------ | ----------------- | -------- | ---- | ---- |
 | node11 | Y                 | Y        | 16G  | 200G |
 
-
-
 - ZK：Zookeeper（分布式协调系统，用来协调服务）
 - NN：Hadoop NameNode（负责协调集群上的数据存储）
 - DN：Hadoop DataNode（**NodeManager** 和 **DataNode** 角色主要用于计算和存储，为了获得更好的性能，通常将 NodeManager 和 DataNode 部署在一起）
