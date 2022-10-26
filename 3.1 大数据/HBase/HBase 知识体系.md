@@ -1,4 +1,6 @@
 - [史上最全 | HBase 知识体系吐血总结 - 腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1904849)
+- [Hbase系列-2、Hbase基础_技术武器库的博客-CSDN博客](https://blog.csdn.net/l848168/article/details/122257580)
+- [Hbase系列-3、Hbase高级_技术武器库的博客-CSDN博客](https://blog.csdn.net/l848168/article/details/122836337)
 
 ## **一、HBase 基础**
 
