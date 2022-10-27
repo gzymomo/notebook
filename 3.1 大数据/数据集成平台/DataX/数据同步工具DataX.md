@@ -1,4 +1,5 @@
 - [大数据Hadoop之——数据同步工具DataX - 掘金 (juejin.cn)](https://juejin.cn/post/7100939690898882573#heading-10)
+- [数据采集工具-DataX - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/435622257)
 
 ## 一、概述
 
