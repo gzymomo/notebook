@@ -55,6 +55,8 @@
 
 ![img](https://ask.qcloudimg.com/http-save/yehe-5196357/7b227006d92aa0dc8427e4622fd68472.png?imageView2/2/w/1620)
 
+
+
 - **Name Space命名空间**
 
 类似于关系型数据库的 DatabBase 概念，每个命名空间下有多个表。HBase有两个自带的命名空间，分别是 hbase 和 default，hbase 中存放的是 HBase 内置的表，default 表是用户默认使用的命名空间。

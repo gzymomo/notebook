@@ -52,7 +52,7 @@ Hive由Facebook实现并开源，基于Hadoop的一个**数据仓库**工具，�
 
 2、Hive的查询延时很严重，因为MapReduce Job的启动过程消耗很长时间，所以不能用在交互查询系统中。
 
-3、hive不支持事务（因为不没有增删改，所以主要用来做OLAP（联机分析处理），而不是OLTP（联机事务处理），这就是数据处理的两大级别）。
+3、hive不支持事务（因为没有增删改，所以主要用来做OLAP（联机分析处理），而不是OLTP（联机事务处理），这就是数据处理的两大级别）。
 
 ### 1.2 Hive的体系架构
 
@@ -1199,6 +1199,14 @@ select * from t where rk = 1;
 如果reduce太少：如果数据量很大，会导致这个reduce异常的慢，从而导致这个任务不能结束，也有可能会OOM、如果reduce太多：  产生的小文件太多，合并起来代价太高，namenode的内存占用也会增大。如果我们不指定mapred.reduce.tasks，hive会自动计算需要多少个reducer。
 
 ## 7 Hive整合HBase
+
+Hbae作为Hive的数据源，通过整合，让HBase支持JOIN、GROUP等SQL查询语法。
+
+Hive与我们的HBase各有千秋，各自有着不同的功能，但是归根接地，hive与hbase的数据最终都是存储在hdfs上面的，一般的我们为了存储磁盘的空间，不会将一份数据存储到多个地方，导致磁盘空间的浪费，我们可以直接将数据存入hbase，然后通过hive整合hbase直接使用sql语句分析hbase里面的数据即可，非常方便。
+
+HBase 虽然可以存储数亿或数十亿行数据，但是对于数据分析来说，不太友好，只提供了简单的基于 Key 值的快速查询能力，没法进行大量的条件查询。现有hbase的查询工具有很多如：Hive，Tez，Impala，Shark/Spark，Phoenix等。今天主要说Hive，Hive方便地提供了Hive QL的接口来简化MapReduce的使用， 而HBase提供了低延迟的数据库访问。如果两者结合，可以利用MapReduce的优势针对HBase存储的大量内容进行离线的计算和分析。
+
+Hive与HBase整合的实现是利用两者本身对外的API接口互相通信来完成的，这种相互通信是通过`$HIVE_HOME/lib/hive-hbase-handler-{hive.version}.jar`工具类实现的。通过HBaseStorageHandler，Hive可以获取到Hive表所对应的HBase表名，列簇和列，InputFormat、OutputFormat类，创建和删除HBase表等。Hive访问HBase中表数据，实质上是通过MapReduce读取HBase表数据，其实现是在MR中，使用HiveHBaseTableInputFormat完成对HBase表的切分，获取RecordReader对象来读取数据。对HBase表的切分原则是一个Region切分成一个Split,即表中有多少个Regions,MR中就有多少个Map；读取HBase表数据都是通过构建Scanner，对表进行全表扫描，如果有过滤条件，则转化为Filter。当过滤条件为rowkey时，则转化为对rowkey的过滤；Scanner通过RPC调用RegionServer的next()来获取数据；
 
 ### 7.1 数据实时写Hbase,实现在Hive中用sql查询
 
