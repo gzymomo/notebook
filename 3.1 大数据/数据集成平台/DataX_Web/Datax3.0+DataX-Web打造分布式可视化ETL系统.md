@@ -43,13 +43,17 @@ DataX 作业运行启动后，Job 会对 TaskGroup 进行监控操作，等待�
 例如生成MySQL到MySQL同步的模板：
 
 ```
-#输出mysql配置模版 [root@192bin]#python/usr/local/datax/bin/datax.py-rmysqlreader-wmysqlwriter>/usr/local/datax/job/mysql2mysql.json #根据模板编写mysql2mysql.json文件 { "job":{ "content":[ { "reader":{ "name":"mysqlreader", "parameter":{ "column":["id","name"],#"*"表示所有字段 "connection":[ { "jdbcUrl":["jdbc:mysql://x.x.x.210:3306/mytest"], "table":["user"] } ], "password":"root", "username":"root" } }, "writer":{ "name":"mysqlwriter", "parameter":{ "column":["id","name"], "connection":[ { "jdbcUrl":"jdbc:mysql://192.168.88.192:3306/mytest", "table":["user"] } ], "password":"root", "username":"root", "writeMode":"insert" } } } ], "setting":{ "speed":{ "channel":"6" } } } }
+#输出mysql配置模版 
+[root@192bin]#python/usr/local/datax/bin/datax.py-rmysqlreader-wmysqlwriter>/usr/local/datax/job/mysql2mysql.json 
+#根据模板编写mysql2mysql.json文件 
+{ "job":{ "content":[ { "reader":{ "name":"mysqlreader", "parameter":{ "column":["id","name"],#"*"表示所有字段 "connection":[ { "jdbcUrl":["jdbc:mysql://x.x.x.210:3306/mytest"], "table":["user"] } ], "password":"root", "username":"root" } }, "writer":{ "name":"mysqlwriter", "parameter":{ "column":["id","name"], "connection":[ { "jdbcUrl":"jdbc:mysql://192.168.88.192:3306/mytest", "table":["user"] } ], "password":"root", "username":"root", "writeMode":"insert" } } } ], "setting":{ "speed":{ "channel":"6" } } } }
 ```
 
 验证：
 
 ```
-[root@192job]#python/usr/local/datax/bin/datax.pymysql2mysql.json 2022-04-2417:39:03.445[job-0]INFOJobContainer- 任务启动时刻:2022-04-2417:38:49 任务结束时刻:2022-04-2417:39:03 任务总计耗时:14s 任务平均流量:0B/s 记录写入速度:0rec/s 读出记录总数:3 读写失败总数:0
+[root@192job]#python/usr/local/datax/bin/datax.pymysql2mysql.json 2022-04-2417:39:03.445
+[job-0]INFOJobContainer- 任务启动时刻:2022-04-2417:38:49 任务结束时刻:2022-04-2417:39:03 任务总计耗时:14s 任务平均流量:0B/s 记录写入速度:0rec/s 读出记录总数:3 读写失败总数:0
 ```
 
 ### 三、DataX-WEB 安装部署

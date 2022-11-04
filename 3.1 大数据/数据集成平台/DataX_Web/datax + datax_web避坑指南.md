@@ -65,8 +65,120 @@ datax-admin下配置修改：
 
 datax-executor下配置修改：该注释的注释掉，该开的开，最后一行 datax路径改成自己的路径：pypath: D:\workspace\datax\datax\bin\datax.py
 
-```
-server:`` ``port: 8080``# port: ${server.port}``spring:`` ``#数据源`` ``datasource:``  ``username: root　　#你的mysql 用户 和密码``  ``password: 123456``  ``url: jdbc:mysql:``//localhost:3306/datax_web?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8``# &&serverTimezone=GMT``#  password: ${DB_PASSWORD:password}``#  username: ${DB_USERNAME:username}``#  url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_DATABASE:dataxweb}?serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false&useSSL=false&nullNamePatternMatchesAll=true&useUnicode=true&characterEncoding=UTF-8``  ``driver-``class``-name: com.mysql.cj.jdbc.Driver` `  ``hikari:``   ``## 最小空闲连接数量``   ``minimum-idle: 5``   ``## 空闲连接存活最大时间，默认600000（10分钟）``   ``idle-timeout: 180000``   ``## 连接池最大连接数，默认是10``   ``maximum-pool-size: 10``   ``## 数据库连接超时时间,默认30秒，即30000``   ``connection-timeout: 30000``   ``connection-test-query: SELECT 1``   ``##此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟``   ``max-lifetime: 1800000` ` ``# datax-web email`` ``mail:``  ``host: smtp.qq.com``  ``port: 25``  ``username: xxx@qq.com``  ``password: xxx``#  username: ${mail.username}``#  password: ${mail.password}``  ``properties:``   ``mail:``    ``smtp:``     ``auth: ``true``     ``starttls:``      ``enable: ``true``      ``required: ``true``    ``socketFactory:``     ``class``: javax.net.ssl.SSLSocketFactory` `management:`` ``health:``  ``mail:``   ``enabled: ``false`` ``server:``  ``servlet:``   ``context-path: /actuator` `mybatis-plus:`` ``# mapper.xml文件扫描`` ``mapper-locations: classpath*:/mybatis-mapper/*Mapper.xml`` ``# 实体扫描，多个package用逗号或者分号分隔`` ``#typeAliasesPackage: com.yibo.essyncclient.*.entity`` ``global-config:``  ``# 数据库相关配置``  ``db-config:``   ``# 主键类型 AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";``   ``id-type: AUTO``   ``# 字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"``   ``field-strategy: NOT_NULL``   ``# 驼峰下划线转换``   ``column-underline: ``true``   ``# 逻辑删除``   ``logic-delete-value: 0``   ``logic-not-delete-value: 1``   ``# 数据库类型``   ``db-type: mysql``  ``banner: ``false`` ``# mybatis原生配置`` ``configuration:``  ``map-underscore-to-camel-``case``: ``true``  ``cache-enabled: ``false``  ``call-setters-``on``-nulls: ``true``  ``jdbc-type-``for``-``null``: ``'null'``  ``type-handlers-package: com.wugui.datax.admin.core.handler` `# 配置mybatis-plus打印sql日志``logging:`` ``level:``  ``com.wugui.datax.admin.mapper: info``  ``path: ./data/applogs/admin``# level:``#  com.wugui.datax.admin.mapper: error``#  path: ${data.path}/applogs/admin`  `#datax-job, access token``datax:`` ``job:``  ``accessToken:``  ``#i18n (default empty as chinese, "en" as english)``  ``i18n:``  ``## triggerpool max size``  ``triggerpool:``   ``fast:``    ``max: 200``   ``slow:``    ``max: 100``   ``### log retention days``  ``logretentiondays: 30` `datasource:`` ``aes:``  ``key: AD42F6697B035B75
+```yaml
+server:
+  port: 8080
+#  port: ${server.port}
+spring:
+  #数据源
+  datasource:
+    username: root　　#你的mysql 用户 和密码
+    password: 123456
+    url: jdbc:mysql://localhost:3306/datax_web?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+#  &&serverTimezone=GMT
+#    password: ${DB_PASSWORD:password}
+#    username: ${DB_USERNAME:username}
+#    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_DATABASE:dataxweb}?serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false&useSSL=false&nullNamePatternMatchesAll=true&useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+ 
+ 
+    hikari:
+      ## 最小空闲连接数量
+      minimum-idle: 5
+      ## 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      ## 连接池最大连接数，默认是10
+      maximum-pool-size: 10
+      ## 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      ##此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+ 
+  # datax-web email
+  mail:
+    host: smtp.qq.com
+    port: 25
+    username: xxx@qq.com
+    password: xxx
+#    username: ${mail.username}
+#    password: ${mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        socketFactory:
+          class: javax.net.ssl.SSLSocketFactory
+ 
+ 
+management:
+  health:
+    mail:
+      enabled: false
+  server:
+    servlet:
+      context-path: /actuator
+ 
+mybatis-plus:
+  # mapper.xml文件扫描
+  mapper-locations: classpath*:/mybatis-mapper/*Mapper.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  #typeAliasesPackage: com.yibo.essyncclient.*.entity
+  global-config:
+    # 数据库相关配置
+    db-config:
+      # 主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: AUTO
+      # 字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: NOT_NULL
+      # 驼峰下划线转换
+      column-underline: true
+      # 逻辑删除
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+      # 数据库类型
+      db-type: mysql
+    banner: false
+  # mybatis原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+    type-handlers-package: com.wugui.datax.admin.core.handler
+ 
+# 配置mybatis-plus打印sql日志
+logging:
+  level:
+    com.wugui.datax.admin.mapper: info
+    path: ./data/applogs/admin
+#  level:
+#    com.wugui.datax.admin.mapper: error
+#    path: ${data.path}/applogs/admin
+ 
+ 
+ 
+#datax-job, access token
+datax:
+  job:
+    accessToken:
+    #i18n (default empty as chinese, "en" as english)
+    i18n:
+    ## triggerpool max size
+    triggerpool:
+      fast:
+        max: 200
+      slow:
+        max: 100
+      ### log retention days
+    logretentiondays: 30
+ 
+datasource:
+  aes:
+    key: AD42F6697B035B75
 ```
 
 4、启动admin，然后启动 executor
@@ -117,17 +229,17 @@ server:`` ``port: 8080``# port: ${server.port}``spring:`` ``#数据源`` ``datas
 
 ![img](https://img2020.cnblogs.com/blog/1697360/202112/1697360-20211224142125446-1245228477.png)
 
- 错误2：存在超过一个time_zone，datax里面的lib缺少mysql驱动，版本就从datax_web中依赖中找出来复制到datax的lib和读写的文件夹下，好好检查
+错误2：存在超过一个time_zone，datax里面的lib缺少mysql驱动，版本就从datax_web中依赖中找出来复制到datax的lib和读写的文件夹下，好好检查
 
 路径大概是：总libs：D:\workspace\datax\datax\lib      读： D:\workspace\datax\datax\plugin\reader\mysqlreader\libs  写：D:\workspace\datax\datax\plugin\writer\mysqlwriter\libs
 
-　　　　　　读写中一般都是![img](https://img2020.cnblogs.com/blog/1697360/202112/1697360-20211224153137978-2049511061.png)
+读写中一般都是
 
- 
+![img](https://img2020.cnblogs.com/blog/1697360/202112/1697360-20211224153137978-2049511061.png)
 
-　　　　　　总libs添加上你的mysql数据库同版本驱动，或者同代版本好像也行
+ 总libs添加上你的mysql数据库同版本驱动，或者同代版本好像也行
 
-  6、打包
+6、打包
 
 打包之前先把repackage在admin和executor的pom中给加上，放在build标签里面
 
@@ -145,15 +257,13 @@ server:`` ``port: 8080``# port: ${server.port}``spring:`` ``#数据源`` ``datas
 </plugin> 
 ```
 
-   完事之后：在maven工具箱里面点击 datax_web下的clean ，完毕之后再点击package 打jar包
+完事之后：在maven工具箱里面点击 datax_web下的clean ，完毕之后再点击package 打jar包
 
-   把admin 和exetor中target中的jar包单独拿出来放到自己的文件夹中，执行这两个jar包肯定会报错，你打开看下jar包里面没有配置文件和mapper，那么把admin下target中的配置文件和分别拉到jar包中，executor只需要拉个配置文件。如下：都在classes文件夹中
+把admin 和exetor中target中的jar包单独拿出来放到自己的文件夹中，执行这两个jar包肯定会报错，你打开看下jar包里面没有配置文件和mapper，那么把admin下target中的配置文件和分别拉到jar包中，executor只需要拉个配置文件。如下：都在classes文件夹中
 
 ![img](https://img2020.cnblogs.com/blog/1697360/202112/1697360-20211224143251163-2052656079.png)![img](https://img2020.cnblogs.com/blog/1697360/202112/1697360-20211224143326515-435847379.png)
 
- 
-
-  完事后，java -jar 运行这两个jar
+完事后，java -jar 运行这两个jar
 
 ![img](https://img2020.cnblogs.com/blog/1697360/202112/1697360-20211224143437901-1333597390.png)
 
