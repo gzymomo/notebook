@@ -69,6 +69,8 @@ sh kafka-manager
 
 ## Kafka Eagle
 
+- [[大数据运维\]第24讲：通过 Kafka Eagle 实现对 Kafka 消息队列的监控 - jpSpaceX - 博客园 (cnblogs.com)](https://www.cnblogs.com/jpSpaceX/articles/15032843.html)
+
 Kafka Eagle监控系统也是一款用来监控Kafka集群的工具，支持管理多个Kafka集群、管理Kafka主题（包含查看、删除、创建等）、消费者组合消费者实例监控、消息阻塞告警、Kafka集群健康状态查看等。
 
 Kafka Eagle v1.2.3整个系统所包含的功能，如下图所示：
